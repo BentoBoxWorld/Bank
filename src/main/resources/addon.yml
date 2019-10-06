@@ -1,0 +1,8 @@
+name: Bank
+main: world.bentobox.bank.Bank
+version: ${version}${build.number}
+icon: GOLD_INGOT
+
+softdepend: BSkyBlock, AcidIsland, SkyGrid, CaveBlock
+
+authors: Poslovitch
