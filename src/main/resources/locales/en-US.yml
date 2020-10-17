@@ -1,0 +1,28 @@
+bank:
+  user:
+    description: "island bank command"
+  balance:
+    description: "shows your island bank balance"
+    your-balance: "&a Your island bank balance is [number]."
+  error:
+    bank-error: "&c Error loading bank account info - please try again later"
+    low-balance: "&c Your island bank balance is not high enough!"
+  withdraw:
+    parameters: "<amount>"
+    description: "withdraw amount from your island account"
+    success: "&a Success! Your new island bank balance is [number]."
+  deposit:
+    parameters: "<amount>"
+    description: "deposit amount into your island account"
+    success: "&a Success! Your new island bank balance is [number]."
+  statement:
+    description: "show your island bank history"
+    title: "Account history"
+    deposit: "Deposit"
+    withdrawal: "Withdrawal"
+    latest: "Sort by latest"
+    oldest: "Sort by oldest"
+    syntax: |
+      [date-time]
+      [name]
+      [number]

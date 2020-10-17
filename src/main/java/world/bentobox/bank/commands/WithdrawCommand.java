@@ -1,0 +1,99 @@
+package world.bentobox.bank.commands;
+
+import java.util.List;
+
+import org.apache.commons.lang.math.NumberUtils;
+
+import world.bentobox.bank.Bank;
+import world.bentobox.bentobox.api.commands.CompositeCommand;
+import world.bentobox.bentobox.api.localization.TextVariables;
+import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.hooks.VaultHook;
+
+/**
+ * @author tastybento
+ *
+ */
+public class WithdrawCommand extends CompositeCommand {
+
+
+    private double value;
+
+    public WithdrawCommand(UserCommand parent) {
+        super(parent, "withdraw");
+    }
+
+    @Override
+    public void setup() {
+        this.setOnlyPlayer(true);
+        this.setPermission("bank.user.withdraw");
+        this.setParametersHelp("bank.withdraw.parameters");
+        this.setDescription("bank.withdraw.description");
+
+    }
+
+    @Override
+    public boolean canExecute(User user, String label, List<String> args) {
+        // Check if there's the right number of arguments
+        if (args.size() != 1) {
+            this.showHelp(this, user);
+            return false;
+        }
+        // Check world
+        if (!this.getWorld().equals(user.getWorld())) {
+            user.sendMessage("general.errors.wrong-world");
+            return false;
+        }
+        // Check value
+        if (!NumberUtils.isDigits(args.get(0))) {
+            user.sendMessage("bank.error.must-be-a-number");
+            return false;
+        }
+
+        value = 0D;
+        try {
+            value = Double.parseDouble(args.get(0));
+        } catch (Exception e) {
+            user.sendMessage("bank.error.must-be-a-number");
+            return false;
+        }
+        if (value <= 0) {
+            user.sendMessage("bank.error.value-must-be-positive");
+            return false;
+        }
+        // Check if the player has the balance
+        double balance = ((Bank)getAddon()).getBankManager().getBalance(user, getWorld());
+        if (balance < value) {
+            user.sendMessage("bank.error.low-balance");
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean execute(User user, String label, List<String> args) {
+        VaultHook vault = ((Bank)this.getAddon()).getVault();
+        // Success
+        ((Bank)getAddon()).getBankManager().withdraw(user, value, getWorld()).thenAccept(result -> {
+            switch (result) {
+            case FAILURE_LOAD_ERROR:
+                user.sendMessage("bank.error.bank-error");
+                break;
+            case FAILURE_LOW_BALANCE:
+                user.sendMessage("bank.error.low-balance");
+                break;
+            case FAILURE_NO_ISLAND:
+                user.sendMessage("general.errors.no-island");
+                break;
+            default:
+                vault.deposit(user, value, getWorld());
+                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(user, getWorld())));
+                break;
+
+            }
+        });
+        return true;
+    }
+
+
+}

@@ -3,6 +3,24 @@ main: world.bentobox.bank.Bank
 version: ${version}${build.number}
 icon: GOLD_INGOT
 
-softdepend: BSkyBlock, AcidIsland, SkyGrid, CaveBlock
+authors: tastybento
 
-authors: Poslovitch
+softdepend: AcidIsland, BSkyBlock, CaveBlock, SkyGrid, AOneBlock
+
+permissions:
+  '[gamemode].bank.user':
+    description: Player can use bank command
+    default: true
+  '[gamemode].bank.user.balance':
+    description: Player can use bank balance command
+    default: true
+  '[gamemode].bank.user.deposit':
+    description: Player can use the bank deposit command
+    default: true
+  '[gamemode].bank.user.withdraw':
+    description: Player can use bank withdraw command
+    default: true
+  '[gamemode].bank.user.statement':
+    description: Player can use the bank statement command
+    default: true
+

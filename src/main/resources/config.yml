@@ -1,0 +1,19 @@
+# Bank Configuration ${version}
+# 
+bank:
+  # BentoBox GameModes that can use Bank
+  game-modes:
+  - BSkyBlock
+  - AOneBlock
+  - AcidIsland
+  - SkyGrid
+  - CaveBlock
+  commands:
+    # User command
+    user: bank
+    # User command aliases
+    user-aliases: 
+    # Admin command
+    admin: bank
+    # Admin command aliases
+    admin-aliases: 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>world.bentobox</groupId>
@@ -15,9 +15,9 @@
 
     <developers>
         <developer>
-            <id>Poslovitch</id>
-            <email>poslovitch@bentobox.world</email>
-            <timezone>1</timezone>
+            <id>tastybento</id>
+            <email>tastybento@bentobox.world</email>
+            <timezone>-8</timezone>
             <roles>
                 <role>Lead Developer</role>
             </roles>
@@ -55,24 +55,27 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <vault.version>1.7</vault.version>
         <!-- Non-minecraft related dependencies -->
         <powermock.version>2.0.2</powermock.version>
         <!-- More visible way how to change dependency versions -->
-        <spigot.version>1.13.2-R0.1-SNAPSHOT</spigot.version>
-        <bentobox.version>1.7.0</bentobox.version>
+        <spigot.version>1.16.1-R0.1-SNAPSHOT</spigot.version>
+        <bentobox.version>1.15.1-SNAPSHOT</bentobox.version>
         <!-- Revision variable removes warning about dynamic version -->
         <revision>${build.version}-SNAPSHOT</revision>
         <!-- Do not change unless you want different name for local builds. -->
         <build.number>-LOCAL</build.number>
         <!-- This allows to change between versions. -->
-        <build.version>1.7.0</build.version>
+        <build.version>1.0.0</build.version>
+
     </properties>
 
     <!-- Profiles will allow to automatically change build version. -->
     <profiles>
         <profile>
-            <!-- ci profile is activated if exist environment variable BUILD_NUMBER.  -->
-            <!-- It replaces ${build.number} that is currently '-LOCAL' with correct build number from JENKINS machine.  -->
+            <!-- ci profile is activated if exist environment variable BUILD_NUMBER. -->
+            <!-- It replaces ${build.number} that is currently '-LOCAL' with 
+                correct build number from JENKINS machine. -->
             <id>ci</id>
             <activation>
                 <property>
@@ -85,10 +88,14 @@
             </properties>
         </profile>
         <profile>
-            <!-- Master profile is activated if exist environment variable GIT_BRANCH and its value is origin/master. -->
-            <!-- It will replace 'revision' with '${build.version}' so it removes '-SNAPSHOT' string at the end. -->
-            <!-- Also, as this is release build, build number can be set to empty string. -->
-            <!-- This profile will be used only if exist environment variable GIT_BRANCH with value origin/master. -->
+            <!-- Master profile is activated if exist environment variable 
+                GIT_BRANCH and its value is origin/master. -->
+            <!-- It will replace 'revision' with '${build.version}' so it 
+                removes '-SNAPSHOT' string at the end. -->
+            <!-- Also, as this is release build, build number can be set 
+                to empty string. -->
+            <!-- This profile will be used only if exist environment variable 
+                GIT_BRANCH with value origin/master. -->
             <id>master</id>
             <activation>
                 <property>
@@ -99,7 +106,7 @@
             <properties>
                 <!-- Override only if necessary -->
                 <revision>${build.version}</revision>
-                <!-- Empties build number variable.-->
+                <!-- Empties build number variable. -->
                 <build.number></build.number>
             </properties>
         </profile>
@@ -118,6 +125,11 @@
             <id>codemc-public</id>
             <url>https://repo.codemc.org/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
     </repositories>
 
     <dependencies>
@@ -153,15 +165,25 @@
             <version>${bentobox.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Vault: as their maven repo is down, we need to get it from jitpack -->
+        <!-- See https://github.com/MilkBowl/VaultAPI/issues/69 -->
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>${vault.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <!-- By default ${revision} is ${build.version}-SNAPSHOT -->
-        <!-- If GIT_BRANCH variable is set to origin/master, then it will be only ${build.version}. -->
+        <!-- If GIT_BRANCH variable is set to origin/master, then it will 
+            be only ${build.version}. -->
 
         <!-- By default ${build.number} is -LOCAL. -->
         <!-- If the BUILD_NUMBER variable is set, then it will be -b[number]. -->
-        <!-- If GIT_BRANCH variable is set to origin/master, then it will be the empty string. -->
+        <!-- If GIT_BRANCH variable is set to origin/master, then it will 
+            be the empty string. -->
         <finalName>${project.name}-${revision}${build.number}</finalName>
 
         <defaultGoal>clean package</defaultGoal>
