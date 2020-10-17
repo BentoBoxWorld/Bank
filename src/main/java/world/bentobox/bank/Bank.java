@@ -1,16 +1,17 @@
 package world.bentobox.bank;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.jdt.annotation.NonNull;
+import org.bukkit.Material;
 import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.bank.commands.UserCommand;
 import world.bentobox.bentobox.api.addons.Addon;
-import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
+import world.bentobox.bentobox.api.flags.Flag;
+import world.bentobox.bentobox.api.flags.Flag.Mode;
+import world.bentobox.bentobox.api.flags.Flag.Type;
+import world.bentobox.bentobox.api.flags.clicklisteners.CycleClick;
 import world.bentobox.bentobox.hooks.VaultHook;
+import world.bentobox.bentobox.managers.RanksManager;
 
 /**
  * Main class of the Bank addon.
@@ -20,17 +21,22 @@ public class Bank extends Addon {
 
     private final Config<Settings> config;
     private @Nullable Settings settings;
-    private final @NonNull List<GameModeAddon> activeGms;
     private VaultHook vault;
     private BankManager bankManager;
+    public static final Flag BANK_ACCESS = new Flag.Builder("BANK_ACCESS", Material.GOLD_INGOT)
+            .mode(Mode.BASIC)
+            .type(Type.PROTECTION)
+            .clickHandler(new CycleClick("BANK_ACCESS", RanksManager.MEMBER_RANK, RanksManager.OWNER_RANK))
+            .build();
 
     public Bank() {
         config = new Config<>(this, Settings.class);
-        activeGms = new ArrayList<>();
     }
 
     @Override
     public void onEnable() {
+        // Register flag
+        this.registerFlag(BANK_ACCESS);
         // Vault hook
         if (!getPlugin().getVault().isPresent()) {
             // Vault is required
@@ -50,26 +56,24 @@ public class Bank extends Addon {
             return;
         }
         config.saveConfigObject(settings);
+        // Bank Manager
+        bankManager = new BankManager(this);
+
         // Register commands with GameModes
-        activeGms.clear();
         getPlugin().getAddonsManager().getGameModeAddons().stream()
         .filter(gm -> settings.getGameModes().stream().anyMatch(gm.getDescription().getName()::equalsIgnoreCase))
         .forEach(gm ->  {
             // Register command
-            gm.getPlayerCommand().ifPresent(playerCmd -> new UserCommand(this, playerCmd, settings.getUserCommand(), settings.getUserAliases().split(" ")));
+            gm.getPlayerCommand().ifPresent(playerCmd -> new UserCommand(this, playerCmd, settings.getUserCommand()));
             //gm.getAdminCommand().ifPresent(adminCmd -> new AdminCommand(this, adminCmd, settings.getAdminCommand(), settings.getAdminAliases().split(" ")));
             // Log
             this.log("Hooking into " + gm.getDescription().getName());
-            // Store active world
-            activeGms.add(gm);
         });
-        // Bank Manager
-        bankManager = new BankManager(this);
     }
 
     @Override
     public void onDisable() {
-
+        // Do nothing
     }
 
     /**

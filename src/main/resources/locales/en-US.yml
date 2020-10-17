@@ -4,9 +4,13 @@ bank:
   balance:
     description: "shows your island bank balance"
     your-balance: "&a Your island bank balance is [number]."
-  error:
+  errors:
     bank-error: "&c Error loading bank account info - please try again later"
     low-balance: "&c Your island bank balance is not high enough!"
+    no-rank: "&c Your rank is not high enough to use the bank."
+    must-be-a-number: "&c Amount must be a number"
+    value-must-be-positive: "&c Amount must be positive."
+    too-much: "&c You do not have that ammount to deposit."
   withdraw:
     parameters: "<amount>"
     description: "withdraw amount from your island account"
@@ -23,6 +27,13 @@ bank:
     latest: "Sort by latest"
     oldest: "Sort by oldest"
     syntax: |
-      [date-time]
-      [name]
-      [number]
+      &9 [date-time]
+      &7 [name]
+      &6 [number]
+protection:
+  flags:
+    BANK_ACCESS:
+      name: Island Bank Access
+      description: |
+        &f Allow acces to
+        &f the island bank

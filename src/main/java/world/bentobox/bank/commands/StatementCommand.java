@@ -47,6 +47,11 @@ public class StatementCommand extends CompositeCommand {
         if (island == null) {
             user.sendMessage("general.errors.no-island");
         }
+        // Check flag
+        if (!island.isAllowed(user, Bank.BANK_ACCESS)) {
+            user.sendMessage("bank.errors.no-rank");
+            return false;
+        }
         return true;
     }
 

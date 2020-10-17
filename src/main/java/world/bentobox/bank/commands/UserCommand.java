@@ -12,8 +12,8 @@ import world.bentobox.bentobox.api.user.User;
  */
 public class UserCommand extends CompositeCommand {
 
-    public UserCommand(Bank addon, CompositeCommand parent, String label, String[] aliases) {
-        super(addon, parent, label, aliases);
+    public UserCommand(Bank addon, CompositeCommand parent, String label) {
+        super(addon, parent, label);
     }
 
     @Override

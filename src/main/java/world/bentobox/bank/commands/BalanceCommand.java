@@ -6,6 +6,7 @@ import world.bentobox.bank.Bank;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.database.objects.Island;
 
 /**
  * @author tastybento
@@ -34,6 +35,16 @@ public class BalanceCommand extends CompositeCommand {
         // Check world
         if (!this.getWorld().equals(user.getWorld())) {
             user.sendMessage("general.errors.wrong-world");
+            return false;
+        }
+        // Check flag
+        Island island = getIslands().getIsland(getWorld(), user);
+        if (island == null) {
+            user.sendMessage("general.errors.no-island");
+            return false;
+        }
+        if (!island.isAllowed(user, Bank.BANK_ACCESS)) {
+            user.sendMessage("bank.errors.no-rank");
             return false;
         }
         return true;

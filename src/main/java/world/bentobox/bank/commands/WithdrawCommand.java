@@ -8,6 +8,7 @@ import world.bentobox.bank.Bank;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.hooks.VaultHook;
 
 /**
@@ -46,25 +47,34 @@ public class WithdrawCommand extends CompositeCommand {
         }
         // Check value
         if (!NumberUtils.isDigits(args.get(0))) {
-            user.sendMessage("bank.error.must-be-a-number");
+            user.sendMessage("bank.errors.must-be-a-number");
             return false;
         }
-
+        // Check flag
+        Island island = getIslands().getIsland(getWorld(), user);
+        if (island == null) {
+            user.sendMessage("general.errors.no-island");
+            return false;
+        }
+        if (!island.isAllowed(user, Bank.BANK_ACCESS)) {
+            user.sendMessage("bank.errors.no-rank");
+            return false;
+        }
         value = 0D;
         try {
             value = Double.parseDouble(args.get(0));
         } catch (Exception e) {
-            user.sendMessage("bank.error.must-be-a-number");
+            user.sendMessage("bank.errors.must-be-a-number");
             return false;
         }
         if (value <= 0) {
-            user.sendMessage("bank.error.value-must-be-positive");
+            user.sendMessage("bank.errors.value-must-be-positive");
             return false;
         }
         // Check if the player has the balance
         double balance = ((Bank)getAddon()).getBankManager().getBalance(user, getWorld());
         if (balance < value) {
-            user.sendMessage("bank.error.low-balance");
+            user.sendMessage("bank.errors.low-balance");
             return false;
         }
         return true;
@@ -77,10 +87,10 @@ public class WithdrawCommand extends CompositeCommand {
         ((Bank)getAddon()).getBankManager().withdraw(user, value, getWorld()).thenAccept(result -> {
             switch (result) {
             case FAILURE_LOAD_ERROR:
-                user.sendMessage("bank.error.bank-error");
+                user.sendMessage("bank.errors.bank-error");
                 break;
             case FAILURE_LOW_BALANCE:
-                user.sendMessage("bank.error.low-balance");
+                user.sendMessage("bank.errors.low-balance");
                 break;
             case FAILURE_NO_ISLAND:
                 user.sendMessage("general.errors.no-island");

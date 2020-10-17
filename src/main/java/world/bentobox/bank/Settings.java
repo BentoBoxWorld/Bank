@@ -28,17 +28,9 @@ public class Settings implements ConfigObject {
     @ConfigEntry(path = "bank.commands.user")
     private String userCommand = "bank";
 
-    @ConfigComment("User command aliases. List, space separated.")
-    @ConfigEntry(path = "bank.commands.user-aliases")
-    private String userAliases = "";
-
     @ConfigComment("Admin command")
     @ConfigEntry(path = "bank.commands.admin")
     private String adminCommand = "bank";
-
-    @ConfigComment("Admin command aliases. List, space separated.")
-    @ConfigEntry(path = "bank.commands.admin-aliases")
-    private String adminAliases = "";
 
     /**
      * @return the gameModes
@@ -81,35 +73,6 @@ public class Settings implements ConfigObject {
     public void setAdminCommand(String adminCommand) {
         this.adminCommand = adminCommand;
     }
-
-    /**
-     * @return the userAliases
-     */
-    public String getUserAliases() {
-        return userAliases;
-    }
-
-    /**
-     * @param userAliases the userAliases to set
-     */
-    public void setUserAliases(String userAliases) {
-        this.userAliases = userAliases;
-    }
-
-    /**
-     * @return the adminAliases
-     */
-    public String getAdminAliases() {
-        return adminAliases;
-    }
-
-    /**
-     * @param adminAliases the adminAliases to set
-     */
-    public void setAdminAliases(String adminAliases) {
-        this.adminAliases = adminAliases;
-    }
-
 
 
 }
