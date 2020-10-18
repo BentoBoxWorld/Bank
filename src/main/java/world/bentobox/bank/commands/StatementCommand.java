@@ -46,6 +46,7 @@ public class StatementCommand extends CompositeCommand {
         island = getIslands().getIsland(getWorld(), user);
         if (island == null) {
             user.sendMessage("general.errors.no-island");
+            return false;
         }
         // Check flag
         if (!island.isAllowed(user, Bank.BANK_ACCESS)) {

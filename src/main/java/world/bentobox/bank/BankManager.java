@@ -102,7 +102,7 @@ public class BankManager {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_NO_ISLAND);
         }
 
-        BankAccounts account = new BankAccounts();
+        BankAccounts account;
         if (!handler.objectExists(island.getUniqueId())) {
             // No account = no balance
             return CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE);
