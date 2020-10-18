@@ -23,4 +23,6 @@ permissions:
   '[gamemode].bank.user.statement':
     description: Player can use the bank statement command
     default: true
-
+  '[gamemode].bank.user.baltop':
+    description: Player can use bank baltop command
+    default: true

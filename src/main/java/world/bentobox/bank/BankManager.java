@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import world.bentobox.bank.data.AccountHistory;
 import world.bentobox.bank.data.BankAccounts;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.Database;
@@ -21,10 +24,12 @@ import world.bentobox.bentobox.database.objects.Island;
  *
  */
 public class BankManager {
+    private static final int MAX_SIZE = 20;
     // Database handler for accounts
     private final Database<BankAccounts> handler;
     private final Bank addon;
     private final Map<String, BankAccounts> cache;
+    private final Map<String, Double> balances;
 
     /**
      * Cached database bank manager for withdrawals, deposits and balance inquiries
@@ -32,8 +37,20 @@ public class BankManager {
      */
     public BankManager(Bank addon) {
         cache = new HashMap<>();
+        balances = new ConcurrentHashMap<>();
         handler = new Database<>(addon, BankAccounts.class);
         this.addon = addon;
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(addon.getPlugin(), () -> {
+            if (cache.size() > MAX_SIZE) {
+                cache.clear();
+            }
+        }, 6000L, 6000L);
+    }
+
+    public void loadBalances() {
+        balances.clear();
+        Bukkit.getScheduler().runTaskAsynchronously(addon.getPlugin(), () ->
+        handler.loadObjects().forEach(ba -> balances.put(ba.getUniqueId(), ba.getBalance())));
     }
 
     public CompletableFuture<BankResponse> deposit(User user, double amount, World world) {
@@ -48,6 +65,7 @@ public class BankManager {
             account.setBalance(account.getBalance() + amount);
             account.getHistory().put(System.currentTimeMillis(), user.getName() + ":" + amount);
             cache.put(island.getUniqueId(), account);
+            balances.put(island.getUniqueId(), account.getBalance());
             CompletableFuture<BankResponse> result = new CompletableFuture<>();
             handler.saveObjectAsync(account).thenRun(() -> result.complete(BankResponse.SUCCESS));
             return result;
@@ -105,6 +123,7 @@ public class BankManager {
         account.setBalance(account.getBalance() - amount);
         account.getHistory().put(System.currentTimeMillis(), user.getName() + ":-" + amount);
         cache.put(island.getUniqueId(), account);
+        balances.put(island.getUniqueId(), account.getBalance());
         CompletableFuture<BankResponse> result = new CompletableFuture<>();
         handler.saveObjectAsync(account).thenRun(() -> result.complete(BankResponse.SUCCESS));
         return result;
@@ -116,47 +135,7 @@ public class BankManager {
         if (island == null) {
             return 0D;
         }
-        try {
-            return getAccount(island.getUniqueId()).getBalance();
-        } catch (IOException e) {
-            return 0D;
-        }
-    }
-
-    public class AccountHistory {
-        private final long timestamp;
-        private final String name;
-        private final double amount;
-        /**
-         * @param timestamp
-         * @param name
-         * @param amount
-         */
-        public AccountHistory(long timestamp, String name, double amount) {
-            super();
-            this.timestamp = timestamp;
-            this.name = name;
-            this.amount = amount;
-        }
-        /**
-         * @return the timestamp
-         */
-        public long getTimestamp() {
-            return timestamp;
-        }
-        /**
-         * @return the name
-         */
-        public String getName() {
-            return name;
-        }
-        /**
-         * @return the amount
-         */
-        public double getAmount() {
-            return amount;
-        }
-
+        return balances.getOrDefault(island.getUniqueId(), 0D);
     }
 
     public List<AccountHistory> getHistory(Island island) {
@@ -172,5 +151,12 @@ public class BankManager {
         } catch (IOException e) {
             return Collections.emptyList();
         }
+    }
+
+    /**
+     * @return the balances
+     */
+    public Map<String, Double> getBalances() {
+        return balances;
     }
 }

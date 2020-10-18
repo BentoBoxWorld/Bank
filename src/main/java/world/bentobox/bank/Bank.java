@@ -58,7 +58,7 @@ public class Bank extends Addon {
         config.saveConfigObject(settings);
         // Bank Manager
         bankManager = new BankManager(this);
-
+        bankManager.loadBalances();
         // Register commands with GameModes
         getPlugin().getAddonsManager().getGameModeAddons().stream()
         .filter(gm -> settings.getGameModes().stream().anyMatch(gm.getDescription().getName()::equalsIgnoreCase))

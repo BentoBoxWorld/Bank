@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.bank.Bank;
-import world.bentobox.bank.BankManager.AccountHistory;
+import world.bentobox.bank.data.AccountHistory;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.panels.PanelItem;
 import world.bentobox.bentobox.api.panels.Tab;

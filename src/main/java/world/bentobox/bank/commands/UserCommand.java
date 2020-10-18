@@ -22,6 +22,7 @@ public class UserCommand extends CompositeCommand {
         this.setOnlyPlayer(true);
         this.setDescription("bank.user.description");
         // Sub commands
+        new BalTopCommand(this);
         new StatementCommand(this);
         new DepositCommand(this);
         new WithdrawCommand(this);
