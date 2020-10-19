@@ -2,6 +2,7 @@ name: Bank
 main: world.bentobox.bank.Bank
 version: ${version}${build.number}
 icon: GOLD_INGOT
+api-version: 1.15.1
 
 authors: tastybento
 
