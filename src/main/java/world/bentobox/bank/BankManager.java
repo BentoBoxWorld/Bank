@@ -12,9 +12,17 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.eclipse.jdt.annotation.Nullable;
+
+import com.google.common.base.Enums;
 
 import world.bentobox.bank.data.AccountHistory;
 import world.bentobox.bank.data.BankAccounts;
+import world.bentobox.bank.data.TxType;
+import world.bentobox.bentobox.api.events.island.IslandEvent.IslandPreclearEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
@@ -23,7 +31,7 @@ import world.bentobox.bentobox.database.objects.Island;
  * @author tastybento
  *
  */
-public class BankManager {
+public class BankManager implements Listener {
     private static final int MAX_SIZE = 20;
     // Database handler for accounts
     private final Database<BankAccounts> handler;
@@ -53,22 +61,31 @@ public class BankManager {
         handler.loadObjects().forEach(ba -> balances.put(ba.getUniqueId(), ba.getBalance())));
     }
 
+    /**
+     * @param user - depositor and island member
+     * @param amount - amount
+     * @param world - island's world
+     * @return BankResponse
+     */
     public CompletableFuture<BankResponse> deposit(User user, double amount, World world) {
         // Get player's account
         Island island = addon.getIslands().getIsland(world, user);
         if (island == null) {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_NO_ISLAND);
         }
+        return deposit(user, island, amount, TxType.DEPOSIT);
+    }
 
+    /**
+     * @param user - depositor
+     * @param island - island
+     * @param amount - amount
+     * @return BankResponse
+     */
+    public CompletableFuture<BankResponse> deposit(User user, Island island, double amount, TxType type) {
         try {
             BankAccounts account = getAccount(island.getUniqueId());
-            account.setBalance(account.getBalance() + amount);
-            account.getHistory().put(System.currentTimeMillis(), user.getName() + ":" + amount);
-            cache.put(island.getUniqueId(), account);
-            balances.put(island.getUniqueId(), account.getBalance());
-            CompletableFuture<BankResponse> result = new CompletableFuture<>();
-            handler.saveObjectAsync(account).thenRun(() -> result.complete(BankResponse.SUCCESS));
-            return result;
+            return this.set(user, island, (account.getBalance() + amount), type);
         } catch (IOException e) {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR);
         }
@@ -95,13 +112,28 @@ public class BankManager {
         return account;
     }
 
+    /**
+     * @param user - island member
+     * @param amount - amount
+     * @param world - world
+     * @return BankResponse
+     */
     public CompletableFuture<BankResponse> withdraw(User user, double amount, World world) {
         // Get player's island
         Island island = addon.getIslands().getIsland(world, user);
         if (island == null) {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_NO_ISLAND);
         }
+        return withdraw(user, island, amount, TxType.WITHDRAW);
+    }
 
+    /**
+     * @param user - user withdrawing
+     * @param island - island
+     * @param amount - amount
+     * @return BankResponse
+     */
+    public CompletableFuture<BankResponse> withdraw(User user, Island island, double amount, TxType type) {
         BankAccounts account;
         if (!handler.objectExists(island.getUniqueId())) {
             // No account = no balance
@@ -120,22 +152,18 @@ public class BankManager {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE);
         }
         // Success
-        account.setBalance(account.getBalance() - amount);
-        account.getHistory().put(System.currentTimeMillis(), user.getName() + ":-" + amount);
-        cache.put(island.getUniqueId(), account);
-        balances.put(island.getUniqueId(), account.getBalance());
-        CompletableFuture<BankResponse> result = new CompletableFuture<>();
-        handler.saveObjectAsync(account).thenRun(() -> result.complete(BankResponse.SUCCESS));
-        return result;
+        return this.set(user, island, (account.getBalance() - amount), type);
     }
 
-    public double getBalance(User user, World world) {
-        // Get player's island
-        Island island = addon.getIslands().getIsland(world, user);
+    public double getBalance(@Nullable Island island) {
         if (island == null) {
             return 0D;
         }
         return balances.getOrDefault(island.getUniqueId(), 0D);
+    }
+
+    public double getBalance(User user, World world) {
+        return getBalance(addon.getIslands().getIsland(world, user));
     }
 
     public List<AccountHistory> getHistory(Island island) {
@@ -143,8 +171,9 @@ public class BankManager {
             BankAccounts account = getAccount(island.getUniqueId());
             return account.getHistory().entrySet().stream().map(en -> {
                 String[] split = en.getValue().split(":");
-                if (split.length == 2) {
-                    return new AccountHistory(en.getKey(), split[0], Double.valueOf(split[1]));
+                if (split.length == 3) {
+                    TxType type = Enums.getIfPresent(TxType.class, split[1]).or(TxType.UNKNOWN);
+                    return new AccountHistory(en.getKey(), split[0], Double.valueOf(split[2]), type);
                 }
                 return null;
             }).filter(Objects::nonNull).collect(Collectors.toList());
@@ -158,5 +187,36 @@ public class BankManager {
      */
     public Map<String, Double> getBalances() {
         return balances;
+    }
+
+    /**
+     * Sets an island's account value to an amount
+     * @param user - user who is doing the setting
+     * @param island - island
+     * @param amount - amount
+     * @param type - type of transaction
+     * @return BankResponse
+     */
+    public CompletableFuture<BankResponse> set(User user, @Nullable Island island, double amount, TxType type) {
+        try {
+            BankAccounts account = getAccount(island.getUniqueId());
+            account.setBalance(amount);
+            account.getHistory().put(System.currentTimeMillis(), user.getName() + ":" + type + ":" + amount);
+            cache.put(island.getUniqueId(), account);
+            balances.put(island.getUniqueId(), account.getBalance());
+            CompletableFuture<BankResponse> result = new CompletableFuture<>();
+            handler.saveObjectAsync(account).thenRun(() -> result.complete(BankResponse.SUCCESS));
+            return result;
+        } catch (IOException e) {
+            return CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onIslandDelete(IslandPreclearEvent e) {
+        String id = e.getIsland().getUniqueId();
+        handler.deleteID(id);
+        cache.remove(id);
+        balances.remove(id);
     }
 }

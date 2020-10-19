@@ -1,4 +1,4 @@
-package world.bentobox.bank.commands;
+package world.bentobox.bank.commands.user;
 
 import java.util.List;
 

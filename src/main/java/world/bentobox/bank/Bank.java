@@ -3,7 +3,8 @@ package world.bentobox.bank;
 import org.bukkit.Material;
 import org.eclipse.jdt.annotation.Nullable;
 
-import world.bentobox.bank.commands.UserCommand;
+import world.bentobox.bank.commands.admin.AdminCommand;
+import world.bentobox.bank.commands.user.UserCommand;
 import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.flags.Flag;
@@ -65,7 +66,7 @@ public class Bank extends Addon {
         .forEach(gm ->  {
             // Register command
             gm.getPlayerCommand().ifPresent(playerCmd -> new UserCommand(this, playerCmd, settings.getUserCommand()));
-            //gm.getAdminCommand().ifPresent(adminCmd -> new AdminCommand(this, adminCmd, settings.getAdminCommand(), settings.getAdminAliases().split(" ")));
+            gm.getAdminCommand().ifPresent(adminCmd -> new AdminCommand(this, adminCmd, settings.getAdminCommand()));
             // Log
             this.log("Hooking into " + gm.getDescription().getName());
         });

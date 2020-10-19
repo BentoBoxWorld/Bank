@@ -1,4 +1,4 @@
-package world.bentobox.bank.commands;
+package world.bentobox.bank.commands.user;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class WithdrawCommand extends CompositeCommand {
 
     private double value;
 
-    public WithdrawCommand(UserCommand parent) {
+    public WithdrawCommand(CompositeCommand parent) {
         super(parent, "withdraw");
     }
 
@@ -46,7 +46,7 @@ public class WithdrawCommand extends CompositeCommand {
             return false;
         }
         // Check value
-        if (!NumberUtils.isDigits(args.get(0))) {
+        if (!NumberUtils.isNumber(args.get(0))) {
             user.sendMessage("bank.errors.must-be-a-number");
             return false;
         }

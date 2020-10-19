@@ -1,7 +1,22 @@
-bank: 
+bank:
+  admin:
+    desciption: "admin command for island bank"
+    give:
+      parameters: "<player> <amount>"
+      description: "add amount to player's island account"
+    take:
+      parameters: "<player> <amount>"
+      description: "take amount from player's island account"
+    balance:
+      parameters: "<player>"
+      description: "view balance of player's island account"
+    set:
+      parameters: "<player> <amount>"
+      description: "set amount in player's island account"
+      success: "[name]'s account set to [number]."
   balance: 
     description: "shows your island bank balance"
-    your-balance: "&a Your island bank balance is [number]."
+    island-balance: "&a Island bank balance is [number]."
   baltop: 
     description: "show balance rankings"
     description-syntax: "&d [number]"
@@ -18,18 +33,22 @@ bank:
     low-balance: "&c Your island bank balance is not high enough!"
     must-be-a-number: "&c Amount must be a number"
     no-rank: "&c Your rank is not high enough to use the bank."
-    too-much: "&c You do not have that ammount to deposit."
+    too-much: "&c You do not have that amount to deposit."
     value-must-be-positive: "&c Amount must be positive."
   statement: 
     deposit: Deposit
     description: "show your island bank history"
+    give: "Admin Give"
     latest: "Sort by latest"
     oldest: "Sort by oldest"
+    set: "Admin Set"
     syntax: |
         &9 [date-time]
         &7 [name]
         &6 [number]
+    take: "Admin Take"
     title: "Account history"
+    unknown: "Unknown Type"
     withdrawal: Withdrawal
   user: 
     description: "island bank command"

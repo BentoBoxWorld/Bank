@@ -1,4 +1,4 @@
-package world.bentobox.bank.commands;
+package world.bentobox.bank.commands.user.tabs;
 
 import java.util.Comparator;
 import java.util.List;

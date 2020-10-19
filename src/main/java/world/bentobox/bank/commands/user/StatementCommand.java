@@ -1,27 +1,34 @@
-package world.bentobox.bank.commands;
+package world.bentobox.bank.commands.user;
 
 import java.util.List;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import world.bentobox.bank.Bank;
+import world.bentobox.bank.commands.user.tabs.StatementTab;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.panels.builders.TabbedPanelBuilder;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.database.objects.Island;
 
 /**
  * @author tastybento
  *
  */
-public class BalTopCommand extends CompositeCommand {
+public class StatementCommand extends CompositeCommand {
 
-    public BalTopCommand(UserCommand parent) {
-        super(parent, "baltop");
+
+    private @Nullable Island island;
+
+    public StatementCommand(CompositeCommand parent) {
+        super(parent, "statement");
     }
 
     @Override
     public void setup() {
         this.setOnlyPlayer(true);
-        this.setPermission("bank.user.baltop");
-        this.setDescription("bank.baltop.description");
+        this.setPermission("bank.user.statement");
+        this.setDescription("bank.statement.description");
     }
 
     @Override
@@ -36,6 +43,17 @@ public class BalTopCommand extends CompositeCommand {
             user.sendMessage("general.errors.wrong-world");
             return false;
         }
+        // Get player's island
+        island = getIslands().getIsland(getWorld(), user);
+        if (island == null) {
+            user.sendMessage("general.errors.no-island");
+            return false;
+        }
+        // Check flag
+        if (!island.isAllowed(user, Bank.BANK_ACCESS)) {
+            user.sendMessage("bank.errors.no-rank");
+            return false;
+        }
         return true;
     }
 
@@ -47,8 +65,8 @@ public class BalTopCommand extends CompositeCommand {
         new TabbedPanelBuilder()
         .user(user)
         .world(user.getWorld())
-        .tab(1, new BalTopTab(((Bank)getAddon()), user, true))
-        .tab(2, new BalTopTab(((Bank)getAddon()), user, false))
+        .tab(1, new StatementTab(((Bank)getAddon()), user, island, true))
+        .tab(2, new StatementTab(((Bank)getAddon()), user, island, false))
         .startingSlot(1)
         .size(54)
         .build().openPanel();

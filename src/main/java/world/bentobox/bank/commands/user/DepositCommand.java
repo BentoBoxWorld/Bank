@@ -1,4 +1,4 @@
-package world.bentobox.bank.commands;
+package world.bentobox.bank.commands.user;
 
 import java.util.List;
 
@@ -19,7 +19,9 @@ import world.bentobox.bentobox.hooks.VaultHook;
  */
 public class DepositCommand extends CompositeCommand {
 
-    public DepositCommand(UserCommand parent) {
+    private double value;
+
+    public DepositCommand(CompositeCommand parent) {
         super(parent, "deposit");
     }
 
@@ -44,7 +46,7 @@ public class DepositCommand extends CompositeCommand {
             return false;
         }
         // Check value
-        if (!NumberUtils.isDigits(args.get(0))) {
+        if (!NumberUtils.isNumber(args.get(0))) {
             user.sendMessage("bank.errors.must-be-a-number");
             return false;
         }
@@ -58,13 +60,7 @@ public class DepositCommand extends CompositeCommand {
             user.sendMessage("bank.errors.no-rank");
             return false;
         }
-        return true;
-    }
 
-    @Override
-    public boolean execute(User user, String label, List<String> args) {
-        VaultHook vault = ((Bank)this.getAddon()).getVault();
-        double value = 0;
         try {
             value = Double.parseDouble(args.get(0));
         } catch (Exception e) {
@@ -75,7 +71,14 @@ public class DepositCommand extends CompositeCommand {
             user.sendMessage("bank.errors.value-must-be-positive");
             return false;
         }
+
+        return true;
+    }
+
+    @Override
+    public boolean execute(User user, String label, List<String> args) {
         // Check if the player has the balance
+        VaultHook vault = ((Bank)this.getAddon()).getVault();
         double balance = vault.getBalance(user, getWorld());
         if (balance < value) {
             user.sendMessage("bank.errors.too-much");
@@ -103,8 +106,10 @@ public class DepositCommand extends CompositeCommand {
 
                 }
             });
+            return true;
         }
-        return true;
+        user.sendMessage("bank.errors.bank-error");
+        return false;
     }
 
 }
