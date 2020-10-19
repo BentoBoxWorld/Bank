@@ -2,21 +2,16 @@ package world.bentobox.bank.commands.admin;
 
 import java.util.List;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import world.bentobox.bank.Bank;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.objects.Island;
 
 /**
  * @author tastybento
  *
  */
 public class AdminBalanceCommand extends AdminCommand {
-
-    private @Nullable Island island;
 
     public AdminBalanceCommand(CompositeCommand parent) {
         super(parent, "balance");

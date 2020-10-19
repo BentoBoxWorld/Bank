@@ -18,10 +18,10 @@ import world.bentobox.bentobox.database.objects.Island;
  */
 public abstract class AbstractBankCommand extends CompositeCommand {
 
-    public AbstractBankCommand(Bank bank, CompositeCommand adminCmd, String adminCommand) {
+    protected AbstractBankCommand(Bank bank, CompositeCommand adminCmd, String adminCommand) {
         super(bank, adminCmd, adminCommand);
     }
-    public AbstractBankCommand(CompositeCommand parent, String string) {
+    protected AbstractBankCommand(CompositeCommand parent, String string) {
         super(parent, string);
     }
 
