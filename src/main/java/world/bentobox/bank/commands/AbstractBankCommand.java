@@ -27,6 +27,7 @@ public abstract class AbstractBankCommand extends CompositeCommand {
 
     protected Island island;
     protected double value;
+    protected User target;
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
@@ -56,7 +57,8 @@ public abstract class AbstractBankCommand extends CompositeCommand {
         if (size == 1) {
             island = getIslands().getIsland(getWorld(), user);
         } else {
-            island = getIslands().getIsland(getWorld(), getAddon().getPlayers().getUser(args.get(0)));
+            target = getAddon().getPlayers().getUser(args.get(0));
+            island = getIslands().getIsland(getWorld(), target);
         }
         if (island == null) {
             user.sendMessage("general.errors.no-island");

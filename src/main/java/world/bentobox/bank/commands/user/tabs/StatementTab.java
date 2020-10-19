@@ -72,10 +72,14 @@ public class StatementTab implements Tab {
                 .map(ah -> {
                     DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, user.getLocale());
                     String formattedDate = df.format(ah.getTimestamp());
+                    df = DateFormat.getTimeInstance(DateFormat.SHORT, user.getLocale());
+                    String formattedTime = df.format(ah.getTimestamp());
                     PanelItemBuilder pi = new PanelItemBuilder()
                             .description(user.getTranslation("bank.statement.syntax",
-                                    "[date-time]",
+                                    "[date]",
                                     formattedDate,
+                                    "[time]",
+                                    formattedTime,
                                     TextVariables.NAME, ah.getName(),
                                     TextVariables.NUMBER, addon.getVault().format(ah.getAmount())));
                     return pi.icon(ICON_TEXT.get(ah.getType()).material).name(user.getTranslation("bank.statement." + ICON_TEXT.get(ah.getType()).text)).build();

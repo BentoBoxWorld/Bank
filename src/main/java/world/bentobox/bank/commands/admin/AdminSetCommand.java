@@ -35,10 +35,10 @@ public class AdminSetCommand extends AdminCommand {
     @Override
     public boolean execute(User user, String label, List<String> args) {
         // Success
-        ((Bank)getAddon()).getBankManager().set(user, island.getUniqueId(), value, TxType.SET).thenAccept(result -> {
+        ((Bank)getAddon()).getBankManager().set(user, island.getUniqueId(), value, value, TxType.SET).thenAccept(result -> {
             if (result == BankResponse.SUCCESS) {
                 VaultHook vault = ((Bank)this.getAddon()).getVault();
-                user.sendMessage("bank.admin.set.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(user, getWorld())));
+                user.sendMessage("bank.admin.set.success", TextVariables.NAME, target.getName(), TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(user, getWorld())));
             } else {
                 user.sendMessage("bank.errors.bank-error");
             }

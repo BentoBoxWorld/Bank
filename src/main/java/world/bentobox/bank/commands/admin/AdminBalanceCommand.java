@@ -20,7 +20,8 @@ public class AdminBalanceCommand extends AdminCommand {
     @Override
     public void setup() {
         this.setPermission("bank.admin.balance");
-        this.setDescription("bank.admin.description");
+        this.setParametersHelp("bank.admin.balance.parameters");
+        this.setDescription("bank.admin.balance.description");
     }
 
     @Override

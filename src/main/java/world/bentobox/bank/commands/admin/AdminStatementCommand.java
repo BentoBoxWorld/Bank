@@ -2,23 +2,17 @@ package world.bentobox.bank.commands.admin;
 
 import java.util.List;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.commands.user.tabs.StatementTab;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.panels.builders.TabbedPanelBuilder;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.objects.Island;
 
 /**
  * @author tastybento
  *
  */
 public class AdminStatementCommand extends AdminCommand {
-
-
-    private @Nullable Island island;
 
     public AdminStatementCommand(CompositeCommand parent) {
         super(parent, "statement");
@@ -28,6 +22,7 @@ public class AdminStatementCommand extends AdminCommand {
     public void setup() {
         this.setOnlyPlayer(true);
         this.setPermission("bank.admin.statement");
+        this.setParametersHelp("bank.admin.statement.parameters");
         this.setDescription("bank.admin.statement.description");
     }
 

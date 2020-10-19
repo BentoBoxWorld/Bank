@@ -85,7 +85,7 @@ public class BankManager implements Listener {
     public CompletableFuture<BankResponse> deposit(User user, Island island, double amount, TxType type) {
         try {
             BankAccounts account = getAccount(island.getUniqueId());
-            return this.set(user, island.getUniqueId(), (account.getBalance() + amount), type);
+            return this.set(user, island.getUniqueId(), amount, (account.getBalance() + amount), type);
         } catch (IOException e) {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR);
         }
@@ -152,7 +152,7 @@ public class BankManager implements Listener {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE);
         }
         // Success
-        return this.set(user, island.getUniqueId(), (account.getBalance() - amount), type);
+        return this.set(user, island.getUniqueId(), amount, (account.getBalance() - amount), type);
     }
 
     public double getBalance(@Nullable Island island) {
@@ -197,10 +197,10 @@ public class BankManager implements Listener {
      * @param type - type of transaction
      * @return BankResponse
      */
-    public CompletableFuture<BankResponse> set(User user, String islandID, double amount, TxType type) {
+    public CompletableFuture<BankResponse> set(User user, String islandID, double amount, double newBalance, TxType type) {
         try {
             BankAccounts account = getAccount(islandID);
-            account.setBalance(amount);
+            account.setBalance(newBalance);
             account.getHistory().put(System.currentTimeMillis(), user.getName() + ":" + type + ":" + amount);
             cache.put(islandID, account);
             balances.put(islandID, account.getBalance());
