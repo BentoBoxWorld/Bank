@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import world.bentobox.bank.Bank;
+import world.bentobox.bank.commands.AbstractBankCommand;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.util.Util;
@@ -12,7 +13,7 @@ import world.bentobox.bentobox.util.Util;
  * @author tastybento
  *
  */
-public class AdminCommand extends CompositeCommand {
+public class AdminCommand extends AbstractBankCommand {
 
     public AdminCommand(Bank bank, CompositeCommand adminCmd, String adminCommand) {
         super(bank, adminCmd, adminCommand);
@@ -41,4 +42,5 @@ public class AdminCommand extends CompositeCommand {
     public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
         return Optional.of(Util.getOnlinePlayerList(user));
     }
+
 }

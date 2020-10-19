@@ -2,23 +2,18 @@ package world.bentobox.bank.commands.user;
 
 import java.util.List;
 
-import org.apache.commons.lang.math.NumberUtils;
-
 import world.bentobox.bank.Bank;
+import world.bentobox.bank.commands.AbstractBankCommand;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.hooks.VaultHook;
 
 /**
  * @author tastybento
  *
  */
-public class WithdrawCommand extends CompositeCommand {
-
-
-    private double value;
+public class WithdrawCommand extends AbstractBankCommand {
 
     public WithdrawCommand(CompositeCommand parent) {
         super(parent, "withdraw");
@@ -35,40 +30,7 @@ public class WithdrawCommand extends CompositeCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        // Check if there's the right number of arguments
-        if (args.size() != 1) {
-            this.showHelp(this, user);
-            return false;
-        }
-        // Check world
-        if (!this.getWorld().equals(user.getWorld())) {
-            user.sendMessage("general.errors.wrong-world");
-            return false;
-        }
-        // Check value
-        if (!NumberUtils.isNumber(args.get(0))) {
-            user.sendMessage("bank.errors.must-be-a-number");
-            return false;
-        }
-        // Check flag
-        Island island = getIslands().getIsland(getWorld(), user);
-        if (island == null) {
-            user.sendMessage("general.errors.no-island");
-            return false;
-        }
-        if (!island.isAllowed(user, Bank.BANK_ACCESS)) {
-            user.sendMessage("bank.errors.no-rank");
-            return false;
-        }
-        value = 0D;
-        try {
-            value = Double.parseDouble(args.get(0));
-        } catch (Exception e) {
-            user.sendMessage("bank.errors.must-be-a-number");
-            return false;
-        }
-        if (value <= 0) {
-            user.sendMessage("bank.errors.value-must-be-positive");
+        if (!super.canExecute(user, label, args)) {
             return false;
         }
         // Check if the player has the balance

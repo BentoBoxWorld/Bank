@@ -85,7 +85,7 @@ public class BankManager implements Listener {
     public CompletableFuture<BankResponse> deposit(User user, Island island, double amount, TxType type) {
         try {
             BankAccounts account = getAccount(island.getUniqueId());
-            return this.set(user, island, (account.getBalance() + amount), type);
+            return this.set(user, island.getUniqueId(), (account.getBalance() + amount), type);
         } catch (IOException e) {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR);
         }
@@ -152,7 +152,7 @@ public class BankManager implements Listener {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE);
         }
         // Success
-        return this.set(user, island, (account.getBalance() - amount), type);
+        return this.set(user, island.getUniqueId(), (account.getBalance() - amount), type);
     }
 
     public double getBalance(@Nullable Island island) {
@@ -192,18 +192,18 @@ public class BankManager implements Listener {
     /**
      * Sets an island's account value to an amount
      * @param user - user who is doing the setting
-     * @param island - island
+     * @param islandID - island unique id
      * @param amount - amount
      * @param type - type of transaction
      * @return BankResponse
      */
-    public CompletableFuture<BankResponse> set(User user, @Nullable Island island, double amount, TxType type) {
+    public CompletableFuture<BankResponse> set(User user, String islandID, double amount, TxType type) {
         try {
-            BankAccounts account = getAccount(island.getUniqueId());
+            BankAccounts account = getAccount(islandID);
             account.setBalance(amount);
             account.getHistory().put(System.currentTimeMillis(), user.getName() + ":" + type + ":" + amount);
-            cache.put(island.getUniqueId(), account);
-            balances.put(island.getUniqueId(), account.getBalance());
+            cache.put(islandID, account);
+            balances.put(islandID, account.getBalance());
             CompletableFuture<BankResponse> result = new CompletableFuture<>();
             handler.saveObjectAsync(account).thenRun(() -> result.complete(BankResponse.SUCCESS));
             return result;
