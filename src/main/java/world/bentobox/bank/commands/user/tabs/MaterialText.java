@@ -6,8 +6,8 @@ public class MaterialText {
     Material material;
     String text;
     /**
-     * @param material - material
-     * @param text - string
+     * @param m - material
+     * @param t - string
      */
     public MaterialText(Material m, String t) {
         super();
