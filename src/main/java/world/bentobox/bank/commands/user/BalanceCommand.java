@@ -9,6 +9,7 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 
 /**
+ * Provides the player's island bank balance
  * @author tastybento
  *
  */
