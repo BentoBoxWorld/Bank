@@ -1,3 +1,6 @@
+/**
+ *
+ */
 package world.bentobox.bank.commands.user;
 
 import static org.junit.Assert.assertEquals;
@@ -12,12 +15,17 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -27,6 +35,7 @@ import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
 import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.Settings;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
@@ -40,9 +49,8 @@ import world.bentobox.bentobox.managers.IslandsManager;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(BentoBox.class)
-public class BalanceCommandTest {
-
+@PrepareForTest({Bukkit.class, BentoBox.class})
+public class StatementCommandTest {
     @Mock
     private CompositeCommand ic;
     @Mock
@@ -62,7 +70,10 @@ public class BalanceCommandTest {
     @Mock
     private VaultHook vh;
     // Class under test
-    private BalanceCommand bc;
+    private StatementCommand sc;
+    @Mock
+    private Player player;
+
     /**
      * @throws java.lang.Exception
      */
@@ -74,6 +85,7 @@ public class BalanceCommandTest {
 
         when(ic.getWorld()).thenReturn(world);
         when(user.getWorld()).thenReturn(world);
+        when(user.getPlayer()).thenReturn(player);
 
         // IWM friendly name
         IslandWorldManager iwm = mock(IslandWorldManager.class);
@@ -95,64 +107,69 @@ public class BalanceCommandTest {
         EconomyResponse er = new EconomyResponse(0, 0, ResponseType.SUCCESS, "");
         when(vh.withdraw(eq(user), anyDouble(), eq(world))).thenReturn(er);
 
-        bc = new BalanceCommand(ic);
+        // Settings
+        when(plugin.getSettings()).thenReturn(new Settings());
+
+        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
+        sc = new StatementCommand(ic);
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.BalanceCommand#setup()}.
+     * Test method for {@link world.bentobox.bank.commands.user.StatementCommand#setup()}.
      */
     @Test
     public void testSetup() {
-        assertTrue(bc.isOnlyPlayer());
-        assertEquals("bank.user.balance", bc.getPermission());
-        assertEquals("bank.balance.description", bc.getDescription());
+        assertTrue(sc.isOnlyPlayer());
+        assertEquals("bank.user.statement", sc.getPermission());
+        assertEquals("bank.statement.description", sc.getDescription());
+
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.BalanceCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.user.StatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testCanExecuteArgs() {
-        assertFalse(bc.canExecute(user, "balance", Collections.singletonList("fff")));
+        assertFalse(sc.canExecute(user, "statement", Collections.singletonList("fff")));
         verify(user).sendMessage(eq("commands.help.header"), eq(TextVariables.LABEL), eq("BSkyBlock"));
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.BalanceCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.user.StatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testCanExecuteNoIsland() {
         when(im.getIsland(eq(world), eq(user))).thenReturn(null);
-        assertFalse(bc.canExecute(user, "balance", Collections.emptyList()));
+        assertFalse(sc.canExecute(user, "statement", Collections.emptyList()));
         verify(user).sendMessage(eq("general.errors.no-island"));
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.BalanceCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.user.StatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testCanExecuteNoRank() {
         when(island.isAllowed(eq(user), any())).thenReturn(false);
-        assertFalse(bc.canExecute(user, "balance", Collections.emptyList()));
+        assertFalse(sc.canExecute(user, "statement", Collections.emptyList()));
         verify(user).sendMessage(eq("bank.errors.no-rank"));
 
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.BalanceCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.user.StatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testCanExecuteSuccess() {
-        assertTrue(bc.canExecute(user, "balance", Collections.emptyList()));
+        assertTrue(sc.canExecute(user, "statement", Collections.emptyList()));
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.BalanceCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.user.StatementCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testExecuteUserStringListOfString() {
-        assertTrue(bc.execute(user, "balance", Collections.emptyList()));
-        verify(user).sendMessage(eq("bank.balance.island-balance"), eq(TextVariables.NUMBER), eq("0.0"));
+        assertTrue(sc.execute(user, "statement", Collections.emptyList()));
+        verify(user).closeInventory();
+        verify(player).openInventory(any(Inventory.class));
     }
-
 }

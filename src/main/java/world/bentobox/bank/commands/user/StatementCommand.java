@@ -2,24 +2,18 @@ package world.bentobox.bank.commands.user;
 
 import java.util.List;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.commands.AbstractBankCommand;
 import world.bentobox.bank.commands.user.tabs.StatementTab;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.panels.builders.TabbedPanelBuilder;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.objects.Island;
 
 /**
  * @author tastybento
  *
  */
 public class StatementCommand extends AbstractBankCommand {
-
-
-    private @Nullable Island island;
 
     public StatementCommand(CompositeCommand parent) {
         super(parent, "statement");
