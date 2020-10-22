@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.bank.Bank;
+import world.bentobox.bank.commands.AbstractBankCommand;
 import world.bentobox.bank.commands.user.tabs.StatementTab;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.panels.builders.TabbedPanelBuilder;
@@ -15,7 +16,7 @@ import world.bentobox.bentobox.database.objects.Island;
  * @author tastybento
  *
  */
-public class StatementCommand extends CompositeCommand {
+public class StatementCommand extends AbstractBankCommand {
 
 
     private @Nullable Island island;
@@ -33,28 +34,7 @@ public class StatementCommand extends CompositeCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        // Check if there's the right number of arguments
-        if (!args.isEmpty()) {
-            this.showHelp(this, user);
-            return false;
-        }
-        // Check world
-        if (!this.getWorld().equals(user.getWorld())) {
-            user.sendMessage("general.errors.wrong-world");
-            return false;
-        }
-        // Get player's island
-        island = getIslands().getIsland(getWorld(), user);
-        if (island == null) {
-            user.sendMessage("general.errors.no-island");
-            return false;
-        }
-        // Check flag
-        if (!island.isAllowed(user, Bank.BANK_ACCESS)) {
-            user.sendMessage("bank.errors.no-rank");
-            return false;
-        }
-        return true;
+        return canAbstractExecute(user, label, args, 0);
     }
 
     @Override

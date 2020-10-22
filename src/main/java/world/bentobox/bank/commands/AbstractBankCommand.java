@@ -29,14 +29,13 @@ public abstract class AbstractBankCommand extends CompositeCommand {
     protected double value;
     protected User target;
 
-    @Override
-    public boolean canExecute(User user, String label, List<String> args) {
+    public boolean canAbstractExecute(User user, String label, List<String> args, int reqArgNum) {
         // Check world
         if (!this.getWorld().equals(user.getWorld())) {
             user.sendMessage("general.errors.wrong-world");
             return false;
         }
-        if (!checkArgs(user, args, 1)) {
+        if (!checkArgs(user, args, reqArgNum)) {
             return false;
         }
         // Check flag
@@ -54,7 +53,7 @@ public abstract class AbstractBankCommand extends CompositeCommand {
             return false;
         }
         // Get target's island
-        if (size == 1) {
+        if (size < 2) {
             island = getIslands().getIsland(getWorld(), user);
         } else {
             target = getAddon().getPlayers().getUser(args.get(0));
@@ -64,6 +63,7 @@ public abstract class AbstractBankCommand extends CompositeCommand {
             user.sendMessage("general.errors.no-island");
             return false;
         }
+        if (size == 0) return true;
         // Check value
         if (!NumberUtils.isNumber(args.get(size - 1))) {
             user.sendMessage("bank.errors.must-be-a-number");

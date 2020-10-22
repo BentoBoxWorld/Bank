@@ -3,17 +3,17 @@ package world.bentobox.bank.commands.user;
 import java.util.List;
 
 import world.bentobox.bank.Bank;
+import world.bentobox.bank.commands.AbstractBankCommand;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.objects.Island;
 
 /**
  * Provides the player's island bank balance
  * @author tastybento
  *
  */
-public class BalanceCommand extends CompositeCommand {
+public class BalanceCommand extends AbstractBankCommand {
 
     public BalanceCommand(CompositeCommand parent) {
         super(parent, "balance");
@@ -28,27 +28,7 @@ public class BalanceCommand extends CompositeCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        // Check if there's the right number of arguments
-        if (!args.isEmpty()) {
-            this.showHelp(this, user);
-            return false;
-        }
-        // Check world
-        if (!this.getWorld().equals(user.getWorld())) {
-            user.sendMessage("general.errors.wrong-world");
-            return false;
-        }
-        // Check flag
-        Island island = getIslands().getIsland(getWorld(), user);
-        if (island == null) {
-            user.sendMessage("general.errors.no-island");
-            return false;
-        }
-        if (!island.isAllowed(user, Bank.BANK_ACCESS)) {
-            user.sendMessage("bank.errors.no-rank");
-            return false;
-        }
-        return true;
+        return canAbstractExecute(user, label, args, 0);
     }
 
     @Override

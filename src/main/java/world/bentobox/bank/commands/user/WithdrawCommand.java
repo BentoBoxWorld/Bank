@@ -30,7 +30,7 @@ public class WithdrawCommand extends AbstractBankCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        if (!super.canExecute(user, label, args)) {
+        if (!canAbstractExecute(user, label, args, 1)) {
             return false;
         }
         // Check if the player has the balance

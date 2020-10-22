@@ -30,6 +30,11 @@ public class DepositCommand extends AbstractBankCommand {
     }
 
     @Override
+    public boolean canExecute(User user, String label, List<String> args) {
+        return canAbstractExecute(user, label, args, 1);
+    }
+
+    @Override
     public boolean execute(User user, String label, List<String> args) {
         // Check if the player has the balance
         VaultHook vault = ((Bank)this.getAddon()).getVault();
