@@ -1,14 +1,21 @@
 package world.bentobox.bank.data;
 
+/**
+ * Account history entry class
+ * @author tastybento
+ *
+ */
 public class AccountHistory {
     private final long timestamp;
     private final String name;
     private final double amount;
     private final TxType type;
     /**
-     * @param timestamp
-     * @param name
-     * @param amount
+     * Account history entry
+     * @param timestamp - time stamp
+     * @param name - name of user making the change
+     * @param amount - amount of change
+     * @type - type of change
      */
     public AccountHistory(long timestamp, String name, double amount, TxType type) {
         super();

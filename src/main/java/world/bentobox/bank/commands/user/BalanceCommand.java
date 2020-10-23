@@ -37,7 +37,7 @@ public class BalanceCommand extends AbstractBankCommand {
                 .getVault()
                 .format(((Bank)getAddon())
                         .getBankManager()
-                        .getBalance(user, getWorld())));
+                        .getBalance(island)));
         return true;
     }
 

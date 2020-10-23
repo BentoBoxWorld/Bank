@@ -94,6 +94,7 @@ public class WithdrawCommandTest {
 
         when(ic.getAddon()).thenReturn(addon);
         when(addon.getBankManager()).thenReturn(bankManager);
+        when(bankManager.getBalance(eq(island))).thenReturn(100D);
         when(addon.getVault()).thenReturn(vh);
         when(vh.format(anyDouble())).thenAnswer(i -> String.valueOf(i.getArgument(0, Double.class)));
 
@@ -217,10 +218,11 @@ public class WithdrawCommandTest {
      */
     @Test
     public void testExecuteUserStringListOfStringSuccess() {
+        testCanExecuteOneArgNumberSuccess();
         when(bankManager.withdraw(eq(user), anyDouble(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.SUCCESS));
         //testCanExecuteOneArgNumberSuccess();
-        assertTrue(wct.execute(user, "withdraw", Collections.emptyList()));
-        verify(vh).deposit(eq(user), eq(0D), eq(world));
-        verify(user).sendMessage(eq("bank.withdraw.success"), eq(TextVariables.NUMBER), eq("0.0"));
+        assertTrue(wct.execute(user, "withdraw", Collections.singletonList("123.30")));
+        verify(vh).deposit(eq(user), eq(123.3D), eq(world));
+        verify(user).sendMessage(eq("bank.withdraw.success"), eq(TextVariables.NUMBER), eq("100.0"));
     }
 }

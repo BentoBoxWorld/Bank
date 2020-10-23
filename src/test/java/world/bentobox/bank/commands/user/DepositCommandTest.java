@@ -96,7 +96,9 @@ public class DepositCommandTest {
 
         when(ic.getAddon()).thenReturn(addon);
         when(addon.getBankManager()).thenReturn(bankManager);
+        when(bankManager.getBalance(eq(island))).thenReturn(100D);
         when(addon.getVault()).thenReturn(vh);
+        when(vh.getBalance(eq(user), eq(world))).thenReturn(1000D);
         when(vh.format(anyDouble())).thenAnswer(i -> String.valueOf(i.getArgument(0, Double.class)));
         EconomyResponse er = new EconomyResponse(0, 0, ResponseType.SUCCESS, "");
         when(vh.withdraw(eq(user), anyDouble(), eq(world))).thenReturn(er);
@@ -220,10 +222,11 @@ public class DepositCommandTest {
      */
     @Test
     public void testExecuteUserStringListOfStringSuccess() {
+        testCanExecuteOneArgNumberSuccess();
         when(bankManager.deposit(eq(user), anyDouble(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.SUCCESS));
-        assertTrue(dct.execute(user, "deposit", Collections.emptyList()));
-        verify(vh).withdraw(eq(user), eq(0D), eq(world));
-        verify(user).sendMessage(eq("bank.deposit.success"), eq(TextVariables.NUMBER), eq("0.0"));
+        assertTrue(dct.execute(user, "deposit", Collections.singletonList("123.30")));
+        verify(vh).withdraw(eq(user), eq(123.3D), eq(world));
+        verify(user).sendMessage(eq("bank.deposit.success"), eq(TextVariables.NUMBER), eq("100.0"));
     }
 
     /**

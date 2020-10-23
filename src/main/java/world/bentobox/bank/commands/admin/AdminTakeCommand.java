@@ -44,7 +44,7 @@ public class AdminTakeCommand extends AbstractAdminBankCommand {
                 break;
             case SUCCESS:
                 VaultHook vault = ((Bank)this.getAddon()).getVault();
-                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(user, getWorld())));
+                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(island)));
                 break;
             default:
                 user.sendMessage("bank.errors.bank-error");

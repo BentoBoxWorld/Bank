@@ -59,7 +59,7 @@ public class WithdrawCommand extends AbstractBankCommand {
                 break;
             default:
                 vault.deposit(user, value, getWorld());
-                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(user, getWorld())));
+                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(island)));
                 break;
 
             }

@@ -58,7 +58,7 @@ public class DepositCommand extends AbstractBankCommand {
                     user.sendMessage("general.errors.no-island");
                     break;
                 case SUCCESS:
-                    user.sendMessage("bank.deposit.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(user, getWorld())));
+                    user.sendMessage("bank.deposit.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(island)));
                     break;
                 default:
                     break;

@@ -155,6 +155,11 @@ public class BankManager implements Listener {
         return this.set(user, island.getUniqueId(), amount, (account.getBalance() - amount), type);
     }
 
+    /**
+     * Get balance for island
+     * @param island - island
+     * @return balance. 0 if unknown
+     */
     public double getBalance(@Nullable Island island) {
         if (island == null) {
             return 0D;
@@ -162,10 +167,21 @@ public class BankManager implements Listener {
         return balances.getOrDefault(island.getUniqueId(), 0D);
     }
 
+    /**
+     * Get balance for user in world
+     * @param user - user
+     * @param world - world
+     * @return balance. 0 if unknown
+     */
     public double getBalance(User user, World world) {
         return getBalance(addon.getIslands().getIsland(world, user));
     }
 
+    /**
+     * Get history for island
+     * @param island - island
+     * @return list of {@link AccountHistory}
+     */
     public List<AccountHistory> getHistory(Island island) {
         try {
             BankAccounts account = getAccount(island.getUniqueId());
