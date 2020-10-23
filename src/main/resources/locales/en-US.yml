@@ -13,7 +13,7 @@ bank:
     set:
       parameters: "<player> <amount>"
       description: "set amount in player's island account"
-      success: "[name]'s account set to [number]."
+      success: "&a [name]'s account set to [number]."
     statement:
       parameters: "<player>"
       description: "view island bank statement for player"
@@ -42,7 +42,7 @@ bank:
     deposit: Deposit
     description: "show your island bank history"
     give: "Admin Give"
-    latest: "Sort by latest"
+    latest: "Sort by newest"
     oldest: "Sort by oldest"
     set: "Admin Set"
     syntax: |
