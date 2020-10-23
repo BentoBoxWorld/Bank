@@ -27,3 +27,21 @@ permissions:
   '[gamemode].bank.user.baltop':
     description: Player can use bank baltop command
     default: true
+  '[gamemode].bank.admin':
+    description: Player can use admin command
+    default: op
+  '[gamemode].bank.admin.balance':
+    description: Player can use admin balance command
+    default: op
+  '[gamemode].bank.admin.give':
+    description: Player can use the admin give command
+    default: op
+  '[gamemode].bank.admin.take':
+    description: Player can use admin take command
+    default: op
+  '[gamemode].bank.admin.statement':
+    description: Player can use the admin statement command
+    default: op
+  '[gamemode].bank.admin.set':
+    description: Player can use admin set command
+    default: op

@@ -11,9 +11,5 @@ bank:
   commands:
     # User command
     user: bank
-    # User command aliases
-    user-aliases: 
     # Admin command
     admin: bank
-    # Admin command aliases
-    admin-aliases: 
