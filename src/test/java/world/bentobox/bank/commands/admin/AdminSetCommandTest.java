@@ -162,9 +162,9 @@ public class AdminSetCommandTest {
      */
     @Test
     public void testCanExecuteUnknownTarget() {
-        when(im.getIsland(eq(world), eq(user))).thenReturn(null);
+        when(pm.getUser(anyString())).thenReturn(null);
         assertFalse(bc.canExecute(user, "set", Arrays.asList("bonne", "100")));
-        verify(user).sendMessage(eq("general.errors.no-island"));
+        verify(user).sendMessage(eq("general.errors.unknown-player"), eq(TextVariables.NAME), eq("bonne"));
     }
 
     /**

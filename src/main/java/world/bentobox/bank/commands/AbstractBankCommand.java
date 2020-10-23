@@ -12,6 +12,7 @@ import org.apache.commons.lang.math.NumberUtils;
 
 import world.bentobox.bank.Bank;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
+import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 
@@ -99,6 +100,10 @@ public abstract class AbstractBankCommand extends CompositeCommand {
             island = getIslands().getIsland(getWorld(), user);
         } else {
             target = getAddon().getPlayers().getUser(args.get(0));
+            if (target == null) {
+                user.sendMessage("general.errors.unknown-player", TextVariables.NAME, args.get(0));
+                return false;
+            }
             island = getIslands().getIsland(getWorld(), target);
         }
         if (island == null) {
