@@ -12,7 +12,7 @@ import world.bentobox.bentobox.api.user.User;
  * @author tastybento
  *
  */
-public class AdminStatementCommand extends AdminCommand {
+public class AdminStatementCommand extends AbstractAdminBankCommand {
 
     public AdminStatementCommand(CompositeCommand parent) {
         super(parent, "statement");
@@ -28,18 +28,7 @@ public class AdminStatementCommand extends AdminCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        // Check if there's the right number of arguments
-        if (args.size() != 1) {
-            this.showHelp(this, user);
-            return false;
-        }
-        // Get target's island
-        island = getIslands().getIsland(getWorld(), getAddon().getPlayers().getUser(args.get(0)));
-        if (island == null) {
-            user.sendMessage("general.errors.no-island");
-            return false;
-        }
-        return true;
+        return canAbstractExecute(user, args, RequestType.ADMIN_STATEMENT);
     }
 
     @Override

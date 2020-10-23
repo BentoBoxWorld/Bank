@@ -3,7 +3,10 @@
  */
 package world.bentobox.bank.commands;
 
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -29,31 +32,70 @@ public abstract class AbstractBankCommand extends CompositeCommand {
     protected double value;
     protected User target;
 
-    public boolean canAbstractExecute(User user, String label, List<String> args, int reqArgNum) {
+    protected enum RequestType {
+        USER_BALANCE,
+        USER_DEPOSIT,
+        USER_WITHDRAWAL,
+        ADMIN_SET,
+        ADMIN_BALANCE,
+        ADMIN_GIVE,
+        ADMIN_TAKE,
+        USER_STATEMENT,
+        ADMIN_STATEMENT
+    }
+
+    /**
+     * A map of the number of args required for each request type
+     */
+    private static final Map<RequestType, Integer> ARG_SIZE;
+    static {
+        Map<RequestType, Integer> as = new EnumMap<>(RequestType.class);
+        as.put(RequestType.USER_BALANCE, 0);
+        as.put(RequestType.USER_DEPOSIT, 1);
+        as.put(RequestType.USER_WITHDRAWAL, 1);
+        as.put(RequestType.USER_STATEMENT, 0);
+        as.put(RequestType.ADMIN_BALANCE, 1);
+        as.put(RequestType.ADMIN_GIVE, 2);
+        as.put(RequestType.ADMIN_SET, 2);
+        as.put(RequestType.ADMIN_STATEMENT, 1);
+        as.put(RequestType.ADMIN_TAKE, 2);
+
+        ARG_SIZE = Collections.unmodifiableMap(as);
+    }
+
+    /**
+     * @param user - user
+     * @param args - args
+     * @param reqArgNum - required number of args
+     * @return true if can execute, false if not
+     */
+    public boolean canAbstractExecute(User user, List<String> args, RequestType type) {
         // Check world
         if (!this.getWorld().equals(user.getWorld())) {
             user.sendMessage("general.errors.wrong-world");
             return false;
         }
-        if (!checkArgs(user, args, reqArgNum)) {
+        if (!checkArgs(user, args, type)) {
             return false;
         }
         // Check flag
-        if (!island.isAllowed(user, Bank.BANK_ACCESS)) {
+        if (type.name().startsWith("USER") && !island.isAllowed(user, Bank.BANK_ACCESS)) {
             user.sendMessage("bank.errors.no-rank");
             return false;
         }
         return true;
     }
 
-    protected boolean checkArgs(User user, List<String> args, int size) {
+    protected boolean checkArgs(User user, List<String> args, RequestType type) {
         // Check if there's the right number of arguments
+        int size = ARG_SIZE.get(type);
         if (args.size() != size) {
             this.showHelp(this, user);
             return false;
         }
         // Get target's island
-        if (size < 2) {
+        boolean isUser = type.name().startsWith("USER");
+        if (isUser) {
             island = getIslands().getIsland(getWorld(), user);
         } else {
             target = getAddon().getPlayers().getUser(args.get(0));
@@ -63,13 +105,14 @@ public abstract class AbstractBankCommand extends CompositeCommand {
             user.sendMessage("general.errors.no-island");
             return false;
         }
-        if (size == 0) return true;
+        if (args.size() == 0 || (!isUser && args.size() == 1)) return true;
         // Check value
-        if (!NumberUtils.isNumber(args.get(size - 1))) {
+        String value = args.get(args.size() - 1);
+        if (!NumberUtils.isNumber(value)) {
             user.sendMessage("bank.errors.must-be-a-number");
             return false;
         }
-        return parseValue(user, args.get(size - 1));
+        return parseValue(user, value);
     }
 
     protected boolean parseValue(User user, String arg) {

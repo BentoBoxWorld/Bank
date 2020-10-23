@@ -14,7 +14,7 @@ import world.bentobox.bentobox.hooks.VaultHook;
  * @author tastybento
  *
  */
-public class AdminSetCommand extends AdminCommand {
+public class AdminSetCommand extends AbstractAdminBankCommand {
 
     public AdminSetCommand(CompositeCommand parent) {
         super(parent, "set");
@@ -29,7 +29,7 @@ public class AdminSetCommand extends AdminCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        return checkArgs(user, args, 2);
+        return checkArgs(user, args, RequestType.ADMIN_SET);
     }
 
     @Override

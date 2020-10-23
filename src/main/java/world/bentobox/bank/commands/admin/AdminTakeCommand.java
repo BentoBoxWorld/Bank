@@ -13,7 +13,7 @@ import world.bentobox.bentobox.hooks.VaultHook;
  * @author tastybento
  *
  */
-public class AdminTakeCommand extends AdminCommand {
+public class AdminTakeCommand extends AbstractAdminBankCommand {
 
     public AdminTakeCommand(CompositeCommand parent) {
         super(parent, "take");
@@ -28,13 +28,16 @@ public class AdminTakeCommand extends AdminCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        return checkArgs(user, args, 2);
+        return checkArgs(user, args, RequestType.ADMIN_TAKE);
     }
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
         // Success
-        ((Bank)getAddon()).getBankManager().withdraw(user, island, value, TxType.TAKE).thenAccept(result -> {
+        ((Bank)getAddon())
+        .getBankManager()
+        .withdraw(user, island, value, TxType.TAKE)
+        .thenAccept(result -> {
             switch (result) {
             case FAILURE_LOW_BALANCE:
                 user.sendMessage("bank.errors.low-balance");

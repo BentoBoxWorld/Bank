@@ -28,7 +28,7 @@ public class StatementCommand extends AbstractBankCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        return canAbstractExecute(user, label, args, 0);
+        return canAbstractExecute(user, args, RequestType.USER_STATEMENT);
     }
 
     @Override

@@ -14,7 +14,7 @@ import world.bentobox.bentobox.hooks.VaultHook;
  * @author tastybento
  *
  */
-public class AdminGiveCommand extends AdminCommand {
+public class AdminGiveCommand extends AbstractAdminBankCommand {
 
     public AdminGiveCommand(CompositeCommand parent) {
         super(parent, "give");
@@ -29,13 +29,16 @@ public class AdminGiveCommand extends AdminCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        return checkArgs(user, args, 2);
+        return checkArgs(user, args, RequestType.ADMIN_GIVE);
     }
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
         // Success
-        ((Bank)getAddon()).getBankManager().deposit(user, island, value, TxType.GIVE).thenAccept(result -> {
+        ((Bank)getAddon())
+        .getBankManager()
+        .deposit(user, island, value, TxType.GIVE)
+        .thenAccept(result -> {
             if (result == BankResponse.SUCCESS) {
                 VaultHook vault = ((Bank)this.getAddon()).getVault();
                 user.sendMessage("bank.deposit.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(user, getWorld())));

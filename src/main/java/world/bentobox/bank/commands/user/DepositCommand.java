@@ -31,7 +31,7 @@ public class DepositCommand extends AbstractBankCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        return canAbstractExecute(user, label, args, 1);
+        return canAbstractExecute(user, args, RequestType.USER_DEPOSIT);
     }
 
     @Override
