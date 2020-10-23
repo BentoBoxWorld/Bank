@@ -105,14 +105,14 @@ public abstract class AbstractBankCommand extends CompositeCommand {
             user.sendMessage("general.errors.no-island");
             return false;
         }
-        if (args.size() == 0 || (!isUser && args.size() == 1)) return true;
+        if (args.isEmpty() || (!isUser && args.size() == 1)) return true;
         // Check value
-        String value = args.get(args.size() - 1);
-        if (!NumberUtils.isNumber(value)) {
+        String v = args.get(args.size() - 1);
+        if (!NumberUtils.isNumber(v)) {
             user.sendMessage("bank.errors.must-be-a-number");
             return false;
         }
-        return parseValue(user, value);
+        return parseValue(user, v);
     }
 
     protected boolean parseValue(User user, String arg) {
