@@ -20,7 +20,7 @@ import world.bentobox.bentobox.managers.RanksManager;
  */
 public class Bank extends Addon {
 
-    private final Config<Settings> config;
+    private final Config<Settings> config = new Config<>(this, Settings.class);
     private @Nullable Settings settings;
     private VaultHook vault;
     private BankManager bankManager;
@@ -29,10 +29,6 @@ public class Bank extends Addon {
             .type(Type.PROTECTION)
             .clickHandler(new CycleClick("BANK_ACCESS", RanksManager.MEMBER_RANK, RanksManager.OWNER_RANK))
             .build();
-
-    public Bank() {
-        config = new Config<>(this, Settings.class);
-    }
 
     @Override
     public void onEnable() {
@@ -51,7 +47,7 @@ public class Bank extends Addon {
         saveDefaultConfig();
         settings = config.loadConfigObject();
         if (settings == null) {
-            // Settings did no load correctly. Disable.
+            // Settings did not load correctly. Disable.
             logError("Settings did not load correctly - disabling Bank - please check config.yml");
             this.setState(State.DISABLED);
             return;
