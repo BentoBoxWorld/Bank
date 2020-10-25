@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.bank.Bank;
@@ -25,11 +26,13 @@ public class BalTopTab implements Tab {
     private final User user;
     private final boolean sort;
     private final Bank addon;
+    private final World world;
     private static final Comparator<Entry<String, Double>> comparator = (h1, h2) -> Double.compare(h1.getValue(), h2.getValue());
 
 
-    public BalTopTab(Bank addon, User user, boolean sort) {
+    public BalTopTab(Bank addon, World world, User user, boolean sort) {
         this.addon = addon;
+        this.world = world;
         this.user = user;
         this.sort = sort;
     }
@@ -47,9 +50,9 @@ public class BalTopTab implements Tab {
 
     @Override
     public List<@Nullable PanelItem> getPanelItems() {
-        return addon.getBankManager().getBalances().entrySet().stream()
+        return addon.getBankManager().getBalances(world).entrySet().stream()
                 .sorted(sort ? comparator.reversed() : comparator)
-                .limit(50)
+                .limit(addon.getSettings().getRanksNumber())
                 .map(ah -> addon.getIslands().getIslandById(ah.getKey())
                         .filter(i -> i.getOwner() != null)
                         .map(island -> new PanelItemBuilder()

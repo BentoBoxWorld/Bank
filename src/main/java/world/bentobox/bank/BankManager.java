@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +27,7 @@ import world.bentobox.bentobox.api.events.island.IslandEvent.IslandPreclearEvent
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.util.Util;
 
 /**
  * @author tastybento
@@ -69,7 +71,7 @@ public class BankManager implements Listener {
      */
     public CompletableFuture<BankResponse> deposit(User user, double amount, World world) {
         // Get player's account
-        Island island = addon.getIslands().getIsland(world, user);
+        Island island = addon.getIslands().getIsland(Util.getWorld(world), user);
         if (island == null) {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_NO_ISLAND);
         }
@@ -120,7 +122,7 @@ public class BankManager implements Listener {
      */
     public CompletableFuture<BankResponse> withdraw(User user, double amount, World world) {
         // Get player's island
-        Island island = addon.getIslands().getIsland(world, user);
+        Island island = addon.getIslands().getIsland(Util.getWorld(world), user);
         if (island == null) {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_NO_ISLAND);
         }
@@ -174,7 +176,7 @@ public class BankManager implements Listener {
      * @return balance. 0 if unknown
      */
     public double getBalance(User user, World world) {
-        return getBalance(addon.getIslands().getIsland(world, user));
+        return getBalance(addon.getIslands().getIsland(Util.getWorld(world), user));
     }
 
     /**
@@ -199,10 +201,15 @@ public class BankManager implements Listener {
     }
 
     /**
+     * Get balances for a world
+     * @param world - world
      * @return the balances
      */
-    public Map<String, Double> getBalances() {
-        return balances;
+    public Map<String, Double> getBalances(World world) {
+        return balances.entrySet().stream()
+                .filter(en -> addon.getIslands().getIslandById(en.getKey())
+                        .map(i -> i.getWorld().equals(Util.getWorld(world))).orElse(false))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 
     /**

@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.bank;
 
 import static org.junit.Assert.assertEquals;
@@ -49,13 +46,14 @@ import world.bentobox.bentobox.database.DatabaseSetup;
 import world.bentobox.bentobox.database.DatabaseSetup.DatabaseType;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.managers.IslandsManager;
+import world.bentobox.bentobox.util.Util;
 
 /**
  * @author tastybento
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, BentoBox.class, DatabaseSetup.class})
+@PrepareForTest({Bukkit.class, BentoBox.class, DatabaseSetup.class, Util.class})
 public class BankManagerTest {
 
     @Mock
@@ -118,7 +116,8 @@ public class BankManagerTest {
         island.setCenter(location);
         when(im.getIsland(eq(world), eq(user))).thenReturn(island);
 
-
+        PowerMockito.mockStatic(Util.class);
+        when(Util.getWorld(any())).thenAnswer(arg -> arg.getArgument(0, World.class));
 
         bm = new BankManager(bank);
     }
@@ -226,7 +225,7 @@ public class BankManagerTest {
      */
     @Test
     public void testGetBalances() {
-        assertTrue(bm.getBalances().isEmpty());
+        assertTrue(bm.getBalances(world).isEmpty());
     }
 
     /**

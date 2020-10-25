@@ -42,13 +42,14 @@ import world.bentobox.bentobox.hooks.VaultHook;
 import world.bentobox.bentobox.managers.IslandWorldManager;
 import world.bentobox.bentobox.managers.IslandsManager;
 import world.bentobox.bentobox.managers.PlayersManager;
+import world.bentobox.bentobox.util.Util;
 
 /**
  * @author tastybento
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, BentoBox.class})
+@PrepareForTest({Bukkit.class, BentoBox.class, Util.class})
 public class AdminStatementCommandTest {
 
     @Mock
@@ -116,6 +117,10 @@ public class AdminStatementCommandTest {
         when(plugin.getSettings()).thenReturn(new Settings());
 
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
+
+        PowerMockito.mockStatic(Util.class);
+        when(Util.getWorld(any())).thenAnswer(arg -> arg.getArgument(0, World.class));
+
         bc = new AdminStatementCommand(ic);
     }
 

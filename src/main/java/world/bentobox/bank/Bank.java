@@ -60,6 +60,7 @@ public class Bank extends Addon {
         // Bank Manager
         bankManager = new BankManager(this);
         bankManager.loadBalances();
+        PhManager placeholderManager = new PhManager(this, bankManager);
         // Register commands with GameModes
         getPlugin().getAddonsManager().getGameModeAddons().stream()
         .filter(gm -> settings.getGameModes().stream().anyMatch(gm.getDescription().getName()::equalsIgnoreCase))
@@ -67,6 +68,10 @@ public class Bank extends Addon {
             // Register command
             gm.getPlayerCommand().ifPresent(playerCmd -> new UserCommand(this, playerCmd, settings.getUserCommand()));
             gm.getAdminCommand().ifPresent(adminCmd -> new AdminCommand(this, adminCmd, settings.getAdminCommand()));
+            // Register placeholders
+            if (!placeholderManager.registerPlaceholders(gm)) {
+                this.logError("Could not register placeholders because there is no PlaceholderManager");
+            }
             // Log
             this.log("Hooking into " + gm.getDescription().getName());
         });
@@ -97,6 +102,5 @@ public class Bank extends Addon {
     public BankManager getBankManager() {
         return bankManager;
     }
-
 
 }

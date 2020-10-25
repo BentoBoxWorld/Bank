@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.bank;
 
 import java.util.ArrayList;
@@ -31,6 +28,13 @@ public class Settings implements ConfigObject {
     @ConfigComment("Admin command")
     @ConfigEntry(path = "bank.commands.admin")
     private String adminCommand = "bank";
+
+    @ConfigComment("This is how many ranks will be registered with the placeholder API.")
+    @ConfigComment("There are two placeholders per rank:")
+    @ConfigComment("%Bank_[gamemode]_top_name_1% with island level: %Bank_[gamemode]_top_value_1%")
+    @ConfigComment("[gamemode] is bskyblock, acidisland, etc.")
+    @ConfigEntry(path = "bank.placeholders.number-of-ranks")
+    private int ranksNumber = 10;
 
     /**
      * @return the gameModes
@@ -72,6 +76,20 @@ public class Settings implements ConfigObject {
      */
     public void setAdminCommand(String adminCommand) {
         this.adminCommand = adminCommand;
+    }
+
+    /**
+     * @return the ranksNumber
+     */
+    public int getRanksNumber() {
+        return ranksNumber;
+    }
+
+    /**
+     * @param ranksNumber the ranksNumber to set
+     */
+    public void setRanksNumber(int ranksNumber) {
+        this.ranksNumber = ranksNumber;
     }
 
 

@@ -48,8 +48,8 @@ public class BalTopCommand extends CompositeCommand {
         new TabbedPanelBuilder()
         .user(user)
         .world(user.getWorld())
-        .tab(1, new BalTopTab(((Bank)getAddon()), user, true))
-        .tab(2, new BalTopTab(((Bank)getAddon()), user, false))
+        .tab(1, new BalTopTab(((Bank)getAddon()), getWorld(), user, true))
+        .tab(2, new BalTopTab(((Bank)getAddon()), getWorld(), user, false))
         .startingSlot(1)
         .size(54)
         .build().openPanel();

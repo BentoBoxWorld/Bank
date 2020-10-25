@@ -15,6 +15,7 @@ import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.util.Util;
 
 /**
  * @author tastybento
@@ -72,7 +73,7 @@ public abstract class AbstractBankCommand extends CompositeCommand {
      */
     public boolean canAbstractExecute(User user, List<String> args, RequestType type) {
         // Check world
-        if (!this.getWorld().equals(user.getWorld())) {
+        if (!this.getWorld().equals(Util.getWorld(user.getWorld()))) {
             user.sendMessage("general.errors.wrong-world");
             return false;
         }

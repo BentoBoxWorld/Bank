@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -34,13 +35,14 @@ import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.hooks.VaultHook;
 import world.bentobox.bentobox.managers.IslandWorldManager;
 import world.bentobox.bentobox.managers.IslandsManager;
+import world.bentobox.bentobox.util.Util;
 
 /**
  * @author tastybento
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(BentoBox.class)
+@PrepareForTest({BentoBox.class, Util.class})
 public class BalanceCommandTest {
 
     @Mock
@@ -94,6 +96,9 @@ public class BalanceCommandTest {
         when(vh.format(anyDouble())).thenAnswer(i -> String.valueOf(i.getArgument(0, Double.class)));
         EconomyResponse er = new EconomyResponse(0, 0, ResponseType.SUCCESS, "");
         when(vh.withdraw(eq(user), anyDouble(), eq(world))).thenReturn(er);
+
+        PowerMockito.mockStatic(Util.class);
+        when(Util.getWorld(any())).thenAnswer(arg -> arg.getArgument(0, World.class));
 
         bc = new BalanceCommand(ic);
     }
