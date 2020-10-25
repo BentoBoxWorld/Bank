@@ -71,7 +71,7 @@ public class BankManager implements Listener {
      */
     public CompletableFuture<BankResponse> deposit(User user, double amount, World world) {
         // Get player's account
-        Island island = addon.getIslands().getIsland(Util.getWorld(world), user);
+        Island island = addon.getIslands().getIsland(Objects.requireNonNull(Util.getWorld(world)), user);
         if (island == null) {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_NO_ISLAND);
         }
@@ -122,7 +122,7 @@ public class BankManager implements Listener {
      */
     public CompletableFuture<BankResponse> withdraw(User user, double amount, World world) {
         // Get player's island
-        Island island = addon.getIslands().getIsland(Util.getWorld(world), user);
+        Island island = addon.getIslands().getIsland(Objects.requireNonNull(Util.getWorld(world)), user);
         if (island == null) {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_NO_ISLAND);
         }
@@ -176,7 +176,7 @@ public class BankManager implements Listener {
      * @return balance. 0 if unknown
      */
     public double getBalance(User user, World world) {
-        return getBalance(addon.getIslands().getIsland(Util.getWorld(world), user));
+        return getBalance(addon.getIslands().getIsland(Objects.requireNonNull(Util.getWorld(world)), user));
     }
 
     /**
@@ -191,7 +191,7 @@ public class BankManager implements Listener {
                 String[] split = en.getValue().split(":");
                 if (split.length == 3) {
                     TxType type = Enums.getIfPresent(TxType.class, split[1]).or(TxType.UNKNOWN);
-                    return new AccountHistory(en.getKey(), split[0], Double.valueOf(split[2]), type);
+                    return new AccountHistory(en.getKey(), split[0], Double.parseDouble(split[2]), type);
                 }
                 return null;
             }).filter(Objects::nonNull).collect(Collectors.toList());

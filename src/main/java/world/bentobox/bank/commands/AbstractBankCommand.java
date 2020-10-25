@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.bank.commands;
 
 import java.util.Collections;
@@ -23,9 +20,6 @@ import world.bentobox.bentobox.util.Util;
  */
 public abstract class AbstractBankCommand extends CompositeCommand {
 
-    protected AbstractBankCommand(Bank bank, CompositeCommand adminCmd, String adminCommand) {
-        super(bank, adminCmd, adminCommand);
-    }
     protected AbstractBankCommand(CompositeCommand parent, String string) {
         super(parent, string);
     }
@@ -68,7 +62,6 @@ public abstract class AbstractBankCommand extends CompositeCommand {
     /**
      * @param user - user
      * @param args - args
-     * @param reqArgNum - required number of args
      * @return true if can execute, false if not
      */
     public boolean canAbstractExecute(User user, List<String> args, RequestType type) {

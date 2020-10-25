@@ -32,7 +32,7 @@ public class StatementTab implements Tab {
     private final @Nullable Island island;
     private final boolean sort;
     private final Bank addon;
-    private static final Comparator<AccountHistory> comparator = (h1, h2) -> Long.compare(h1.getTimestamp(), h2.getTimestamp());
+    private static final Comparator<AccountHistory> comparator = Comparator.comparingLong(AccountHistory::getTimestamp);
 
     private static final Map<TxType, MaterialText> ICON_TEXT;
     static {
@@ -67,6 +67,7 @@ public class StatementTab implements Tab {
 
     @Override
     public List<@Nullable PanelItem> getPanelItems() {
+        if (island == null) return Collections.emptyList();
         return addon.getBankManager().getHistory(island).stream()
                 .sorted(sort ? comparator.reversed() : comparator)
                 .map(ah -> {

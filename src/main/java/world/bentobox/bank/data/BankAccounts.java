@@ -25,7 +25,7 @@ public class BankAccounts implements DataObject {
     private double balance;
 
     @Expose
-    private Map<Long, String> history = new TreeMap<>();
+    private final Map<Long, String> history = new TreeMap<>();
 
     @Override
     public String getUniqueId() {
@@ -56,13 +56,6 @@ public class BankAccounts implements DataObject {
      */
     public Map<Long, String> getHistory() {
         return history;
-    }
-
-    /**
-     * @param history the history to set
-     */
-    public void setHistory(Map<Long, String> history) {
-        this.history = history;
     }
 
 }

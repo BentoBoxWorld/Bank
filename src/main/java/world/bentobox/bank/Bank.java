@@ -85,7 +85,7 @@ public class Bank extends Addon {
     /**
      * @return the settings
      */
-    public Settings getSettings() {
+    public @Nullable Settings getSettings() {
         return settings;
     }
 

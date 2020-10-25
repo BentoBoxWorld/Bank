@@ -77,10 +77,9 @@ public class AdminStatementCommandTest {
     @Mock
     private Player player;
     /**
-     * @throws java.lang.Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // Set up plugin
         BentoBox plugin = mock(BentoBox.class);
         Whitebox.setInternalState(BentoBox.class, "instance", plugin);
@@ -138,7 +137,7 @@ public class AdminStatementCommandTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.admin.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testCanExecuteArgsNoArgs() {
@@ -147,7 +146,7 @@ public class AdminStatementCommandTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.admin.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testCanExecuteNoIsland() {
@@ -157,7 +156,7 @@ public class AdminStatementCommandTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.admin.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testCanExecuteUnknownTarget() {
@@ -166,7 +165,7 @@ public class AdminStatementCommandTest {
         verify(user).sendMessage(eq("general.errors.unknown-player"), eq(TextVariables.NAME), eq("bonne"));    }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.admin.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testCanExecuteNoRank() {
@@ -176,7 +175,7 @@ public class AdminStatementCommandTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.admin.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testCanExecuteSuccess() {
@@ -184,7 +183,7 @@ public class AdminStatementCommandTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.commands.user.AdminStatementCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     * Test method for {@link world.bentobox.bank.commands.admin.AdminStatementCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
     public void testExecuteUserStringListOfString() {

@@ -2,7 +2,6 @@ package world.bentobox.bank.commands.user;
 
 import java.util.List;
 
-import world.bentobox.bank.Bank;
 import world.bentobox.bank.commands.AbstractBankCommand;
 import world.bentobox.bank.commands.user.tabs.StatementTab;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -39,8 +38,8 @@ public class StatementCommand extends AbstractBankCommand {
         new TabbedPanelBuilder()
         .user(user)
         .world(user.getWorld())
-        .tab(1, new StatementTab(((Bank)getAddon()), user, island, true))
-        .tab(2, new StatementTab(((Bank)getAddon()), user, island, false))
+        .tab(1, new StatementTab(getAddon(), user, island, true))
+        .tab(2, new StatementTab(getAddon(), user, island, false))
         .startingSlot(1)
         .size(54)
         .build().openPanel();

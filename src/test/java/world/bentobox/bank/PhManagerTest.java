@@ -74,10 +74,9 @@ public class PhManagerTest {
 
 
     /**
-     * @throws java.lang.Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         AddonDescription desc = new AddonDescription.Builder("main", "AcidIsland", "1.0.2").build();
         when(gm.getDescription()).thenReturn(desc);
@@ -87,7 +86,7 @@ public class PhManagerTest {
         when(user.getWorld()).thenReturn(world);
         when(gm.inWorld(eq(world))).thenReturn(true);
         VaultHook vh = mock(VaultHook.class);
-        when(vh.format(anyDouble())).thenAnswer(args -> "$" + String.valueOf(args.getArgument(0, Double.class)));
+        when(vh.format(anyDouble())).thenAnswer(args -> "$" + args.getArgument(0, Double.class));
         when(addon.getVault()).thenReturn(vh);
         when(addon.getIslands()).thenReturn(im);
         when(user.getLocation()).thenReturn(location);
@@ -199,7 +198,7 @@ public class PhManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#checkCache(int)}.
+     * Test method for {@link world.bentobox.bank.PhManager#checkCache(World, int)}.
      */
     @Test
     public void testCheckCache() {
@@ -208,7 +207,7 @@ public class PhManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#checkCache(int)}.
+     * Test method for {@link world.bentobox.bank.PhManager#checkCache(World, int)}.
      */
     @Test
     public void testCheckCacheWithBalances() {
@@ -228,12 +227,12 @@ public class PhManagerTest {
         when(bm.getBalances(world)).thenReturn(map);
         for (int i = 1; i < 11; i++) {
             pm.checkCache(world, i);
-            assertEquals(pm.getBalances().get(i-1), "$" + String.valueOf(map.get(pm.getNames().get(i-1))));
+            assertEquals(pm.getBalances().get(i-1), "$" + map.get(pm.getNames().get(i - 1)));
         }
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#checkCache(int)}.
+     * Test method for {@link world.bentobox.bank.PhManager#checkCache(World, int)}.
      */
     @Test
     public void testCheckCacheNoNamesChange() {
@@ -244,7 +243,7 @@ public class PhManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#checkCache(int)}.
+     * Test method for {@link world.bentobox.bank.PhManager#checkCache(World, int)}.
      */
     @Test
     public void testCheckCacheNoChange() {
@@ -257,7 +256,7 @@ public class PhManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#checkCache(int)}.
+     * Test method for {@link world.bentobox.bank.PhManager#checkCache(World, int)}.
      */
     @Test
     public void testCheckCacheOutOfBounds() {

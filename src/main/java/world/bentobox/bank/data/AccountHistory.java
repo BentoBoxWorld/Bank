@@ -15,7 +15,7 @@ public class AccountHistory {
      * @param timestamp - time stamp
      * @param name - name of user making the change
      * @param amount - amount of change
-     * @type - type of change
+     * @param type - type of change
      */
     public AccountHistory(long timestamp, String name, double amount, TxType type) {
         super();

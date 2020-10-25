@@ -2,6 +2,7 @@ package world.bentobox.bank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.World;
 
@@ -20,7 +21,7 @@ public class PhManager {
     private final BankManager bankManager;
     private final Bank addon;
     private List<String> names = new ArrayList<>();
-    private List<String> balances = new ArrayList<>();
+    private final List<String> balances = new ArrayList<>();
     private long lastSorted = System.currentTimeMillis();
     private static final long CACHETIME = 10000;
 
@@ -47,7 +48,7 @@ public class PhManager {
                 gm.getDescription().getName().toLowerCase() + "_visited_island_balance", user -> getVisitedIslandBalance(gm, user));
 
         // Register Ranked Placeholders
-        for (int i = 1; i <= addon.getSettings().getRanksNumber(); i++) {
+        for (int i = 1; i <= Objects.requireNonNull(addon.getSettings()).getRanksNumber(); i++) {
             final int rank = i;
             // Name
             plugin.getPlaceholdersManager().registerPlaceholder(addon,
@@ -60,6 +61,7 @@ public class PhManager {
     }
 
     String getVisitedIslandBalance(GameModeAddon gm, User user) {
+        if (user == null || user.getLocation() == null) return "";
         if (!gm.inWorld(user.getWorld())) return addon.getVault().format(0D);
         return addon.getIslands().getIslandAt(user.getLocation())
                 .map(island -> addon.getVault().format(bankManager.getBalance(island)))
@@ -83,7 +85,7 @@ public class PhManager {
 
     int checkCache(World world, int rank) {
         if (rank < 1) rank = 1;
-        if (rank > addon.getSettings().getRanksNumber()) rank = addon.getSettings().getRanksNumber();
+        if (rank > Objects.requireNonNull(addon.getSettings()).getRanksNumber()) rank = addon.getSettings().getRanksNumber();
         if (names.isEmpty() || (System.currentTimeMillis() - lastSorted) > CACHETIME) {
             // Clear the old top
             names.clear();

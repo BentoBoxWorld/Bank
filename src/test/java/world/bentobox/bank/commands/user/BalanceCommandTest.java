@@ -66,10 +66,9 @@ public class BalanceCommandTest {
     // Class under test
     private BalanceCommand bc;
     /**
-     * @throws java.lang.Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // Set up plugin
         BentoBox plugin = mock(BentoBox.class);
         Whitebox.setInternalState(BentoBox.class, "instance", plugin);

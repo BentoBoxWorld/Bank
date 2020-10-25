@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.bank.commands.user;
 
 import static org.junit.Assert.assertEquals;
@@ -76,10 +73,9 @@ public class StatementCommandTest {
     private Player player;
 
     /**
-     * @throws java.lang.Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // Set up plugin
         BentoBox plugin = mock(BentoBox.class);
         Whitebox.setInternalState(BentoBox.class, "instance", plugin);

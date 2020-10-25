@@ -32,7 +32,7 @@ The default player command is `bank` and it can be changed in the config.yml. So
 * `bank deposit <amount>` - deposit money into the island bank
 * `bank withdraw <amount>` - withdraw money from the island bank
 * `bank balance` - see your island bank balance
-* `bank statement` - see a fancy statement of deposits/withdrawals, etc. on you island bank account
+* `bank statement` - see a fancy statement of deposits/withdrawals, etc. on your island bank account
 
 ### Admin commands
 

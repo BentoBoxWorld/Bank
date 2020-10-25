@@ -27,7 +27,7 @@ public class BalTopTab implements Tab {
     private final boolean sort;
     private final Bank addon;
     private final World world;
-    private static final Comparator<Entry<String, Double>> comparator = (h1, h2) -> Double.compare(h1.getValue(), h2.getValue());
+    private static final Comparator<Entry<String, Double>> comparator = Comparator.comparingDouble(Entry::getValue);
 
 
     public BalTopTab(Bank addon, World world, User user, boolean sort) {
@@ -52,7 +52,7 @@ public class BalTopTab implements Tab {
     public List<@Nullable PanelItem> getPanelItems() {
         return addon.getBankManager().getBalances(world).entrySet().stream()
                 .sorted(sort ? comparator.reversed() : comparator)
-                .limit(addon.getSettings().getRanksNumber())
+                .limit(Objects.requireNonNull(addon.getSettings()).getRanksNumber())
                 .map(ah -> addon.getIslands().getIslandById(ah.getKey())
                         .filter(i -> i.getOwner() != null)
                         .map(island -> new PanelItemBuilder()

@@ -93,10 +93,9 @@ public class BankManagerTest {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         when(bank.getPlugin()).thenReturn(plugin);
         // Set up plugin
         Whitebox.setInternalState(BentoBox.class, "instance", plugin);
@@ -123,7 +122,7 @@ public class BankManagerTest {
     }
 
     /**
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception - exception
      */
     @After
     public void tearDown() throws Exception {
@@ -221,7 +220,7 @@ public class BankManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.BankManager#getBalances()}.
+     * Test method for {@link world.bentobox.bank.BankManager#getBalances(World)}.
      */
     @Test
     public void testGetBalances() {

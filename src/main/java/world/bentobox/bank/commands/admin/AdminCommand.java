@@ -16,10 +16,6 @@ public class AdminCommand extends CompositeCommand {
         super(bank, adminCmd, adminCommand);
     }
 
-    public AdminCommand(CompositeCommand parent, String string) {
-        super(parent, string);
-    }
-
     @Override
     public void setup() {
         this.setPermission("bank.admin");
