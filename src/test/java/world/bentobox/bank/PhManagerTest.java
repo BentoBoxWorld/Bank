@@ -236,10 +236,9 @@ public class PhManagerTest {
      */
     @Test
     public void testCheckCacheNoNamesChange() {
-        long ls = pm.getLastSorted();
         pm.setLastSorted(System.currentTimeMillis() + 10000);
         assertEquals(5, pm.checkCache(world, 5));
-        assertTrue(ls < pm.getLastSorted());
+        verify(bm).getBalances(eq(world));
     }
 
     /**
