@@ -27,8 +27,10 @@ public class AdminCommand extends CompositeCommand {
         new AdminTakeCommand(this);
     }
 
+
     @Override
     public boolean execute(User user, String label, List<String> args) {
+        this.showHelp(this, user);
         return true;
     }
 
