@@ -95,6 +95,7 @@ public class AdminTakeCommandTest {
         // Players
         when(addon.getPlayers()).thenReturn(pm);
         when(pm.getUser(eq("tastybento"))).thenReturn(user);
+        when(user.getName()).thenReturn("tastybento");
 
         // Island flag allowed
         when(island.isAllowed(eq(user), any())).thenReturn(true);
@@ -203,8 +204,11 @@ public class AdminTakeCommandTest {
      */
     @Test
     public void testExecuteUserStringListOfString() {
+        testCanExecuteSuccess();
         assertTrue(bc.execute(user, "take", Arrays.asList("tastybento", "100")));
-        verify(user).sendMessage(eq("bank.withdraw.success"), eq(TextVariables.NUMBER), eq("0.0"));
+        verify(user).sendMessage(eq("bank.admin.give.success"),
+                eq(TextVariables.NAME), eq("tastybento"),
+                eq(TextVariables.NUMBER), eq("0.0"));
     }
 
     /**
@@ -212,9 +216,10 @@ public class AdminTakeCommandTest {
      */
     @Test
     public void testExecuteUserStringListOfStringLowBalance() {
+        testCanExecuteSuccess();
         when(bankManager.withdraw(eq(user), any(), anyDouble(), eq(TxType.TAKE))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
         assertTrue(bc.execute(user, "take", Arrays.asList("tastybento", "100")));
-        verify(user).sendMessage(eq("bank.errors.low-balance"));
+        verify(user).sendMessage(eq("bank.errors.too-low"));
     }
 
     /**

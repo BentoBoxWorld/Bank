@@ -40,11 +40,13 @@ public class AdminTakeCommand extends AbstractAdminBankCommand {
         .thenAccept(result -> {
             switch (result) {
             case FAILURE_LOW_BALANCE:
-                user.sendMessage("bank.errors.low-balance");
+                user.sendMessage("bank.errors.too-low");
                 break;
             case SUCCESS:
                 VaultHook vault = ((Bank)this.getAddon()).getVault();
-                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(island)));
+                user.sendMessage("bank.admin.give.success",
+                        TextVariables.NAME, this.target.getName(),
+                        TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(island)));
                 break;
             default:
                 user.sendMessage("bank.errors.bank-error");

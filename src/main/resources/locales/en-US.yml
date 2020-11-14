@@ -4,6 +4,7 @@ bank:
     give:
       parameters: "<player> <amount>"
       description: "add amount to player's island account"
+      success: "&a Success! [name]'s island bank balance is now [number]."
     take:
       parameters: "<player> <amount>"
       description: "take amount from player's island account"
@@ -34,6 +35,7 @@ bank:
   errors: 
     bank-error: "&c Error loading bank account info - please try again later"
     low-balance: "&c Your island bank balance is not high enough!"
+    too-low: "&c The island balance is too low."
     must-be-a-number: "&c Amount must be a number"
     no-rank: "&c Your rank is not high enough to use the bank."
     too-much: "&c You do not have that amount to deposit."

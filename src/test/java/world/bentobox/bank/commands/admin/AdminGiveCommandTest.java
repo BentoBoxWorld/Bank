@@ -94,6 +94,7 @@ public class AdminGiveCommandTest {
         // Players
         when(addon.getPlayers()).thenReturn(pm);
         when(pm.getUser(eq("tastybento"))).thenReturn(user);
+        when(user.getName()).thenReturn("tastybento");
 
         // Island flag allowed
         when(island.isAllowed(eq(user), any())).thenReturn(true);
@@ -202,8 +203,11 @@ public class AdminGiveCommandTest {
      */
     @Test
     public void testExecuteUserStringListOfString() {
+        assertTrue(bc.canExecute(user, "give", Arrays.asList("tastybento", "100")));
         assertTrue(bc.execute(user, "give", Arrays.asList("tastybento", "100")));
-        verify(user).sendMessage(eq("bank.deposit.success"), eq(TextVariables.NUMBER), eq("0.0"));
+        verify(user).sendMessage(eq("bank.admin.give.success"),
+                eq(TextVariables.NAME), eq("tastybento"),
+                eq(TextVariables.NUMBER), eq("0.0"));
     }
 
     /**

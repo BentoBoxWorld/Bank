@@ -41,7 +41,9 @@ public class AdminGiveCommand extends AbstractAdminBankCommand {
         .thenAccept(result -> {
             if (result == BankResponse.SUCCESS) {
                 VaultHook vault = ((Bank)this.getAddon()).getVault();
-                user.sendMessage("bank.deposit.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(island)));
+                user.sendMessage("bank.admin.give.success",
+                        TextVariables.NAME, this.target.getName(),
+                        TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(island)));
             } else {
                 user.sendMessage("bank.errors.bank-error");
             }
