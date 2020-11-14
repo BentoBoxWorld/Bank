@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
-import world.bentobox.bank.Bank;
 import world.bentobox.bank.commands.AbstractBankCommand;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
@@ -37,7 +36,7 @@ public class DepositCommand extends AbstractBankCommand {
     @Override
     public boolean execute(User user, String label, List<String> args) {
         // Check if the player has the balance
-        VaultHook vault = ((Bank)this.getAddon()).getVault();
+        VaultHook vault = addon.getVault();
         double balance = vault.getBalance(user, getWorld());
         if (balance < value) {
             user.sendMessage("bank.errors.too-much");
@@ -58,7 +57,7 @@ public class DepositCommand extends AbstractBankCommand {
                     user.sendMessage("general.errors.no-island");
                     break;
                 case SUCCESS:
-                    user.sendMessage("bank.deposit.success", TextVariables.NUMBER, format(addon.getBankManager().getBalance(island)));
+                    user.sendMessage("bank.deposit.success", TextVariables.NUMBER, vault.format(addon.getBankManager().getBalance(island)));
                     break;
                 default:
                     break;

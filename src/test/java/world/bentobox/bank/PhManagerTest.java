@@ -135,7 +135,8 @@ public class PhManagerTest {
     @Test
     public void testGetVisitedIslandBalanceWrongWorld() {
         when(gm.inWorld(eq(world))).thenReturn(false);
-        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user));
+        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, false));
+        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, true));
     }
 
     /**
@@ -144,7 +145,8 @@ public class PhManagerTest {
     @Test
     public void testGetVisitedIslandBalanceNoIsland() {
         when(im.getIslandAt(eq(location))).thenReturn(Optional.empty());
-        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user));
+        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, false));
+        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, true));
     }
 
     /**
@@ -152,8 +154,28 @@ public class PhManagerTest {
      */
     @Test
     public void testGetVisitedIslandBalance() {
-        assertEquals("$1234.56", pm.getVisitedIslandBalance(gm, user));
+        assertEquals("$1234.56", pm.getVisitedIslandBalance(gm, user, false));
+        assertEquals("1.2k", pm.getVisitedIslandBalance(gm, user, true));
     }
+
+    /**
+     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User)}.
+     */
+    @Test
+    public void testGetVisitedIslandBalanceLargest() {
+        when(bm.getBalance(eq(island))).thenReturn(Double.MAX_VALUE);
+        assertEquals("9223372T", pm.getVisitedIslandBalance(gm, user, true));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User)}.
+     */
+    @Test
+    public void testGetVisitedIslandBalanceBig() {
+        when(bm.getBalance(eq(island))).thenReturn(123456789D);
+        assertEquals("123.5M", pm.getVisitedIslandBalance(gm, user, true));
+    }
+
 
     /**
      * Test method for {@link world.bentobox.bank.PhManager#getRankName(org.bukkit.World, int)}.

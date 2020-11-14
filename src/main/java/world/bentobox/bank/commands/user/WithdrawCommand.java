@@ -57,7 +57,7 @@ public class WithdrawCommand extends AbstractBankCommand {
                 break;
             default:
                 addon.getVault().deposit(user, value, getWorld());
-                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, format(addon.getBankManager().getBalance(island)));
+                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island)));
                 break;
 
             }

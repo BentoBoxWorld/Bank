@@ -41,7 +41,7 @@ public class AdminGiveCommand extends AbstractAdminBankCommand {
             if (result == BankResponse.SUCCESS) {
                 user.sendMessage("bank.admin.give.success",
                         TextVariables.NAME, this.target.getName(),
-                        TextVariables.NUMBER, format(((Bank)getAddon()).getBankManager().getBalance(island)));
+                        TextVariables.NUMBER, addon.getVault().format(((Bank)getAddon()).getBankManager().getBalance(island)));
             } else {
                 user.sendMessage("bank.errors.bank-error");
             }

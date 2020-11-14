@@ -30,7 +30,7 @@ public class AdminBalanceCommand extends AbstractAdminBankCommand {
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        user.sendMessage("bank.balance.island-balance", TextVariables.NUMBER, format(addon
+        user.sendMessage("bank.balance.island-balance", TextVariables.NUMBER, addon.getVault().format(addon
                 .getBankManager()
                 .getBalance(island)));
         return true;

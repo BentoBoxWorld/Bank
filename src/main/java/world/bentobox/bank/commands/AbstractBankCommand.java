@@ -1,15 +1,11 @@
 package world.bentobox.bank.commands;
 
-import java.math.BigInteger;
-import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.commons.lang.math.NumberUtils;
-import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.bank.Bank;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -23,17 +19,6 @@ import world.bentobox.bentobox.util.Util;
  *
  */
 public abstract class AbstractBankCommand extends CompositeCommand {
-
-    private static final BigInteger THOUSAND = BigInteger.valueOf(1000);
-    private static final TreeMap<BigInteger, String> LEVELS;
-    static {
-        LEVELS = new TreeMap<>();
-
-        LEVELS.put(THOUSAND, "k");
-        LEVELS.put(THOUSAND.pow(2), "M");
-        LEVELS.put(THOUSAND.pow(3), "G");
-        LEVELS.put(THOUSAND.pow(4), "T");
-    }
 
     protected AbstractBankCommand(CompositeCommand parent, String string) {
         super(parent, string);
@@ -145,22 +130,4 @@ public abstract class AbstractBankCommand extends CompositeCommand {
         return true;
     }
 
-    /**
-     * Get the string representation of money. May be converted to shorthand notation, e.g., 104556 = 10.5k
-     * @param lvl - value to represent
-     * @return string of the value.
-     */
-    public String format(@Nullable double value) {
-        String level = addon.getVault().format(value);
-        // If balance is greater than 1 million use shorthand version
-        if(value > 999999) {
-            BigInteger levelValue = BigInteger.valueOf((long)value);
-
-            Map.Entry<BigInteger, String> stage = LEVELS.floorEntry(levelValue);
-            if (stage != null) {
-                level = new DecimalFormat("#.#").format(levelValue.divide(stage.getKey().divide(THOUSAND)).doubleValue()/1000.0) + stage.getValue();
-            }
-        }
-        return level;
-    }
 }

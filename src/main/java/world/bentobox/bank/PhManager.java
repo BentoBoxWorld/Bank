@@ -1,10 +1,15 @@
 package world.bentobox.bank;
 
+import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 import org.bukkit.World;
+import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
@@ -16,6 +21,16 @@ import world.bentobox.bentobox.api.user.User;
  *
  */
 public class PhManager {
+    private static final BigInteger THOUSAND = BigInteger.valueOf(1000);
+    private static final TreeMap<BigInteger, String> LEVELS;
+    static {
+        LEVELS = new TreeMap<>();
+
+        LEVELS.put(THOUSAND, "k");
+        LEVELS.put(THOUSAND.pow(2), "M");
+        LEVELS.put(THOUSAND.pow(3), "G");
+        LEVELS.put(THOUSAND.pow(4), "T");
+    }
 
     private final BentoBox plugin;
     private final BankManager bankManager;
@@ -45,7 +60,16 @@ public class PhManager {
 
         // Visited Island Balance
         plugin.getPlaceholdersManager().registerPlaceholder(addon,
-                gm.getDescription().getName().toLowerCase() + "_visited_island_balance", user -> getVisitedIslandBalance(gm, user));
+                gm.getDescription().getName().toLowerCase() + "_visited_island_balance", user -> getVisitedIslandBalance(gm, user, false));
+
+        // Formatted Island Balance
+        plugin.getPlaceholdersManager().registerPlaceholder(addon,
+                gm.getDescription().getName().toLowerCase() + "_island_balance_formatted",
+                user -> format(bankManager.getBalance(user, gm.getOverWorld())));
+
+        // Formatted Visited Island Balance
+        plugin.getPlaceholdersManager().registerPlaceholder(addon,
+                gm.getDescription().getName().toLowerCase() + "_visited_island_balance_formatted", user -> getVisitedIslandBalance(gm, user, true));
 
         // Register Ranked Placeholders
         for (int i = 1; i <= Objects.requireNonNull(addon.getSettings()).getRanksNumber(); i++) {
@@ -60,11 +84,11 @@ public class PhManager {
         return true;
     }
 
-    String getVisitedIslandBalance(GameModeAddon gm, User user) {
+    String getVisitedIslandBalance(GameModeAddon gm, User user, boolean formatted) {
         if (user == null || user.getLocation() == null) return "";
         if (!gm.inWorld(user.getWorld())) return addon.getVault().format(0D);
         return addon.getIslands().getIslandAt(user.getLocation())
-                .map(island -> addon.getVault().format(bankManager.getBalance(island)))
+                .map(island -> formatted ? format(bankManager.getBalance(island)) : addon.getVault().format(bankManager.getBalance(island)))
                 .orElse(addon.getVault().format(0D));
     }
 
@@ -139,4 +163,18 @@ public class PhManager {
         this.names = names;
     }
 
+    /**
+     * Get the string representation of money. May be converted to shorthand notation, e.g., 104556 = 10.5k
+     * @param lvl - value to represent
+     * @return string of the value.
+     */
+    private String format(@Nullable double value) {
+        String level = addon.getVault().format(value);
+        BigInteger levelValue = BigInteger.valueOf((long)value);
+        Map.Entry<BigInteger, String> stage = LEVELS.floorEntry(levelValue);
+        if (stage != null) {
+            level = new DecimalFormat("#.#").format(levelValue.divide(stage.getKey().divide(THOUSAND)).doubleValue()/1000.0) + stage.getValue();
+        }
+        return level;
+    }
 }
