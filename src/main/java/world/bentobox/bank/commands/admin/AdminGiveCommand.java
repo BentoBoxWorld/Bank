@@ -8,7 +8,6 @@ import world.bentobox.bank.data.TxType;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.hooks.VaultHook;
 
 /**
  * @author tastybento
@@ -35,15 +34,14 @@ public class AdminGiveCommand extends AbstractAdminBankCommand {
     @Override
     public boolean execute(User user, String label, List<String> args) {
         // Success
-        ((Bank)getAddon())
+        addon
         .getBankManager()
         .deposit(user, island, value, TxType.GIVE)
         .thenAccept(result -> {
             if (result == BankResponse.SUCCESS) {
-                VaultHook vault = ((Bank)this.getAddon()).getVault();
                 user.sendMessage("bank.admin.give.success",
                         TextVariables.NAME, this.target.getName(),
-                        TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(island)));
+                        TextVariables.NUMBER, format(((Bank)getAddon()).getBankManager().getBalance(island)));
             } else {
                 user.sendMessage("bank.errors.bank-error");
             }

@@ -46,7 +46,7 @@ public class DepositCommand extends AbstractBankCommand {
         // Success
         EconomyResponse response = vault.withdraw(user, value, getWorld());
         if (response.type == ResponseType.SUCCESS) {
-            ((Bank)getAddon()).getBankManager().deposit(user, value, getWorld()).thenAccept(result -> {
+            addon.getBankManager().deposit(user, value, getWorld()).thenAccept(result -> {
                 switch (result) {
                 case FAILURE_LOAD_ERROR:
                     user.sendMessage("bank.errors.bank-error");
@@ -58,7 +58,7 @@ public class DepositCommand extends AbstractBankCommand {
                     user.sendMessage("general.errors.no-island");
                     break;
                 case SUCCESS:
-                    user.sendMessage("bank.deposit.success", TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(island)));
+                    user.sendMessage("bank.deposit.success", TextVariables.NUMBER, format(addon.getBankManager().getBalance(island)));
                     break;
                 default:
                     break;

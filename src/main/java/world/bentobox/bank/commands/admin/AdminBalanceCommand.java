@@ -2,7 +2,6 @@ package world.bentobox.bank.commands.admin;
 
 import java.util.List;
 
-import world.bentobox.bank.Bank;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
@@ -31,11 +30,9 @@ public class AdminBalanceCommand extends AbstractAdminBankCommand {
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        user.sendMessage("bank.balance.island-balance", TextVariables.NUMBER, ((Bank)getAddon())
-                .getVault()
-                .format(((Bank)getAddon())
-                        .getBankManager()
-                        .getBalance(island)));
+        user.sendMessage("bank.balance.island-balance", TextVariables.NUMBER, format(addon
+                .getBankManager()
+                .getBalance(island)));
         return true;
     }
 

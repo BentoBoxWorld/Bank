@@ -2,12 +2,10 @@ package world.bentobox.bank.commands.admin;
 
 import java.util.List;
 
-import world.bentobox.bank.Bank;
 import world.bentobox.bank.data.TxType;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.hooks.VaultHook;
 
 /**
  * @author tastybento
@@ -34,7 +32,7 @@ public class AdminTakeCommand extends AbstractAdminBankCommand {
     @Override
     public boolean execute(User user, String label, List<String> args) {
         // Success
-        ((Bank)getAddon())
+        addon
         .getBankManager()
         .withdraw(user, island, value, TxType.TAKE)
         .thenAccept(result -> {
@@ -43,10 +41,9 @@ public class AdminTakeCommand extends AbstractAdminBankCommand {
                 user.sendMessage("bank.errors.too-low");
                 break;
             case SUCCESS:
-                VaultHook vault = ((Bank)this.getAddon()).getVault();
                 user.sendMessage("bank.admin.give.success",
                         TextVariables.NAME, this.target.getName(),
-                        TextVariables.NUMBER, vault.format(((Bank)getAddon()).getBankManager().getBalance(island)));
+                        TextVariables.NUMBER, format(addon.getBankManager().getBalance(island)));
                 break;
             default:
                 user.sendMessage("bank.errors.bank-error");

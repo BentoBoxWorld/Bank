@@ -159,4 +159,34 @@ public class BalanceCommandTest {
         verify(user).sendMessage(eq("bank.balance.island-balance"), eq(TextVariables.NUMBER), eq("0.0"));
     }
 
+    /**
+     * Test method for {@link world.bentobox.bank.commands.user.BalanceCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     */
+    @Test
+    public void testExecuteUserStringListOfStringLargeBalance() {
+        when(bankManager.getBalance(any())).thenReturn(Double.MAX_VALUE);
+        assertTrue(bc.execute(user, "balance", Collections.emptyList()));
+        verify(user).sendMessage(eq("bank.balance.island-balance"), eq(TextVariables.NUMBER), eq("9223372T"));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.commands.user.BalanceCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     */
+    @Test
+    public void testExecuteUserStringListOfStringLargeBalance999999() {
+        when(bankManager.getBalance(any())).thenReturn(999999D);
+        assertTrue(bc.execute(user, "balance", Collections.emptyList()));
+        verify(user).sendMessage(eq("bank.balance.island-balance"), eq(TextVariables.NUMBER), eq("999999.0"));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.commands.user.BalanceCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     */
+    @Test
+    public void testExecuteUserStringListOfStringLargeBalance1M() {
+        when(bankManager.getBalance(any())).thenReturn(1000000D);
+        assertTrue(bc.execute(user, "balance", Collections.emptyList()));
+        verify(user).sendMessage(eq("bank.balance.island-balance"), eq(TextVariables.NUMBER), eq("1M"));
+    }
+
 }
