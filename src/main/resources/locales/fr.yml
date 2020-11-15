@@ -5,6 +5,7 @@ bank:
     give:
       parameters: "<joueur> <montant>"
       description: ajouter un montant au compte de l'île du joueur
+      success: "&a Succès! Le solde bancaire de l'île de [name] est désormais de [number]."
     take:
       parameters: "<joueur> <montant>"
       description: prendre le montant du compte de l'île du joueur
@@ -40,6 +41,7 @@ bank:
     no-rank: "&c Votre rang n'est pas assez élevé pour utiliser la banque."
     too-much: "&c Vous n'avez pas ce montant à déposer."
     value-must-be-positive: "&c Le montant doit être positif."
+    too-low: "&c L'équilibre de l'île est trop faible."
   statement:
     deposit: Dépôt
     description: montrer l'histoire de votre banque insulaire
