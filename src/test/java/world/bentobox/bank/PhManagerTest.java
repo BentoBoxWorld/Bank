@@ -135,8 +135,10 @@ public class PhManagerTest {
     @Test
     public void testGetVisitedIslandBalanceWrongWorld() {
         when(gm.inWorld(eq(world))).thenReturn(false);
-        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, false));
-        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, true));
+        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, false, false));
+        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, true, false));
+        assertEquals("0.0", pm.getVisitedIslandBalance(gm, user, false, true));
+        assertEquals("0.0", pm.getVisitedIslandBalance(gm, user, true, true));
     }
 
     /**
@@ -145,8 +147,10 @@ public class PhManagerTest {
     @Test
     public void testGetVisitedIslandBalanceNoIsland() {
         when(im.getIslandAt(eq(location))).thenReturn(Optional.empty());
-        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, false));
-        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, true));
+        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, false, false));
+        assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, true, false));
+        assertEquals("0.0", pm.getVisitedIslandBalance(gm, user, false, true));
+        assertEquals("0.0", pm.getVisitedIslandBalance(gm, user, true, true));
     }
 
     /**
@@ -154,8 +158,10 @@ public class PhManagerTest {
      */
     @Test
     public void testGetVisitedIslandBalance() {
-        assertEquals("$1234.56", pm.getVisitedIslandBalance(gm, user, false));
-        assertEquals("1.2k", pm.getVisitedIslandBalance(gm, user, true));
+        assertEquals("$1234.56", pm.getVisitedIslandBalance(gm, user, false, false));
+        assertEquals("1.2k", pm.getVisitedIslandBalance(gm, user, true, false));
+        assertEquals("1234.56", pm.getVisitedIslandBalance(gm, user, false, true));
+        assertEquals("1234.56", pm.getVisitedIslandBalance(gm, user, true, true));
     }
 
     /**
@@ -164,7 +170,8 @@ public class PhManagerTest {
     @Test
     public void testGetVisitedIslandBalanceLargest() {
         when(bm.getBalance(eq(island))).thenReturn(Double.MAX_VALUE);
-        assertEquals("9223372T", pm.getVisitedIslandBalance(gm, user, true));
+        assertEquals("9223372T", pm.getVisitedIslandBalance(gm, user, true, false));
+        assertEquals("1.7976931348623157E308", pm.getVisitedIslandBalance(gm, user, true, true));
     }
 
     /**
@@ -173,7 +180,8 @@ public class PhManagerTest {
     @Test
     public void testGetVisitedIslandBalanceBig() {
         when(bm.getBalance(eq(island))).thenReturn(123456789D);
-        assertEquals("123.5M", pm.getVisitedIslandBalance(gm, user, true));
+        assertEquals("123.5M", pm.getVisitedIslandBalance(gm, user, true, false));
+        assertEquals("1.23456789E8", pm.getVisitedIslandBalance(gm, user, true, true));
     }
 
 

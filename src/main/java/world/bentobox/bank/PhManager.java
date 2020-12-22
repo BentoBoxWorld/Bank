@@ -53,6 +53,15 @@ public class PhManager {
 
     protected boolean registerPlaceholders(GameModeAddon gm) {
         if (plugin.getPlaceholdersManager() == null) return false;
+        // Island Balance Number
+        plugin.getPlaceholdersManager().registerPlaceholder(addon,
+                gm.getDescription().getName().toLowerCase() + "_island_balance_number",
+                user -> String.valueOf(bankManager.getBalance(user, gm.getOverWorld())));
+
+        // Visited Island Balance Number
+        plugin.getPlaceholdersManager().registerPlaceholder(addon,
+                gm.getDescription().getName().toLowerCase() + "_visited_island_balance_number", user -> getVisitedIslandBalance(gm, user, false, true));
+
         // Island Balance
         plugin.getPlaceholdersManager().registerPlaceholder(addon,
                 gm.getDescription().getName().toLowerCase() + "_island_balance",
@@ -60,7 +69,7 @@ public class PhManager {
 
         // Visited Island Balance
         plugin.getPlaceholdersManager().registerPlaceholder(addon,
-                gm.getDescription().getName().toLowerCase() + "_visited_island_balance", user -> getVisitedIslandBalance(gm, user, false));
+                gm.getDescription().getName().toLowerCase() + "_visited_island_balance", user -> getVisitedIslandBalance(gm, user, false, false));
 
         // Formatted Island Balance
         plugin.getPlaceholdersManager().registerPlaceholder(addon,
@@ -69,7 +78,7 @@ public class PhManager {
 
         // Formatted Visited Island Balance
         plugin.getPlaceholdersManager().registerPlaceholder(addon,
-                gm.getDescription().getName().toLowerCase() + "_visited_island_balance_formatted", user -> getVisitedIslandBalance(gm, user, true));
+                gm.getDescription().getName().toLowerCase() + "_visited_island_balance_formatted", user -> getVisitedIslandBalance(gm, user, true, false));
 
         // Register Ranked Placeholders
         for (int i = 1; i <= Objects.requireNonNull(addon.getSettings()).getRanksNumber(); i++) {
@@ -84,12 +93,21 @@ public class PhManager {
         return true;
     }
 
-    String getVisitedIslandBalance(GameModeAddon gm, User user, boolean formatted) {
+    /**
+     * Get the visited island balance
+     * @param gm - game mode
+     * @param user - user
+     * @param formatted - format with k, M, etc.
+     * @param plain - provides the raw double balance. If true, formatted parameter is ignored
+     * @return string of balance
+     */
+    String getVisitedIslandBalance(GameModeAddon gm, User user, boolean formatted, boolean plain) {
         if (user == null || user.getLocation() == null) return "";
-        if (!gm.inWorld(user.getWorld())) return addon.getVault().format(0D);
-        return addon.getIslands().getIslandAt(user.getLocation())
-                .map(island -> formatted ? format(bankManager.getBalance(island)) : addon.getVault().format(bankManager.getBalance(island)))
-                .orElse(addon.getVault().format(0D));
+        double balance = gm.inWorld(user.getWorld()) ? addon.getIslands().getIslandAt(user.getLocation()).map(i -> bankManager.getBalance(i)).orElse(0D) : 0D;
+        if (plain) {
+            return String.valueOf(balance);
+        }
+        return formatted ? format(balance) : addon.getVault().format(balance);
     }
 
     /**
