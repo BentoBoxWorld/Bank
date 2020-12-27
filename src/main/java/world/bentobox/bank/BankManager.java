@@ -23,7 +23,7 @@ import com.google.common.base.Enums;
 import world.bentobox.bank.data.AccountHistory;
 import world.bentobox.bank.data.BankAccounts;
 import world.bentobox.bank.data.TxType;
-import world.bentobox.bentobox.api.events.island.IslandEvent.IslandPreclearEvent;
+import world.bentobox.bentobox.api.events.island.IslandPreclearEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;

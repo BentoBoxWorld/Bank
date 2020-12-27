@@ -37,8 +37,9 @@ import org.powermock.reflect.Whitebox;
 import world.bentobox.bank.data.TxType;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.Settings;
+import world.bentobox.bentobox.api.events.IslandBaseEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent;
-import world.bentobox.bentobox.api.events.island.IslandEvent.IslandPreclearEvent;
+import world.bentobox.bentobox.api.events.island.IslandPreclearEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent.Reason;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.AbstractDatabaseHandler;
@@ -243,8 +244,11 @@ public class BankManagerTest {
      */
     @Test
     public void testOnIslandDelete() {
-        IslandPreclearEvent e = (IslandPreclearEvent) new IslandEvent.IslandEventBuilder().oldIsland(island).reason(Reason.PRECLEAR).island(island).build();
-        bm.onIslandDelete(e);
+        IslandBaseEvent e = new IslandEvent.IslandEventBuilder().oldIsland(island).reason(Reason.PRECLEAR).island(island).build();
+        if (e.getNewEvent().isPresent()) {
+            e = e.getNewEvent().get();
+        }
+        bm.onIslandDelete((IslandPreclearEvent)e);
         verify(h).deleteID(eq(uniqueId));
     }
 
