@@ -55,7 +55,7 @@ public class Bank extends Addon {
         config.saveConfigObject(settings);
         // Bank Manager
         bankManager = new BankManager(this);
-        bankManager.loadBalances();
+        bankManager.loadBalances().thenRun(() -> bankManager.startInterest());
         PhManager placeholderManager = new PhManager(this, bankManager);
         // Register commands with GameModes
         getPlugin().getAddonsManager().getGameModeAddons().stream()

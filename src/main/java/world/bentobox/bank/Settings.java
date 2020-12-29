@@ -36,6 +36,13 @@ public class Settings implements ConfigObject {
     @ConfigEntry(path = "bank.placeholders.number-of-ranks")
     private int ranksNumber = 10;
 
+    @ConfigComment("The annual interest rate for accounts. If zero or less, interest will not be paid.")
+    private float interestRate = 10;
+
+    @ConfigComment("Period that interest is compounded in hours. Default is 1 hour; minimum is 1 minute.")
+    @ConfigComment("Make period shorter than the server reboot period otherwise interest will not be paid.")
+    private float compoundPeriod = 1;
+
     /**
      * @return the gameModes
      */
@@ -90,6 +97,36 @@ public class Settings implements ConfigObject {
      */
     public void setRanksNumber(int ranksNumber) {
         this.ranksNumber = ranksNumber;
+    }
+
+    /**
+     * @return the interestRate for this period
+     */
+    public float getInterestRate() {
+        // Interest rate is a yearly percentage. Period is hourly.
+        return interestRate / 365 / 24 / 100;
+    }
+
+    /**
+     * @param interestRate the interestRate to set
+     */
+    public void setInterestRate(float interestRate) {
+        this.interestRate = interestRate;
+    }
+
+    /**
+     * @return the compoundPeriod in ticks
+     */
+    public long getCompoundPeriod() {
+        // Make the period a minimum of 1 minute long
+        return Math.max(1200L, (long) (compoundPeriod * 72000L));
+    }
+
+    /**
+     * @param compoundPeriod the compoundPeriod to set
+     */
+    public void setCompoundPeriod(float compoundPeriod) {
+        this.compoundPeriod = compoundPeriod;
     }
 
 

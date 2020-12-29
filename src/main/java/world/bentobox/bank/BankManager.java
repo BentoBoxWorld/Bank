@@ -16,6 +16,7 @@ import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.base.Enums;
@@ -35,6 +36,8 @@ import world.bentobox.bentobox.util.Util;
  */
 public class BankManager implements Listener {
     private static final int MAX_SIZE = 20;
+    private static final double MINIMUM_BALANCE = 0.1;
+    private static final double MINIMUM_INTEREST = 0.01;
     // Database handler for accounts
     private final Database<BankAccounts> handler;
     private final Bank addon;
@@ -57,10 +60,50 @@ public class BankManager implements Listener {
         }, 6000L, 6000L);
     }
 
-    public void loadBalances() {
+    /**
+     * Load the bank balances
+     * @return completable future that completes when the loading is done
+     */
+    public CompletableFuture<Void> loadBalances() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
         balances.clear();
-        Bukkit.getScheduler().runTaskAsynchronously(addon.getPlugin(), () ->
-        handler.loadObjects().forEach(ba -> balances.put(ba.getUniqueId(), ba.getBalance())));
+        Bukkit.getScheduler().runTaskAsynchronously(addon.getPlugin(), () -> {
+            handler.loadObjects().forEach(ba -> balances.put(ba.getUniqueId(), ba.getBalance()));
+            future.complete(null);
+        });
+        return future;
+    }
+
+    /**
+     * Start a recurring task to pay interest
+     */
+    public void startInterest() {
+        if (addon.getSettings().getInterestRate() <= 0D) {
+            return;
+        }
+        Bukkit.getScheduler().runTaskTimer(addon.getPlugin(),
+                () -> calculateInterest(), addon.getSettings().getCompoundPeriod(), addon.getSettings().getCompoundPeriod());
+    }
+
+    void calculateInterest() {
+        balances.forEach((uuid, bal) -> {
+            if (bal < MINIMUM_BALANCE) return;
+            double interest = formatDouble(bal * addon.getSettings().getInterestRate());
+            if (interest > MINIMUM_INTEREST) {
+                addon.getIslands().getIslandById(uuid).filter(i -> i.getOwner() != null).ifPresent(island ->
+                this.set(User.getInstance(island.getOwner()), island.getUniqueId(), interest, (bal + interest), TxType.INTEREST));
+            }
+        });
+    }
+
+    /**
+     * Reduce double down to 2 decimal places
+     * @param valueToFormat - value
+     * @return double reduced
+     */
+    private Double formatDouble(Double valueToFormat) {
+        long rounded = Math.round(valueToFormat*100);
+        return rounded/100.0;
     }
 
     /**
@@ -214,17 +257,21 @@ public class BankManager implements Listener {
 
     /**
      * Sets an island's account value to an amount
-     * @param user - user who is doing the setting
+     * @param user - user who is doing the setting or island owner for interest
      * @param islandID - island unique id
      * @param amount - amount
      * @param type - type of transaction
      * @return BankResponse
      */
-    public CompletableFuture<BankResponse> set(User user, String islandID, double amount, double newBalance, TxType type) {
+    public CompletableFuture<BankResponse> set(@NonNull User user, @NonNull String islandID, double amount, double newBalance, TxType type) {
         try {
             BankAccounts account = getAccount(islandID);
             account.setBalance(newBalance);
-            account.getHistory().put(System.currentTimeMillis(), user.getName() + ":" + type + ":" + amount);
+            if (type.equals(TxType.INTEREST) ) {
+                account.getHistory().put(System.currentTimeMillis(), user.getTranslation("bank.statement.interest") + ":" + amount);
+            } else {
+                account.getHistory().put(System.currentTimeMillis(), user.getName() + ":" + type + ":" + amount);
+            }
             cache.put(islandID, account);
             balances.put(islandID, account.getBalance());
             CompletableFuture<BankResponse> result = new CompletableFuture<>();
