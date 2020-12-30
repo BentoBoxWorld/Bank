@@ -34,13 +34,15 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
+import world.bentobox.bank.data.BankAccounts;
+import world.bentobox.bank.data.Money;
 import world.bentobox.bank.data.TxType;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.Settings;
 import world.bentobox.bentobox.api.events.IslandBaseEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent;
-import world.bentobox.bentobox.api.events.island.IslandPreclearEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent.Reason;
+import world.bentobox.bentobox.api.events.island.IslandPreclearEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.AbstractDatabaseHandler;
 import world.bentobox.bentobox.database.DatabaseSetup;
@@ -58,7 +60,7 @@ import world.bentobox.bentobox.util.Util;
 public class BankManagerTest {
 
     @Mock
-    private Bank bank;
+    private Bank addon;
     // Class under test
     private BankManager bm;
 
@@ -78,6 +80,7 @@ public class BankManagerTest {
     private String uniqueId;
     @Mock
     private Location location;
+    private world.bentobox.bank.Settings settings;
 
 
     @SuppressWarnings("unchecked")
@@ -97,7 +100,7 @@ public class BankManagerTest {
      */
     @Before
     public void setUp() {
-        when(bank.getPlugin()).thenReturn(plugin);
+        when(addon.getPlugin()).thenReturn(plugin);
         // Set up plugin
         Whitebox.setInternalState(BentoBox.class, "instance", plugin);
 
@@ -107,7 +110,7 @@ public class BankManagerTest {
         when(plugin.getSettings()).thenReturn(pluginSettings);
         when(pluginSettings.getDatabaseType()).thenReturn(value);
         // Island manager
-        when(bank.getIslands()).thenReturn(im);
+        when(addon.getIslands()).thenReturn(im);
         uniqueId = UUID.randomUUID().toString();
         island = new Island();
         island.setUniqueId(uniqueId);
@@ -119,7 +122,11 @@ public class BankManagerTest {
         PowerMockito.mockStatic(Util.class);
         when(Util.getWorld(any())).thenAnswer(arg -> arg.getArgument(0, World.class));
 
-        bm = new BankManager(bank);
+        // Addon settings
+        settings = new world.bentobox.bank.Settings();
+        when(addon.getSettings()).thenReturn(settings);
+
+        bm = new BankManager(addon);
     }
 
     /**
@@ -165,7 +172,7 @@ public class BankManagerTest {
      */
     @Test
     public void testDepositUserDoubleWorld() {
-        bm.deposit(user, 100D, world).thenAccept(r -> assertEquals(BankResponse.SUCCESS, r));
+        bm.deposit(user, new Money(100), world).thenAccept(r -> assertEquals(BankResponse.SUCCESS, r));
     }
 
     /**
@@ -174,7 +181,7 @@ public class BankManagerTest {
     @Test
     public void testDepositUserIslandDoubleTxType() {
         for (TxType type : TxType.values()) {
-            bm.deposit(user, island, 100D, type).thenAccept(r -> assertEquals(BankResponse.SUCCESS, r));
+            bm.deposit(user, island, new Money(100), type).thenAccept(r -> assertEquals(BankResponse.SUCCESS, r));
         }
     }
 
@@ -183,7 +190,7 @@ public class BankManagerTest {
      */
     @Test
     public void testWithdrawUserDoubleWorld() {
-        bm.withdraw(user, 100D, world).thenAccept(r -> assertEquals(BankResponse.SUCCESS, r));
+        bm.withdraw(user, new Money(100), world).thenAccept(r -> assertEquals(BankResponse.SUCCESS, r));
     }
 
     /**
@@ -192,7 +199,7 @@ public class BankManagerTest {
     @Test
     public void testWithdrawUserIslandDoubleTxType() {
         for (TxType type : TxType.values()) {
-            bm.withdraw(user, island, 100D, type).thenAccept(r -> assertEquals(BankResponse.SUCCESS, r));
+            bm.withdraw(user, island, new Money(100), type).thenAccept(r -> assertEquals(BankResponse.SUCCESS, r));
         }
     }
 
@@ -201,7 +208,7 @@ public class BankManagerTest {
      */
     @Test
     public void testGetBalanceIsland() {
-        assertEquals(0D, bm.getBalance(island), 0D);
+        assertEquals(0D, bm.getBalance(island).getValue(), 0D);
     }
 
     /**
@@ -209,7 +216,7 @@ public class BankManagerTest {
      */
     @Test
     public void testGetBalanceUserWorld() {
-        assertEquals(0D, bm.getBalance(user, world), 0D);
+        assertEquals(0D, bm.getBalance(user, world).getValue(), 0D);
     }
 
     /**
@@ -235,7 +242,7 @@ public class BankManagerTest {
     public void testSet() {
         String islandID = "";
         for (TxType type : TxType.values()) {
-            bm.set(user, islandID, 10D, 100D, type).thenAccept(r -> assertEquals(BankResponse.SUCCESS, r));
+            bm.set(user, islandID, new Money(10), new Money(100), type).thenAccept(r -> assertEquals(BankResponse.SUCCESS, r));
         }
     }
 
@@ -250,6 +257,63 @@ public class BankManagerTest {
         }
         bm.onIslandDelete((IslandPreclearEvent)e);
         verify(h).deleteID(eq(uniqueId));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.BankManager#calculateInterest(world.bentobox.bank.data.BankAccounts)}.
+     */
+    @Test
+    public void testOnCalculateInterestZeroBalance() {
+        BankAccounts ba = new BankAccounts();
+        assertEquals(0D, bm.calculateInterest(ba).getValue(), 0D);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.BankManager#calculateInterest(world.bentobox.bank.data.BankAccounts)}.
+     */
+    @Test
+    public void testOnCalculateInterestOneYear10() {
+        BankAccounts ba = new BankAccounts();
+        settings.setInterestRate(10); // 10%
+        ba.setBalance(new Money(10000));
+        ba.setInterestLastPaid(System.currentTimeMillis() - BankManager.MILLISECONDS_IN_YEAR);
+        assertEquals(11051.56D, bm.calculateInterest(ba).getValue(), 0D);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.BankManager#calculateInterest(world.bentobox.bank.data.BankAccounts)}.
+     */
+    @Test
+    public void testOnCalculateInterestOneYear10OneDay() {
+        BankAccounts ba = new BankAccounts();
+        settings.setInterestRate(10); // 10%
+        ba.setBalance(new Money(10000));
+        ba.setInterestLastPaid(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+        assertEquals(10058.89D, bm.calculateInterest(ba).getValue(), 0D);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.BankManager#calculateInterest(world.bentobox.bank.data.BankAccounts)}.
+     */
+    @Test
+    public void testOnCalculateInterestOneYear25() {
+        BankAccounts ba = new BankAccounts();
+        settings.setInterestRate(25); // 25%
+        ba.setBalance(new Money(10000));
+        ba.setInterestLastPaid(System.currentTimeMillis() - BankManager.MILLISECONDS_IN_YEAR);
+        assertEquals(12839.16D, bm.calculateInterest(ba).getValue(), 0D);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.BankManager#calculateInterest(world.bentobox.bank.data.BankAccounts)}.
+     */
+    @Test
+    public void testOnCalculateInterestOneYear0() {
+        BankAccounts ba = new BankAccounts();
+        settings.setInterestRate(0); // 0%
+        ba.setBalance(new Money(10000));
+        ba.setInterestLastPaid(System.currentTimeMillis() - BankManager.MILLISECONDS_IN_YEAR);
+        assertEquals(10000D, bm.calculateInterest(ba).getValue(), 0D);
     }
 
 }

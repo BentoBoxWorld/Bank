@@ -51,6 +51,8 @@ public class BalTopTab implements Tab {
     @Override
     public List<@Nullable PanelItem> getPanelItems() {
         return addon.getBankManager().getBalances(world).entrySet().stream()
+                .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().getValue()))
+                .entrySet().stream()
                 .sorted(sort ? comparator.reversed() : comparator)
                 .limit(Objects.requireNonNull(addon.getSettings()).getRanksNumber())
                 .map(ah -> addon.getIslands().getIslandById(ah.getKey())

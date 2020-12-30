@@ -43,7 +43,7 @@ public class AdminTakeCommand extends AbstractAdminBankCommand {
             case SUCCESS:
                 user.sendMessage("bank.admin.give.success",
                         TextVariables.NAME, this.target.getName(),
-                        TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island)));
+                        TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
                 break;
             default:
                 user.sendMessage("bank.errors.bank-error");

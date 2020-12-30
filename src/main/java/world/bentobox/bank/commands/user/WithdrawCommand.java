@@ -3,6 +3,7 @@ package world.bentobox.bank.commands.user;
 import java.util.List;
 
 import world.bentobox.bank.commands.AbstractBankCommand;
+import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
@@ -32,8 +33,8 @@ public class WithdrawCommand extends AbstractBankCommand {
             return false;
         }
         // Check if the player has the balance
-        double balance = addon.getBankManager().getBalance(user, getWorld());
-        if (balance < value) {
+        Money balance = addon.getBankManager().getBalance(user, getWorld());
+        if (Money.lessThan(balance, value)) {
             user.sendMessage("bank.errors.low-balance");
             return false;
         }
@@ -56,8 +57,8 @@ public class WithdrawCommand extends AbstractBankCommand {
                 user.sendMessage("general.errors.no-island");
                 break;
             default:
-                addon.getVault().deposit(user, value, getWorld());
-                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island)));
+                addon.getVault().deposit(user, value.getValue(), getWorld());
+                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
                 break;
 
             }

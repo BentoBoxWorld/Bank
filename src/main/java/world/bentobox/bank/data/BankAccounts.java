@@ -22,10 +22,17 @@ public class BankAccounts implements DataObject {
     private String uniqueId;
 
     @Expose
-    private double balance;
+    @Deprecated
+    private Double balance;
+
+    @Expose
+    private Money moneyBalance;
 
     @Expose
     private final Map<Long, String> history = new TreeMap<>();
+
+    @Expose
+    private Long interestLastPaid;
 
     @Override
     public String getUniqueId() {
@@ -40,15 +47,22 @@ public class BankAccounts implements DataObject {
     /**
      * @return the balance
      */
-    public double getBalance() {
-        return balance;
+    public Money getBalance() {
+        // Backwards compatibility
+        if (balance != null && balance != 0) {
+            moneyBalance = new Money(balance);
+            balance = null;
+        } else if (moneyBalance == null) {
+            moneyBalance = new Money();
+        }
+        return moneyBalance;
     }
 
     /**
      * @param balance the balance to set
      */
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void setBalance(Money balance) {
+        this.moneyBalance = balance;
     }
 
     /**
@@ -56,6 +70,25 @@ public class BankAccounts implements DataObject {
      */
     public Map<Long, String> getHistory() {
         return history;
+    }
+
+    /**
+     * Get the timestamp for when interest was last paid
+     * @return the interestLastPaid
+     */
+    public long getInterestLastPaid() {
+        if (interestLastPaid == null) {
+            interestLastPaid = System.currentTimeMillis();
+        }
+        return interestLastPaid;
+    }
+
+    /**
+     * Set when interest was last paid
+     * @param interestLastPaid the interestLastPaid to set
+     */
+    public void setInterestLastPaid(long interestLastPaid) {
+        this.interestLastPaid = interestLastPaid;
     }
 
 }

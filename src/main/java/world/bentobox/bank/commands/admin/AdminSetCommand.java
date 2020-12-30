@@ -38,7 +38,7 @@ public class AdminSetCommand extends AbstractAdminBankCommand {
         .set(user, island.getUniqueId(), value, value, TxType.SET)
         .thenAccept(result -> {
             if (result == BankResponse.SUCCESS) {
-                user.sendMessage("bank.admin.set.success", TextVariables.NAME, target.getName(), TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island)));
+                user.sendMessage("bank.admin.set.success", TextVariables.NAME, target.getName(), TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
             } else {
                 user.sendMessage("bank.errors.bank-error");
             }

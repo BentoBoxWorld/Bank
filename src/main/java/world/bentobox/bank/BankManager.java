@@ -23,6 +23,7 @@ import com.google.common.base.Enums;
 
 import world.bentobox.bank.data.AccountHistory;
 import world.bentobox.bank.data.BankAccounts;
+import world.bentobox.bank.data.Money;
 import world.bentobox.bank.data.TxType;
 import world.bentobox.bentobox.api.events.island.IslandPreclearEvent;
 import world.bentobox.bentobox.api.user.User;
@@ -36,13 +37,13 @@ import world.bentobox.bentobox.util.Util;
  */
 public class BankManager implements Listener {
     private static final int MAX_SIZE = 20;
-    private static final double MINIMUM_BALANCE = 0.1;
     private static final double MINIMUM_INTEREST = 0.01;
+    static final long MILLISECONDS_IN_YEAR = 1000 * 60 * 60 * 24 * 365;
     // Database handler for accounts
     private final Database<BankAccounts> handler;
     private final Bank addon;
     private final Map<String, BankAccounts> cache;
-    private final Map<String, Double> balances;
+    private final Map<String, Money> balances;
 
     /**
      * Cached database bank manager for withdrawals, deposits and balance inquiries
@@ -61,49 +62,64 @@ public class BankManager implements Listener {
     }
 
     /**
-     * Load the bank balances
+     * Load the bank balances and calculate any interest due
      * @return completable future that completes when the loading is done
      */
     public CompletableFuture<Void> loadBalances() {
         CompletableFuture<Void> future = new CompletableFuture<>();
         balances.clear();
         Bukkit.getScheduler().runTaskAsynchronously(addon.getPlugin(), () -> {
-            handler.loadObjects().forEach(ba -> balances.put(ba.getUniqueId(), ba.getBalance()));
+            handler.loadObjects().forEach(ba -> balances.put(ba.getUniqueId(), getBalancePlusInterest(ba)));
             future.complete(null);
         });
         return future;
     }
 
     /**
-     * Start a recurring task to pay interest
+     * Get the new balance plus interest, if any.
+     * Interest will only be calculated if the last time it was added is longer than the compound period
+     * @param ba - bank account
+     * @return Money balance of account
      */
-    public void startInterest() {
-        if (addon.getSettings().getInterestRate() <= 0D) {
-            return;
+    private Money getBalancePlusInterest(BankAccounts ba) {
+        if (System.currentTimeMillis() - ba.getInterestLastPaid() > addon.getSettings().getCompoundPeriodInMs()) {
+            return calculateInterest(ba);
         }
-        Bukkit.getScheduler().runTaskTimer(addon.getPlugin(),
-                () -> calculateInterest(), addon.getSettings().getCompoundPeriod(), addon.getSettings().getCompoundPeriod());
+        return ba.getBalance();
     }
 
-    void calculateInterest() {
-        balances.forEach((uuid, bal) -> {
-            if (bal < MINIMUM_BALANCE) return;
-            double interest = formatDouble(bal * addon.getSettings().getInterestRate());
-            if (interest > MINIMUM_INTEREST) {
-                addon.getIslands().getIslandById(uuid).filter(i -> i.getOwner() != null).ifPresent(island ->
-                this.set(User.getInstance(island.getOwner()), island.getUniqueId(), interest, (bal + interest), TxType.INTEREST));
-            }
-        });
+    Money calculateInterest(BankAccounts ba) {
+        double bal = ba.getBalance().getValue();
+        // Calculate compound interest over period of time
+        // A = P * (1 + r/n)^(n*t)
+        /*
+         * A = the total value
+         * P = the initial deposit
+         * r = the annual interest rate
+         * n = the number of times that interest is compounded per year
+         * t = the number of years the money is saved﻿
+         */
+        double r = (double)addon.getSettings().getInterestRate() / 100;
+        long n = addon.getSettings().getCompoundPeriodsPerYear();
+        double t = getYears(System.currentTimeMillis() - ba.getInterestLastPaid());
+        double A = bal * Math.pow((1 + r/n), (n*t));
+        double interest = A - bal;
+        if (interest > MINIMUM_INTEREST) {
+            addon.getIslands().getIslandById(ba.getUniqueId()).filter(i -> i.getOwner() != null).ifPresent(island -> {
+                // Set the interest payment timestamp
+                ba.setInterestLastPaid(System.currentTimeMillis());
+                // Put this account into the cache so it will be found immediately by the set method
+                cache.put(ba.getUniqueId(), ba);
+                // Add the new amount
+                this.set(User.getInstance(island.getOwner()), island.getUniqueId(), new Money(interest), new Money(bal + interest), TxType.INTEREST);
+            });
+
+        }
+        return new Money(A);
     }
 
-    /**
-     * Reduce double down to 2 decimal places
-     * @param valueToFormat - value
-     * @return double reduced
-     */
-    private Double formatDouble(Double valueToFormat) {
-        long rounded = Math.round(valueToFormat*100);
-        return rounded/100.0;
+    private double getYears(long l) {
+        return (double)l / MILLISECONDS_IN_YEAR;
     }
 
     /**
@@ -112,7 +128,7 @@ public class BankManager implements Listener {
      * @param world - island's world
      * @return BankResponse
      */
-    public CompletableFuture<BankResponse> deposit(User user, double amount, World world) {
+    public CompletableFuture<BankResponse> deposit(User user, Money amount, World world) {
         // Get player's account
         Island island = addon.getIslands().getIsland(Objects.requireNonNull(Util.getWorld(world)), user);
         if (island == null) {
@@ -127,10 +143,12 @@ public class BankManager implements Listener {
      * @param amount - amount
      * @return BankResponse
      */
-    public CompletableFuture<BankResponse> deposit(User user, Island island, double amount, TxType type) {
+    public CompletableFuture<BankResponse> deposit(User user, Island island, Money amount, TxType type) {
         try {
             BankAccounts account = getAccount(island.getUniqueId());
-            return this.set(user, island.getUniqueId(), amount, (account.getBalance() + amount), type);
+            // Calculate interest
+            this.getBalancePlusInterest(account);
+            return this.set(user, island.getUniqueId(), amount, Money.add(account.getBalance(), amount), type);
         } catch (IOException e) {
             return CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR);
         }
@@ -163,7 +181,7 @@ public class BankManager implements Listener {
      * @param world - world
      * @return BankResponse
      */
-    public CompletableFuture<BankResponse> withdraw(User user, double amount, World world) {
+    public CompletableFuture<BankResponse> withdraw(User user, Money amount, World world) {
         // Get player's island
         Island island = addon.getIslands().getIsland(Objects.requireNonNull(Util.getWorld(world)), user);
         if (island == null) {
@@ -178,7 +196,7 @@ public class BankManager implements Listener {
      * @param amount - amount
      * @return BankResponse
      */
-    public CompletableFuture<BankResponse> withdraw(User user, Island island, double amount, TxType type) {
+    public CompletableFuture<BankResponse> withdraw(User user, Island island, Money amount, TxType type) {
         BankAccounts account;
         if (!handler.objectExists(island.getUniqueId())) {
             // No account = no balance
@@ -191,13 +209,15 @@ public class BankManager implements Listener {
             }
 
         }
+        // Calculate interest
+        this.getBalancePlusInterest(account);
         // Check balance
-        if (account.getBalance() < amount) {
+        if (Money.lessThan(account.getBalance(), amount)) {
             // Low balance
             return CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE);
         }
         // Success
-        return this.set(user, island.getUniqueId(), amount, (account.getBalance() - amount), type);
+        return this.set(user, island.getUniqueId(), amount, Money.subtract(account.getBalance(), amount), type);
     }
 
     /**
@@ -205,11 +225,11 @@ public class BankManager implements Listener {
      * @param island - island
      * @return balance. 0 if unknown
      */
-    public double getBalance(@Nullable Island island) {
+    public Money getBalance(@Nullable Island island) {
         if (island == null) {
-            return 0D;
+            return new Money();
         }
-        return balances.getOrDefault(island.getUniqueId(), 0D);
+        return balances.getOrDefault(island.getUniqueId(), new Money());
     }
 
     /**
@@ -218,7 +238,7 @@ public class BankManager implements Listener {
      * @param world - world
      * @return balance. 0 if unknown
      */
-    public double getBalance(User user, World world) {
+    public Money getBalance(User user, World world) {
         return getBalance(addon.getIslands().getIsland(Objects.requireNonNull(Util.getWorld(world)), user));
     }
 
@@ -230,6 +250,8 @@ public class BankManager implements Listener {
     public List<AccountHistory> getHistory(Island island) {
         try {
             BankAccounts account = getAccount(island.getUniqueId());
+            // Calculate interest
+            this.getBalancePlusInterest(account);
             return account.getHistory().entrySet().stream().map(en -> {
                 String[] split = en.getValue().split(":");
                 if (split.length == 3) {
@@ -248,7 +270,7 @@ public class BankManager implements Listener {
      * @param world - world
      * @return the balances
      */
-    public Map<String, Double> getBalances(World world) {
+    public Map<String, Money> getBalances(World world) {
         return balances.entrySet().stream()
                 .filter(en -> addon.getIslands().getIslandById(en.getKey())
                         .map(i -> i.getWorld().equals(Util.getWorld(world))).orElse(false))
@@ -259,19 +281,16 @@ public class BankManager implements Listener {
      * Sets an island's account value to an amount
      * @param user - user who is doing the setting or island owner for interest
      * @param islandID - island unique id
-     * @param amount - amount
+     * @param amount - amount being added or removed
+     * @param newBalance - the resulting new balance
      * @param type - type of transaction
      * @return BankResponse
      */
-    public CompletableFuture<BankResponse> set(@NonNull User user, @NonNull String islandID, double amount, double newBalance, TxType type) {
+    public CompletableFuture<BankResponse> set(@NonNull User user, @NonNull String islandID, Money amount, Money newBalance, TxType type) {
         try {
             BankAccounts account = getAccount(islandID);
             account.setBalance(newBalance);
-            if (type.equals(TxType.INTEREST) ) {
-                account.getHistory().put(System.currentTimeMillis(), user.getTranslation("bank.statement.interest") + ":" + amount);
-            } else {
-                account.getHistory().put(System.currentTimeMillis(), user.getName() + ":" + type + ":" + amount);
-            }
+            account.getHistory().put(System.currentTimeMillis(), user.getName() + ":" + type + ":" + amount.getValue());
             cache.put(islandID, account);
             balances.put(islandID, account.getBalance());
             CompletableFuture<BankResponse> result = new CompletableFuture<>();

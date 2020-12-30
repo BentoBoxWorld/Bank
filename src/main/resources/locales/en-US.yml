@@ -40,7 +40,10 @@ bank:
     no-rank: "&c Your rank is not high enough to use the bank."
     too-much: "&c You do not have that amount to deposit."
     value-must-be-positive: "&c Amount must be positive."
-  statement: 
+  statement:
+    balance:
+      name: "&9 Balance:"
+      description: &6 [number]
     deposit: Deposit
     description: "show your island bank history"
     give: "Admin Give"

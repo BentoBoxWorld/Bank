@@ -37,10 +37,10 @@ public class Settings implements ConfigObject {
     private int ranksNumber = 10;
 
     @ConfigComment("The annual interest rate for accounts. If zero or less, interest will not be paid.")
-    private float interestRate = 10;
+    private int interestRate = 10;
 
-    @ConfigComment("Period that interest is compounded in hours. Default is 1 hour; minimum is 1 minute.")
-    @ConfigComment("Make period shorter than the server reboot period otherwise interest will not be paid.")
+    @ConfigComment("Period that interest is compounded in days. Default is 1 day.")
+    @ConfigComment("Interest calculations are done when the server starts or when the player logs in.")
     private float compoundPeriod = 1;
 
     /**
@@ -100,33 +100,54 @@ public class Settings implements ConfigObject {
     }
 
     /**
-     * @return the interestRate for this period
+     * Interest rate is a yearly percentage.
+     * @return the yearly interestRate
      */
-    public float getInterestRate() {
-        // Interest rate is a yearly percentage. Period is hourly.
-        return interestRate / 365 / 24 / 100;
+    public int getInterestRate() {
+        return interestRate;
     }
 
     /**
      * @param interestRate the interestRate to set
      */
-    public void setInterestRate(float interestRate) {
+    public void setInterestRate(int interestRate) {
         this.interestRate = interestRate;
     }
 
     /**
      * @return the compoundPeriod in ticks
      */
-    public long getCompoundPeriod() {
+    public long getCompoundPeriodInTicks() {
         // Make the period a minimum of 1 minute long
-        return Math.max(1200L, (long) (compoundPeriod * 72000L));
+        return Math.max(1200L, (long) (compoundPeriod * 20 * 24 * 60 * 60));
     }
 
     /**
-     * @param compoundPeriod the compoundPeriod to set
+     * @return compound period in days
+     */
+    public float getCompoundPeriod() {
+        return compoundPeriod;
+    }
+
+    /**
+     * @return the compound periods per year
+     */
+    public long getCompoundPeriodsPerYear() {
+        return (long) (compoundPeriod * 365);
+    }
+
+    /**
+     * @param compoundPeriod the compoundPeriod to set in hours
      */
     public void setCompoundPeriod(float compoundPeriod) {
         this.compoundPeriod = compoundPeriod;
+    }
+
+    /**
+     * @return the compound period in ms
+     */
+    public long getCompoundPeriodInMs() {
+        return (long) (compoundPeriod * 24 * 60 * 60 * 1000);
     }
 
 
