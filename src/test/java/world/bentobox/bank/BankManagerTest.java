@@ -273,6 +273,7 @@ public class BankManagerTest {
      */
     @Test
     public void testOnCalculateInterestOneYear10() {
+        calculate(10, 11051.56D, BankManager.MILLISECONDS_IN_YEAR);
         BankAccounts ba = new BankAccounts();
         settings.setInterestRate(10); // 10%
         ba.setBalance(new Money(10000));
@@ -284,12 +285,8 @@ public class BankManagerTest {
      * Test method for {@link world.bentobox.bank.BankManager#calculateInterest(world.bentobox.bank.data.BankAccounts)}.
      */
     @Test
-    public void testOnCalculateInterestOneYear10OneDay() {
-        BankAccounts ba = new BankAccounts();
-        settings.setInterestRate(10); // 10%
-        ba.setBalance(new Money(10000));
-        ba.setInterestLastPaid(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
-        assertEquals(10058.89D, bm.calculateInterest(ba).getValue(), 0D);
+    public void testOnCalculateInterestOneDay10() {
+        calculate(10, 10002.74D, (long)24 * 60 * 60 * 1000);
     }
 
     /**
@@ -297,11 +294,7 @@ public class BankManagerTest {
      */
     @Test
     public void testOnCalculateInterestOneYear25() {
-        BankAccounts ba = new BankAccounts();
-        settings.setInterestRate(25); // 25%
-        ba.setBalance(new Money(10000));
-        ba.setInterestLastPaid(System.currentTimeMillis() - BankManager.MILLISECONDS_IN_YEAR);
-        assertEquals(12839.16D, bm.calculateInterest(ba).getValue(), 0D);
+        calculate(25, 12839.16D, BankManager.MILLISECONDS_IN_YEAR);
     }
 
     /**
@@ -309,11 +302,16 @@ public class BankManagerTest {
      */
     @Test
     public void testOnCalculateInterestOneYear0() {
+        calculate(0, 10000D, BankManager.MILLISECONDS_IN_YEAR);
+    }
+
+    private void calculate(int i, double d, long milliseconds) {
         BankAccounts ba = new BankAccounts();
-        settings.setInterestRate(0); // 0%
+        settings.setInterestRate(i); // 10%
         ba.setBalance(new Money(10000));
-        ba.setInterestLastPaid(System.currentTimeMillis() - BankManager.MILLISECONDS_IN_YEAR);
-        assertEquals(10000D, bm.calculateInterest(ba).getValue(), 0D);
+        ba.setInterestLastPaid(System.currentTimeMillis() - milliseconds);
+        assertEquals(d, bm.calculateInterest(ba).getValue(), 0D);
+
     }
 
 }

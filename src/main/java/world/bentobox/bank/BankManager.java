@@ -38,7 +38,7 @@ import world.bentobox.bentobox.util.Util;
 public class BankManager implements Listener {
     private static final int MAX_SIZE = 20;
     private static final double MINIMUM_INTEREST = 0.01;
-    static final long MILLISECONDS_IN_YEAR = 1000 * 60 * 60 * 24 * 365;
+    static final long MILLISECONDS_IN_YEAR = (long)1000 * 60 * 60 * 24 * 365;
     // Database handler for accounts
     private final Database<BankAccounts> handler;
     private final Bank addon;
@@ -91,9 +91,9 @@ public class BankManager implements Listener {
     Money calculateInterest(BankAccounts ba) {
         double bal = ba.getBalance().getValue();
         // Calculate compound interest over period of time
-        // A = P * (1 + r/n)^(n*t)
+        // a = P * (1 + r/n)^(n*t)
         /*
-         * A = the total value
+         * a = the total value
          * P = the initial deposit
          * r = the annual interest rate
          * n = the number of times that interest is compounded per year
@@ -102,8 +102,8 @@ public class BankManager implements Listener {
         double r = (double)addon.getSettings().getInterestRate() / 100;
         long n = addon.getSettings().getCompoundPeriodsPerYear();
         double t = getYears(System.currentTimeMillis() - ba.getInterestLastPaid());
-        double A = bal * Math.pow((1 + r/n), (n*t));
-        double interest = A - bal;
+        double a = bal * Math.pow((1 + r/n), (n*t));
+        double interest = a - bal;
         if (interest > MINIMUM_INTEREST) {
             addon.getIslands().getIslandById(ba.getUniqueId()).filter(i -> i.getOwner() != null).ifPresent(island -> {
                 // Set the interest payment timestamp
@@ -115,7 +115,7 @@ public class BankManager implements Listener {
             });
 
         }
-        return new Money(A);
+        return new Money(a);
     }
 
     private double getYears(long l) {

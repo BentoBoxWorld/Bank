@@ -21,8 +21,10 @@ public class BankAccounts implements DataObject {
     @Expose
     private String uniqueId;
 
+    /**
+     * This is only used for backward compatibility
+     */
     @Expose
-    @Deprecated
     private Double balance;
 
     @Expose

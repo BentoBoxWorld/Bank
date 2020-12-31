@@ -41,7 +41,7 @@ public class Money implements Comparable<Money> {
      * @param d the value to set
      */
     public void setValue(double d) {
-        this.value = new BigDecimal(d).setScale(2, RoundingMode.HALF_DOWN);
+        this.value = BigDecimal.valueOf(d).setScale(2, RoundingMode.HALF_DOWN);
     }
 
     public static Money add(@NonNull Money value1, @NonNull Money value2) {
@@ -104,7 +104,7 @@ public class Money implements Comparable<Money> {
      * @return {@code true} if the value is > 0
      */
     public boolean isPositive() {
-        return value.compareTo(BigDecimal.ZERO) == 1;
+        return value.compareTo(BigDecimal.ZERO) > 0;
     }
 
     /**
