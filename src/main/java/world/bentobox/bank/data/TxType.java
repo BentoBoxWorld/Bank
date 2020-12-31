@@ -22,6 +22,10 @@ public enum TxType {
      */
     SET,
     /**
+     * Interest
+     */
+    INTEREST,
+    /**
      * Unknown transaction type
      */
     UNKNOWN

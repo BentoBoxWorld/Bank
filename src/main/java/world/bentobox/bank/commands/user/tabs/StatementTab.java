@@ -1,6 +1,7 @@
 package world.bentobox.bank.commands.user.tabs;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -37,8 +38,9 @@ public class StatementTab implements Tab {
     private static final Map<TxType, MaterialText> ICON_TEXT;
     static {
         Map<TxType, MaterialText> ic = new EnumMap<>(TxType.class);
-        ic.put(TxType.DEPOSIT, new MaterialText(Material.GOLD_NUGGET, "deposit"));
+        ic.put(TxType.DEPOSIT, new MaterialText(Material.GOLD_INGOT, "deposit"));
         ic.put(TxType.WITHDRAW, new MaterialText(Material.WOODEN_PICKAXE, "withdrawal"));
+        ic.put(TxType.INTEREST, new MaterialText(Material.GOLD_NUGGET, "interest"));
         ic.put(TxType.SET, new MaterialText(Material.BIRCH_SIGN, "set"));
         ic.put(TxType.GIVE, new MaterialText(Material.GOLDEN_HOE, "give"));
         ic.put(TxType.TAKE, new MaterialText(Material.DARK_OAK_SIGN, "take"));
@@ -68,7 +70,19 @@ public class StatementTab implements Tab {
     @Override
     public List<@Nullable PanelItem> getPanelItems() {
         if (island == null) return Collections.emptyList();
-        return addon.getBankManager().getHistory(island).stream()
+        List<PanelItem> result = new ArrayList<>();
+        // Balance
+        result.add(new PanelItemBuilder()
+                .icon(Material.CHEST)
+                .name(user.getTranslation("bank.statement.balance.name"))
+                .description(user.getTranslation("bank.statement.balance.description",
+                        TextVariables.NUMBER,
+                        addon.getVault().format(addon
+                                .getBankManager()
+                                .getBalance(island)
+                                .getValue())))
+                .build());
+        result.addAll(addon.getBankManager().getHistory(island).stream()
                 .sorted(sort ? comparator.reversed() : comparator)
                 .map(ah -> {
                     DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, user.getLocale());
@@ -84,7 +98,8 @@ public class StatementTab implements Tab {
                                     TextVariables.NAME, ah.getName(),
                                     TextVariables.NUMBER, addon.getVault().format(ah.getAmount())));
                     return pi.icon(ICON_TEXT.get(ah.getType()).material).name(user.getTranslation("bank.statement." + ICON_TEXT.get(ah.getType()).text)).build();
-                }).collect(Collectors.toList());
+                }).collect(Collectors.toList()));
+        return result;
     }
 
     @Override

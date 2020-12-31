@@ -31,6 +31,7 @@ import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
 import world.bentobox.bank.BankResponse;
+import world.bentobox.bank.data.Money;
 import world.bentobox.bank.data.TxType;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -107,8 +108,8 @@ public class AdminSetCommandTest {
         EconomyResponse er = new EconomyResponse(0, 0, ResponseType.SUCCESS, "");
         when(vh.withdraw(eq(user), anyDouble(), eq(world))).thenReturn(er);
         // Always successful setting
-        when(bankManager.set(eq(user), anyString(), anyDouble(), anyDouble(), eq(TxType.SET))).thenReturn(CompletableFuture.completedFuture(BankResponse.SUCCESS));
-        when(bankManager.getBalance(eq(island))).thenReturn(100D);
+        when(bankManager.set(eq(user), anyString(), any(), any(), eq(TxType.SET))).thenReturn(CompletableFuture.completedFuture(BankResponse.SUCCESS));
+        when(bankManager.getBalance(eq(island))).thenReturn(new Money(100D));
         // Island
         when(island.getUniqueId()).thenReturn(UUID.randomUUID().toString());
 
@@ -217,7 +218,7 @@ public class AdminSetCommandTest {
     @Test
     public void testExecuteUserStringListOfStringError() {
         testCanExecuteSuccess();
-        when(bankManager.set(eq(user), any(), anyDouble(), anyDouble(), eq(TxType.SET))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR));
+        when(bankManager.set(eq(user), any(), any(), any(), eq(TxType.SET))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR));
         assertTrue(bc.execute(user, "set", Arrays.asList("tastybento", "100")));
         verify(user).sendMessage(eq("bank.errors.bank-error"));
     }

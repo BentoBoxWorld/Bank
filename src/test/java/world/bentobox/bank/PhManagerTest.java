@@ -28,6 +28,7 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.AddonDescription;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
@@ -68,7 +69,7 @@ public class PhManagerTest {
     private Island island;
     @Mock
     private @Nullable Location location;
-    private Map<String, Double> map;
+    private Map<String, Money> map;
     @Mock
     private PlayersManager plm;
 
@@ -91,7 +92,7 @@ public class PhManagerTest {
         when(addon.getIslands()).thenReturn(im);
         when(user.getLocation()).thenReturn(location);
         when(im.getIslandAt(eq(location))).thenReturn(Optional.of(island));
-        when(bm.getBalance(eq(island))).thenReturn(1234.56D);
+        when(bm.getBalance(eq(island))).thenReturn(new Money(1234.56D));
         map = new LinkedHashMap<>();
         when(bm.getBalances(any())).thenReturn(map);
         when(addon.getPlayers()).thenReturn(plm);
@@ -169,7 +170,7 @@ public class PhManagerTest {
      */
     @Test
     public void testGetVisitedIslandBalanceLargest() {
-        when(bm.getBalance(eq(island))).thenReturn(Double.MAX_VALUE);
+        when(bm.getBalance(eq(island))).thenReturn(new Money(Double.MAX_VALUE));
         assertEquals("9223372T", pm.getVisitedIslandBalance(gm, user, true, false));
         assertEquals("1.7976931348623157E308", pm.getVisitedIslandBalance(gm, user, true, true));
     }
@@ -179,7 +180,7 @@ public class PhManagerTest {
      */
     @Test
     public void testGetVisitedIslandBalanceBig() {
-        when(bm.getBalance(eq(island))).thenReturn(123456789D);
+        when(bm.getBalance(eq(island))).thenReturn(new Money(123456789D));
         assertEquals("123.5M", pm.getVisitedIslandBalance(gm, user, true, false));
         assertEquals("1.23456789E8", pm.getVisitedIslandBalance(gm, user, true, true));
     }
@@ -241,23 +242,23 @@ public class PhManagerTest {
      */
     @Test
     public void testCheckCacheWithBalances() {
-        map.put(UUID.randomUUID().toString(), 123.45);
-        map.put(UUID.randomUUID().toString(), 1230.45);
-        map.put(UUID.randomUUID().toString(), 12300.45);
-        map.put(UUID.randomUUID().toString(), 12.45);
-        map.put(UUID.randomUUID().toString(), 12343.45);
-        map.put(UUID.randomUUID().toString(), 1.45);
-        map.put(UUID.randomUUID().toString(), 1345.45);
-        map.put(UUID.randomUUID().toString(), 1345.45);
-        map.put(UUID.randomUUID().toString(), 1345.45);
-        map.put(UUID.randomUUID().toString(), 100.45);
-
-        map.put(UUID.randomUUID().toString(), 10000.45);
-        map.put(UUID.randomUUID().toString(), 1000000.45);
+        map.put(UUID.randomUUID().toString(), new Money(123.45));
+        map.put(UUID.randomUUID().toString(), new Money(1230.45));
+        map.put(UUID.randomUUID().toString(), new Money(12300.45));
+        map.put(UUID.randomUUID().toString(), new Money(12.45));
+        map.put(UUID.randomUUID().toString(), new Money(12343.45));
+        map.put(UUID.randomUUID().toString(), new Money(1.45));
+        map.put(UUID.randomUUID().toString(), new Money(1345.45));
+        map.put(UUID.randomUUID().toString(), new Money(1345.45));
+        map.put(UUID.randomUUID().toString(), new Money(1345.45));
+        map.put(UUID.randomUUID().toString(), new Money(100.45));
+        map.put(UUID.randomUUID().toString(), new Money(100.4556786));
+        map.put(UUID.randomUUID().toString(), new Money(10000.45));
+        map.put(UUID.randomUUID().toString(), new Money(1000000.45));
         when(bm.getBalances(world)).thenReturn(map);
         for (int i = 1; i < 11; i++) {
             pm.checkCache(world, i);
-            assertEquals(pm.getBalances().get(i-1), "$" + map.get(pm.getNames().get(i - 1)));
+            assertEquals(pm.getBalances().get(i-1), "$" + map.get(pm.getNames().get(i - 1)).getValue());
         }
     }
 

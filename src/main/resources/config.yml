@@ -1,5 +1,4 @@
 # Bank Configuration ${version}
-# 
 bank:
   # BentoBox GameModes that can use Bank
   game-modes:
@@ -13,3 +12,15 @@ bank:
     user: bank
     # Admin command
     admin: bank
+  placeholders:
+    # This is how many ranks will be registered with the placeholder API.
+    # There are two placeholders per rank:
+    # %Bank_[gamemode]_top_name_1% with island level: %Bank_[gamemode]_top_value_1%
+    # [gamemode] is bskyblock, acidisland, etc.
+    number-of-ranks: 10
+  # The annual interest rate for accounts.
+  interest-rate: 10
+  # Period that interest is compounded in hours. Default 1 hour
+  # Do not make this time longer than the time your server is on before it reboots
+  compound-period: 1
+  

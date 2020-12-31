@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang.math.NumberUtils;
 
 import world.bentobox.bank.Bank;
+import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
@@ -27,7 +28,7 @@ public abstract class AbstractBankCommand extends CompositeCommand {
 
     protected Bank addon;
     protected Island island;
-    protected double value;
+    protected Money value = new Money();
     protected User target;
 
     protected enum RequestType {
@@ -118,12 +119,12 @@ public abstract class AbstractBankCommand extends CompositeCommand {
 
     protected boolean parseValue(User user, String arg) {
         try {
-            value = Double.parseDouble(arg);
+            value = Money.parseMoney(arg);
         } catch (Exception e) {
             user.sendMessage("bank.errors.must-be-a-number");
             return false;
         }
-        if (value <= 0) {
+        if (!value.isPositive()) {
             user.sendMessage("bank.errors.value-must-be-positive");
             return false;
         }

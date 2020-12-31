@@ -30,6 +30,7 @@ import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
 import world.bentobox.bank.BankResponse;
+import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
@@ -97,7 +98,7 @@ public class DepositCommandTest {
 
         when(ic.getAddon()).thenReturn(addon);
         when(addon.getBankManager()).thenReturn(bankManager);
-        when(bankManager.getBalance(eq(island))).thenReturn(100D);
+        when(bankManager.getBalance(eq(island))).thenReturn(new Money(100D));
         when(addon.getVault()).thenReturn(vh);
         when(vh.getBalance(eq(user), eq(world))).thenReturn(1000D);
         when(vh.format(anyDouble())).thenAnswer(i -> String.valueOf(i.getArgument(0, Double.class)));
@@ -173,7 +174,7 @@ public class DepositCommandTest {
      */
     @Test
     public void testCanExecuteOneArgNumberSuccess() {
-        when(bankManager.getBalance(eq(user), eq(world))).thenReturn(555D);
+        when(bankManager.getBalance(eq(user), eq(world))).thenReturn(new Money(555D));
         assertTrue(dct.canExecute(user, "deposit", Collections.singletonList("123.30")));
         verify(user, never()).sendMessage(any());
     }
@@ -183,7 +184,7 @@ public class DepositCommandTest {
      */
     @Test
     public void testExecuteUserStringListOfStringLoadError() {
-        when(bankManager.deposit(eq(user), anyDouble(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR));
+        when(bankManager.deposit(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR));
 
         assertTrue(dct.execute(user, "deposit", Collections.emptyList()));
         verify(user).sendMessage("bank.errors.bank-error");
@@ -205,7 +206,7 @@ public class DepositCommandTest {
      */
     @Test
     public void testExecuteUserStringListOfStringLowBalance() {
-        when(bankManager.deposit(eq(user), anyDouble(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
+        when(bankManager.deposit(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
 
         assertTrue(dct.execute(user, "deposit", Collections.emptyList()));
         verify(user).sendMessage("bank.errors.low-balance");
@@ -216,7 +217,7 @@ public class DepositCommandTest {
      */
     @Test
     public void testExecuteUserStringListOfStringNoIsland() {
-        when(bankManager.deposit(eq(user), anyDouble(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_NO_ISLAND));
+        when(bankManager.deposit(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_NO_ISLAND));
         assertTrue(dct.execute(user, "deposit", Collections.emptyList()));
         verify(user).sendMessage("general.errors.no-island");
     }
@@ -227,7 +228,7 @@ public class DepositCommandTest {
     @Test
     public void testExecuteUserStringListOfStringSuccess() {
         testCanExecuteOneArgNumberSuccess();
-        when(bankManager.deposit(eq(user), anyDouble(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.SUCCESS));
+        when(bankManager.deposit(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.SUCCESS));
         assertTrue(dct.execute(user, "deposit", Collections.singletonList("123.30")));
         verify(vh).withdraw(eq(user), eq(123.3D), eq(world));
         verify(user).sendMessage(eq("bank.deposit.success"), eq(TextVariables.NUMBER), eq("100.0"));
@@ -238,7 +239,7 @@ public class DepositCommandTest {
      */
     @Test
     public void testCanExecuteOneArgNumberLowBalance() {
-        when(bankManager.deposit(eq(user), anyDouble(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
+        when(bankManager.deposit(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
         assertTrue(dct.execute(user, "deposit", Collections.singletonList("123.30")));
         verify(user).sendMessage(eq("bank.errors.low-balance"));
     }

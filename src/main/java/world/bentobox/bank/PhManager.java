@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import org.bukkit.World;
 import org.eclipse.jdt.annotation.Nullable;
 
+import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.user.User;
@@ -65,7 +66,7 @@ public class PhManager {
         // Island Balance
         plugin.getPlaceholdersManager().registerPlaceholder(addon,
                 gm.getDescription().getName().toLowerCase() + "_island_balance",
-                user -> addon.getVault().format(bankManager.getBalance(user, gm.getOverWorld())));
+                user -> addon.getVault().format(bankManager.getBalance(user, gm.getOverWorld()).getValue()));
 
         // Visited Island Balance
         plugin.getPlaceholdersManager().registerPlaceholder(addon,
@@ -74,7 +75,7 @@ public class PhManager {
         // Formatted Island Balance
         plugin.getPlaceholdersManager().registerPlaceholder(addon,
                 gm.getDescription().getName().toLowerCase() + "_island_balance_formatted",
-                user -> format(bankManager.getBalance(user, gm.getOverWorld())));
+                user -> format(bankManager.getBalance(user, gm.getOverWorld()).getValue()));
 
         // Formatted Visited Island Balance
         plugin.getPlaceholdersManager().registerPlaceholder(addon,
@@ -103,7 +104,7 @@ public class PhManager {
      */
     String getVisitedIslandBalance(GameModeAddon gm, User user, boolean formatted, boolean plain) {
         if (user == null || user.getLocation() == null) return "";
-        double balance = gm.inWorld(user.getWorld()) ? addon.getIslands().getIslandAt(user.getLocation()).map(i -> bankManager.getBalance(i)).orElse(0D) : 0D;
+        double balance = gm.inWorld(user.getWorld()) ? addon.getIslands().getIslandAt(user.getLocation()).map(i -> bankManager.getBalance(i).getValue()).orElse(0D) : 0D;
         if (plain) {
             return String.valueOf(balance);
         }
@@ -134,12 +135,12 @@ public class PhManager {
             balances.clear();
             // Get a new balance map, sort it and save it to two sorted lists
             bankManager.getBalances(world).entrySet()
-            .stream().sorted((h1, h2) -> Double.compare(h2.getValue(), h1.getValue()))
+            .stream().sorted((h1, h2) -> Money.compare(h2.getValue(), h1.getValue()))
             .limit(addon.getSettings().getRanksNumber())
             .forEach(en -> {
                 names.add(addon.getIslands().getIslandById(en.getKey())
                         .map(i -> addon.getPlayers().getName(i.getOwner())).orElse(""));
-                balances.add(addon.getVault().format(en.getValue()));
+                balances.add(addon.getVault().format(en.getValue().getValue()));
             });
             lastSorted = System.currentTimeMillis();
         }

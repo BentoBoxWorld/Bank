@@ -30,6 +30,7 @@ import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
 import world.bentobox.bank.BankResponse;
+import world.bentobox.bank.data.Money;
 import world.bentobox.bank.data.TxType;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -107,8 +108,9 @@ public class AdminTakeCommandTest {
         EconomyResponse er = new EconomyResponse(0, 0, ResponseType.SUCCESS, "");
         when(vh.withdraw(eq(user), anyDouble(), eq(world))).thenReturn(er);
         // Always successful taking
-        when(bankManager.withdraw(eq(user), any(), anyDouble(), eq(TxType.TAKE))).thenReturn(CompletableFuture.completedFuture(BankResponse.SUCCESS));
-
+        when(bankManager.withdraw(eq(user), any(), any(), eq(TxType.TAKE))).thenReturn(CompletableFuture.completedFuture(BankResponse.SUCCESS));
+        // set default balance to 0 for unknown island
+        when(bankManager.getBalance(any())).thenReturn(new Money());
 
         bc = new AdminTakeCommand(ic);
     }
@@ -217,7 +219,7 @@ public class AdminTakeCommandTest {
     @Test
     public void testExecuteUserStringListOfStringLowBalance() {
         testCanExecuteSuccess();
-        when(bankManager.withdraw(eq(user), any(), anyDouble(), eq(TxType.TAKE))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
+        when(bankManager.withdraw(eq(user), any(), any(), eq(TxType.TAKE))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
         assertTrue(bc.execute(user, "take", Arrays.asList("tastybento", "100")));
         verify(user).sendMessage(eq("bank.errors.too-low"));
     }
@@ -227,7 +229,7 @@ public class AdminTakeCommandTest {
      */
     @Test
     public void testExecuteUserStringListOfStringError() {
-        when(bankManager.withdraw(eq(user), any(), anyDouble(), eq(TxType.TAKE))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR));
+        when(bankManager.withdraw(eq(user), any(), any(), eq(TxType.TAKE))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR));
         assertTrue(bc.execute(user, "take", Arrays.asList("tastybento", "100")));
         verify(user).sendMessage(eq("bank.errors.bank-error"));
     }

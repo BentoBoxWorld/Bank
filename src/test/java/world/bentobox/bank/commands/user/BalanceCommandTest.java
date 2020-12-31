@@ -27,6 +27,7 @@ import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
+import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
@@ -98,6 +99,8 @@ public class BalanceCommandTest {
 
         PowerMockito.mockStatic(Util.class);
         when(Util.getWorld(any())).thenAnswer(arg -> arg.getArgument(0, World.class));
+
+        when(bankManager.getBalance(any())).thenReturn(new Money());
 
         bc = new BalanceCommand(ic);
     }
