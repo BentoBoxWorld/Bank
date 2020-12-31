@@ -152,7 +152,7 @@ public class MoneyTest {
     public void testCompareTo() {
         m = new Money(456);
         assertTrue(m.compareTo(new Money(123)) > 0);
-        assertTrue(m.compareTo(new Money(456)) == 0);
+        assertEquals(0, m.compareTo(new Money(456)));
         assertTrue(m.compareTo(new Money(1230)) < 0);
     }
 
@@ -162,7 +162,7 @@ public class MoneyTest {
     @Test
     public void testCompare() {
         assertTrue(Money.compare(new Money(456), new Money(123)) > 0);
-        assertTrue(Money.compare(new Money(456), new Money(456)) == 0);
+        assertEquals(0, Money.compare(new Money(456), new Money(456)));
         assertTrue(Money.compare(new Money(456), new Money(1230)) < 0);
     }
 
