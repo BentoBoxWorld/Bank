@@ -43,6 +43,9 @@ bank:
     value-must-be-positive: "&c Le montant doit être positif."
     too-low: "&c L'équilibre de l'île est trop faible."
   statement:
+    balance:
+      name: "&9 Le solde :"
+      description: "&6 [number]"
     deposit: Dépôt
     description: montrer l'histoire de votre banque insulaire
     give: Admin Donner

@@ -43,7 +43,7 @@ bank:
   statement:
     balance:
       name: "&9 Balance:"
-      description: &6 [number]
+      description: "&6 [number]"
     deposit: Deposit
     description: "show your island bank history"
     give: "Admin Give"
