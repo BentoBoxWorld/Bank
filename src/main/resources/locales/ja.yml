@@ -40,6 +40,9 @@ bank:
     too-much: "&cデポジットする金額がありません。"
     value-must-be-positive: "&c金額は正でなければなりません。"
   statement:
+    balance:
+      name: "&9 銀行預金残高:"
+      description: "&6 [number]"
     deposit: 預り金
     description: 島の銀行の歴史を表示する
     give: 管理者が与える
