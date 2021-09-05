@@ -40,6 +40,8 @@ bank:
     no-rank: "&c Your rank is not high enough to use the bank."
     too-much: "&c You do not have that amount to deposit."
     value-must-be-positive: "&c Amount must be positive."
+    scientific: "&c Scientific notation is not supported."
+    too-long: "&c Value must be less than 10 digits"
   statement:
     balance:
       name: "&9 Balance:"
