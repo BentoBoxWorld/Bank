@@ -119,6 +119,12 @@ public class Money implements Comparable<Money> {
      *         a parsable {@code Money}.
      */
     public static Money parseMoney(String arg) {
+        if (arg.contains("e") || arg.contains("E")) {
+            throw new NumberFormatException("bank.errors.scientific");
+        }
+        if (arg.length() > 10) {
+            throw new NumberFormatException("bank.errors.too-long");
+        }
         return new Money(new BigDecimal(arg));
     }
 

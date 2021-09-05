@@ -121,7 +121,11 @@ public abstract class AbstractBankCommand extends CompositeCommand {
         try {
             value = Money.parseMoney(arg);
         } catch (Exception e) {
-            user.sendMessage("bank.errors.must-be-a-number");
+            if (e.getMessage().startsWith("bank")) {
+                user.sendMessage(e.getMessage());
+            } else {
+                user.sendMessage("bank.errors.must-be-a-number");
+            }
             return false;
         }
         if (!value.isPositive()) {
