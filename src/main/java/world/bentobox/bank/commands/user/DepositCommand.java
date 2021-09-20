@@ -1,6 +1,8 @@
 package world.bentobox.bank.commands.user;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
@@ -71,4 +73,10 @@ public class DepositCommand extends AbstractBankCommand {
         return false;
     }
 
+    @Override
+    public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
+        VaultHook vault = addon.getVault();
+        String balance = String.valueOf(vault.getBalance(user, getWorld()));
+        return Optional.of(Collections.singletonList(balance));
+    }
 }

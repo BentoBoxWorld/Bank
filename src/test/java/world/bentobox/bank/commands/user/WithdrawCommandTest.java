@@ -11,6 +11,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.World;
@@ -103,6 +105,8 @@ public class WithdrawCommandTest {
 
         PowerMockito.mockStatic(Util.class);
         when(Util.getWorld(any())).thenAnswer(arg -> arg.getArgument(0, World.class));
+
+        when(ic.getWorld()).thenReturn(world);
 
         wct = new WithdrawCommand(ic);
 
@@ -231,4 +235,18 @@ public class WithdrawCommandTest {
         verify(vh).deposit(eq(user), eq(123.3D), eq(world));
         verify(user).sendMessage(eq("bank.withdraw.success"), eq(TextVariables.NUMBER), eq("100.0"));
     }
+
+    /**
+     * Test method for {@link world.bentobox.bank.commands.user.WithdrawCommand#tabComplete(User, String, java.util.List)
+     */
+    @Test
+    public void testTabComplete() {
+        Optional<List<String>> value = wct.tabComplete(user, "", Collections.emptyList());
+        assertTrue(value.isPresent());
+        assertEquals("0.0", value.get().get(0));
+        when(bankManager.getBalance(any(), any())).thenReturn(new Money(12345D));
+        value = wct.tabComplete(user, "", Collections.emptyList());
+        assertEquals("12345.0", value.get().get(0));
+    }
+
 }

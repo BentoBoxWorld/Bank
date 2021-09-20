@@ -1,6 +1,8 @@
 package world.bentobox.bank.commands.user;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import world.bentobox.bank.commands.AbstractBankCommand;
 import world.bentobox.bank.data.Money;
@@ -66,5 +68,10 @@ public class WithdrawCommand extends AbstractBankCommand {
         return true;
     }
 
+    @Override
+    public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
+        String balance = String.valueOf(addon.getBankManager().getBalance(user, getWorld()).getValue());
+        return Optional.of(Collections.singletonList(balance));
+    }
 
 }
