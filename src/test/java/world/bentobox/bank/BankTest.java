@@ -37,7 +37,9 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -279,9 +281,14 @@ public class BankTest {
 
     }
 
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
+
     @Test
     public void testGetSettings() {
-        assertNull(addon.getSettings());
+        exceptionRule.expect(NullPointerException.class);
+        exceptionRule.expectMessage("Settings not initialized?");
+        addon.getSettings();
     }
 
     @Test

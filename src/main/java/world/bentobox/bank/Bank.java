@@ -1,6 +1,9 @@
 package world.bentobox.bank;
 
+import java.util.Objects;
+
 import org.bukkit.Material;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.bank.commands.admin.AdminCommand;
@@ -81,8 +84,8 @@ public class Bank extends Addon {
     /**
      * @return the settings
      */
-    public @Nullable Settings getSettings() {
-        return settings;
+    public @NonNull Settings getSettings() {
+        return Objects.requireNonNull(settings, "Settings not initialized?");
     }
 
     /**
