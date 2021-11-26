@@ -38,7 +38,7 @@ public class Bank extends Addon {
         // Register flag
         this.registerFlag(BANK_ACCESS);
         // Vault hook
-        if (!getPlugin().getVault().isPresent()) {
+        if (getPlugin().getVault().isEmpty()) {
             // Vault is required
             logError("Vault is required - disabling Bank - please install the Vault plugin");
             this.setState(State.DISABLED);

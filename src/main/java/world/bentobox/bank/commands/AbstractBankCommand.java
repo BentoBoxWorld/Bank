@@ -23,7 +23,7 @@ public abstract class AbstractBankCommand extends CompositeCommand {
 
     protected AbstractBankCommand(CompositeCommand parent, String string) {
         super(parent, string);
-        this.addon = ((Bank)getAddon());
+        this.addon = getAddon();
     }
 
     protected Bank addon;

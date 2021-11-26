@@ -49,20 +49,13 @@ public class WithdrawCommand extends AbstractBankCommand {
         // Success
         addon.getBankManager().withdraw(user, value, getWorld()).thenAccept(result -> {
             switch (result) {
-            case FAILURE_LOAD_ERROR:
-                user.sendMessage("bank.errors.bank-error");
-                break;
-            case FAILURE_LOW_BALANCE:
-                user.sendMessage("bank.errors.low-balance");
-                break;
-            case FAILURE_NO_ISLAND:
-                user.sendMessage("general.errors.no-island");
-                break;
-            default:
-                addon.getVault().deposit(user, value.getValue(), getWorld());
-                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
-                break;
-
+                case FAILURE_LOAD_ERROR -> user.sendMessage("bank.errors.bank-error");
+                case FAILURE_LOW_BALANCE -> user.sendMessage("bank.errors.low-balance");
+                case FAILURE_NO_ISLAND -> user.sendMessage("general.errors.no-island");
+                default -> {
+                    addon.getVault().deposit(user, value.getValue(), getWorld());
+                    user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
+                }
             }
         });
         return true;
