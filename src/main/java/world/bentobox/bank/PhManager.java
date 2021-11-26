@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 import org.bukkit.World;
-import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.BentoBox;
@@ -103,7 +102,7 @@ public class PhManager {
      * @return string of balance
      */
     String getVisitedIslandBalance(GameModeAddon gm, User user, boolean formatted, boolean plain) {
-        if (user == null || user.getLocation() == null) return "";
+        if (user == null || !user.isPlayer()) return "";
         double balance = gm.inWorld(user.getWorld()) ? addon.getIslands().getIslandAt(user.getLocation()).map(i -> bankManager.getBalance(i).getValue()).orElse(0D) : 0D;
         if (plain) {
             return String.valueOf(balance);
@@ -184,10 +183,10 @@ public class PhManager {
 
     /**
      * Get the string representation of money. May be converted to shorthand notation, e.g., 104556 = 10.5k
-     * @param lvl - value to represent
+     * @param value - value to represent
      * @return string of the value.
      */
-    private String format(@Nullable double value) {
+    private String format(double value) {
         String level = addon.getVault().format(value);
         BigInteger levelValue = BigInteger.valueOf((long)value);
         Map.Entry<BigInteger, String> stage = LEVELS.floorEntry(levelValue);

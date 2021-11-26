@@ -12,6 +12,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.World;
@@ -242,6 +244,16 @@ public class DepositCommandTest {
         when(bankManager.deposit(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
         assertTrue(dct.execute(user, "deposit", Collections.singletonList("123.30")));
         verify(user).sendMessage(eq("bank.errors.low-balance"));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.commands.user.DepositCommand#tabComplete(User, String, java.util.List)
+     */
+    @Test
+    public void testTabComplete() {
+        Optional<List<String>> value = dct.tabComplete(user, "", Collections.emptyList());
+        assertTrue(value.isPresent());
+        assertEquals("1000.0", value.get().get(0));
     }
 
 }

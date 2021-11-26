@@ -1,6 +1,8 @@
 package world.bentobox.bank.commands.user;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import world.bentobox.bank.commands.AbstractBankCommand;
 import world.bentobox.bank.data.Money;
@@ -47,24 +49,22 @@ public class WithdrawCommand extends AbstractBankCommand {
         // Success
         addon.getBankManager().withdraw(user, value, getWorld()).thenAccept(result -> {
             switch (result) {
-            case FAILURE_LOAD_ERROR:
-                user.sendMessage("bank.errors.bank-error");
-                break;
-            case FAILURE_LOW_BALANCE:
-                user.sendMessage("bank.errors.low-balance");
-                break;
-            case FAILURE_NO_ISLAND:
-                user.sendMessage("general.errors.no-island");
-                break;
-            default:
-                addon.getVault().deposit(user, value.getValue(), getWorld());
-                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
-                break;
-
+                case FAILURE_LOAD_ERROR -> user.sendMessage("bank.errors.bank-error");
+                case FAILURE_LOW_BALANCE -> user.sendMessage("bank.errors.low-balance");
+                case FAILURE_NO_ISLAND -> user.sendMessage("general.errors.no-island");
+                default -> {
+                    addon.getVault().deposit(user, value.getValue(), getWorld());
+                    user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
+                }
             }
         });
         return true;
     }
 
+    @Override
+    public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
+        String balance = String.valueOf(addon.getBankManager().getBalance(user, getWorld()).getValue());
+        return Optional.of(Collections.singletonList(balance));
+    }
 
 }

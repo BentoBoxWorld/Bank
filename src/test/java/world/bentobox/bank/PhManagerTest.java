@@ -104,6 +104,7 @@ public class PhManagerTest {
             return Optional.of(i);
         });
         when(plm.getName(any())).thenAnswer(arg -> arg.getArgument(0, UUID.class).toString());
+        when(user.isPlayer()).thenReturn(true);
         pm = new PhManager(addon, bm);
     }
 

@@ -138,10 +138,9 @@ public class Money implements Comparable<Money> {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Money)) {
+        if (!(obj instanceof Money other)) {
             return false;
         }
-        Money other = (Money) obj;
         return value.equals(other.value);
     }
 

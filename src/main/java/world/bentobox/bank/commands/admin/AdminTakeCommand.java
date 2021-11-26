@@ -37,18 +37,11 @@ public class AdminTakeCommand extends AbstractAdminBankCommand {
         .withdraw(user, island, value, TxType.TAKE)
         .thenAccept(result -> {
             switch (result) {
-            case FAILURE_LOW_BALANCE:
-                user.sendMessage("bank.errors.too-low");
-                break;
-            case SUCCESS:
-                user.sendMessage("bank.admin.give.success",
+                case FAILURE_LOW_BALANCE -> user.sendMessage("bank.errors.too-low");
+                case SUCCESS -> user.sendMessage("bank.admin.give.success",
                         TextVariables.NAME, this.target.getName(),
                         TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
-                break;
-            default:
-                user.sendMessage("bank.errors.bank-error");
-                break;
-
+                default -> user.sendMessage("bank.errors.bank-error");
             }
         });
         return true;
