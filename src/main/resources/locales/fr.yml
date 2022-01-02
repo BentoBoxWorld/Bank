@@ -42,6 +42,8 @@ bank:
     no-rank: "&c Votre rang n'est pas assez élevé pour utiliser la banque."
     too-much: "&c Vous n'avez pas ce montant à déposer."
     value-must-be-positive: "&c Le montant doit être positif."
+    scientific: "&c La notation scientifique n'est pas prise en charge."
+    too-long: "&c La valeur doit être inférieure à 10 chiffres"
   statement:
     balance:
       name: "&9 Le solde :"
