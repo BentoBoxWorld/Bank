@@ -17,14 +17,36 @@ bank:
       success: "&a La cuenta de la isla de [name] fue establecida a [number]."
     statement:
       parameters: "<jugador>"
-  balance: {}
-  baltop: {}
-  deposit: {}
+      description: ver extracto bancario de la isla para el jugador
+  balance:
+    description: muestra el saldo bancario de su isla
+  baltop:
+    description: mostrar clasificaciones de equilibrio
+    highest: Ordenar por más alto
+    lowest: Ordenar por el más bajo
+    title: Saldos superiores
+  deposit:
+    description: depositar cantidad en su cuenta de la isla
+    parameters: "<cantidad>"
   errors: {}
   statement:
-    balance: {}
-  user: {}
-  withdraw: {}
+    balance:
+      name: "& 9 Equilibrio:"
+    deposit: Depositar
+    description: muestra el historial de tu banco de la isla
+    give: Admin Dar
+    interest: Interesar
+    latest: Ordenar por más reciente
+    oldest: Ordenar por más antiguo
+    title: Historial de cuenta
+    unknown: Tipo desconocido
+    withdrawal: Retirada
+  user:
+    description: comando del banco de la isla
+  withdraw:
+    description: retirar cantidad de su cuenta de la isla
+    parameters: "<cantidad>"
 protection:
   flags:
-    BANK_ACCESS: {}
+    BANK_ACCESS:
+      name: Acceso al banco de la isla
