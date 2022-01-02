@@ -37,11 +37,11 @@ bank:
     bank-error: "&c Erreur lors du chargement des informations du compte bancaire
       - veuillez réessayer plus tard"
     low-balance: "&c Le solde bancaire de votre île n'est pas assez élevé!"
+    too-low: "&c L'équilibre de l'île est trop faible."
     must-be-a-number: "&c Le montant doit être un nombre"
     no-rank: "&c Votre rang n'est pas assez élevé pour utiliser la banque."
     too-much: "&c Vous n'avez pas ce montant à déposer."
     value-must-be-positive: "&c Le montant doit être positif."
-    too-low: "&c L'équilibre de l'île est trop faible."
   statement:
     balance:
       name: "&9 Le solde :"
@@ -49,6 +49,7 @@ bank:
     deposit: Dépôt
     description: montrer l'histoire de votre banque insulaire
     give: Admin Donner
+    interest: Intérêt
     latest: Trier par plus récent
     oldest: Trier par plus ancien
     set: Admin Valeur Définir
