@@ -1,0 +1,30 @@
+---
+bank:
+  admin:
+    description: comando de administrador para el addon Bank
+    give:
+      parameters: "<jugador> <cantidad>"
+      description: agrega cierta cantidad a la cuenta de la isla del jugador
+    take:
+      parameters: "<jugador> <cantidad>"
+      description: quita cierta cantidad a la cuenta de la isla del jugador
+    balance:
+      parameters: "<jugador>"
+      description: mirar la cantidad actual de la isla del jugador
+    set:
+      parameters: "<jugador> <cantidad>"
+      description: establece la cuenta de la isla del jugador a cierta cantidad
+      success: "&a La cuenta de la isla de [name] fue establecida a [number]."
+    statement:
+      parameters: "<jugador>"
+  balance: {}
+  baltop: {}
+  deposit: {}
+  errors: {}
+  statement:
+    balance: {}
+  user: {}
+  withdraw: {}
+protection:
+  flags:
+    BANK_ACCESS: {}
