@@ -1,0 +1,52 @@
+---
+bank:
+  admin:
+    description: admin příkaz pro ostrovní banku
+    give:
+      parameters: "<hráč> <množství>"
+      description: přidat částku na hráčův ostrovní účet
+    take:
+      parameters: "<hráč> <množství>"
+      description: vezměte částku z hráčova ostrova
+    balance:
+      parameters: "<hráč>"
+      description: zobrazit zůstatek ostrovního účtu hráče
+    set:
+      parameters: "<hráč> <množství>"
+      description: nastavit částku na hráčově ostrovním účtu
+    statement:
+      parameters: "<hráč>"
+      description: zobrazit výpis z banky pro hráče
+  balance:
+    description: ukazuje zůstatek vaší ostrovní banky
+  baltop:
+    description: zobrazit hodnocení zůstatku
+    highest: Řadit podle nejvyššího
+    lowest: Řadit podle nejnižší
+    title: Nejlepší zůstatky
+  deposit:
+    description: vložte částku na svůj ostrovní účet
+    parameters: "<množství>"
+  errors: {}
+  statement:
+    balance: {}
+    deposit: Vklad
+    description: ukažte historii své ostrovní banky
+    give: Správce dát
+    interest: Zájem
+    latest: Řadit podle nejnovějších
+    oldest: Řadit podle nejstarších
+    set: Sada správce
+    take: Admin Vezměte
+    title: Historie účtu
+    unknown: Neznámý typ
+    withdrawal: Vybrání
+  user:
+    description: příkaz ostrovní banky
+  withdraw:
+    description: vybrat částku ze svého ostrovního účtu
+    parameters: "<množství>"
+protection:
+  flags:
+    BANK_ACCESS:
+      name: Přístup na ostrovní banku
