@@ -44,6 +44,17 @@ public class Money implements Comparable<Money> {
         this.value = BigDecimal.valueOf(d).setScale(2, RoundingMode.HALF_DOWN);
     }
 
+    /**
+     * Returns Money object with given value.
+     *
+     * @param value the value
+     * @return the money object.
+     */
+    public static Money of(double value)
+    {
+        return new Money(value);
+    }
+
     public static Money add(@NonNull Money value1, @NonNull Money value2) {
         return new Money(value1.getValue() + value2.getValue());
     }
