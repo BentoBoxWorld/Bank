@@ -66,6 +66,12 @@ public class BankAccounts implements DataObject {
     public void setBalance(Money balance) {
         this.moneyBalance = balance;
     }
+    /**
+     * @param balance the balance to set
+     */
+    public void setBalance(double balance) {
+        this.moneyBalance = new Money(balance);
+    }
 
     /**
      * @return the history

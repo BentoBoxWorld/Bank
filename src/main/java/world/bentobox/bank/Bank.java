@@ -8,6 +8,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.bank.commands.admin.AdminCommand;
 import world.bentobox.bank.commands.user.UserCommand;
+import world.bentobox.bank.requests.BankRequestHandler;
 import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.flags.Flag;
@@ -74,6 +75,8 @@ public class Bank extends Addon {
             // Log
             this.log("Hooking into " + gm.getDescription().getName());
         });
+        // Register request handler
+        registerRequestHandler(new BankRequestHandler(this));
     }
 
     @Override
