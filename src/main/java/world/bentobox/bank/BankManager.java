@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -29,17 +30,15 @@ import world.bentobox.bentobox.api.events.island.IslandPreclearEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.paperlib.PaperLib;
 import world.bentobox.bentobox.util.Util;
 
 /**
  * @author tastybento
- *
  */
 public class BankManager implements Listener {
     private static final int MAX_SIZE = 20;
     private static final double MINIMUM_INTEREST = 0.01;
-    static final long MILLISECONDS_IN_YEAR = (long)1000 * 60 * 60 * 24 * 365;
+    static final long MILLISECONDS_IN_YEAR = (long) 1000 * 60 * 60 * 24 * 365;
     // Database handler for accounts
     private final Database<BankAccounts> handler;
     private final Bank addon;
@@ -48,6 +47,7 @@ public class BankManager implements Listener {
 
     /**
      * Cached database bank manager for withdrawals, deposits and balance inquiries
+     *
      * @param addon - Bank
      */
     public BankManager(Bank addon) {
@@ -64,6 +64,7 @@ public class BankManager implements Listener {
 
     /**
      * Load the bank balances and calculate any interest due
+     *
      * @return completable future that completes when the loading is done
      */
     public CompletableFuture<Void> loadBalances() {
@@ -79,6 +80,7 @@ public class BankManager implements Listener {
     /**
      * Get the new balance plus interest, if any.
      * Interest will only be calculated if the last time it was added is longer than the compound period
+     *
      * @param ba - bank account
      * @return Money balance of account
      */
@@ -100,10 +102,10 @@ public class BankManager implements Listener {
          * n = the number of times that interest is compounded per year
          * t = the number of years the money is saved﻿
          */
-        double r = (double)addon.getSettings().getInterestRate() / 100;
+        double r = (double) addon.getSettings().getInterestRate() / 100;
         long n = addon.getSettings().getCompoundPeriodsPerYear();
         double t = getYears(System.currentTimeMillis() - ba.getInterestLastPaid());
-        double a = bal * Math.pow((1 + r/n), (n*t));
+        double a = bal * Math.pow((1 + r / n), (n * t));
         double interest = a - bal;
         if (interest > MINIMUM_INTEREST) {
             addon.getIslands().getIslandById(ba.getUniqueId()).filter(i -> i.getOwner() != null).ifPresent(island -> {
@@ -120,13 +122,13 @@ public class BankManager implements Listener {
     }
 
     private double getYears(long l) {
-        return (double)l / MILLISECONDS_IN_YEAR;
+        return (double) l / MILLISECONDS_IN_YEAR;
     }
 
     /**
-     * @param user - depositor and island member
+     * @param user   - depositor and island member
      * @param amount - amount
-     * @param world - island's world
+     * @param world  - island's world
      * @return BankResponse
      */
     public CompletableFuture<BankResponse> deposit(User user, Money amount, World world) {
@@ -139,7 +141,7 @@ public class BankManager implements Listener {
     }
 
     /**
-     * @param user - depositor
+     * @param user   - depositor
      * @param island - island
      * @param amount - amount
      * @return BankResponse
@@ -157,11 +159,23 @@ public class BankManager implements Listener {
 
     /**
      * Gets account
+     *
      * @param uuid - Island UUID
      * @return account
      * @throws IOException - if database value cannot be read
      */
-    private BankAccounts getAccount(String uuid) throws IOException {
+    public BankAccounts getAccount(UUID uuid) throws IOException {
+        return getAccount(uuid.toString());
+    }
+
+    /**
+     * Gets account
+     *
+     * @param uuid - Island UUID
+     * @return account
+     * @throws IOException - if database value cannot be read
+     */
+    public BankAccounts getAccount(String uuid) throws IOException {
         if (cache.containsKey(uuid)) return cache.get(uuid);
         BankAccounts account = new BankAccounts();
         if (!handler.objectExists(uuid)) {
@@ -177,9 +191,9 @@ public class BankManager implements Listener {
     }
 
     /**
-     * @param user - island member
+     * @param user   - island member
      * @param amount - amount
-     * @param world - world
+     * @param world  - world
      * @return BankResponse
      */
     public CompletableFuture<BankResponse> withdraw(User user, Money amount, World world) {
@@ -192,7 +206,7 @@ public class BankManager implements Listener {
     }
 
     /**
-     * @param user - user withdrawing
+     * @param user   - user withdrawing
      * @param island - island
      * @param amount - amount
      * @return BankResponse
@@ -226,13 +240,12 @@ public class BankManager implements Listener {
      * This method checks and returns if in given world given user bank account is at least given value of money. If
      * bank account has exactly required amount, it returns {@code true}.
      *
-     * @param user the user which account must be checked.
+     * @param user  the user which account must be checked.
      * @param world the world where island is located.
      * @param value the value that must be checked.
      * @return {@code true} if in islands bank account is at least given value, {@code false} otherwise.
      */
-    public boolean has(@NonNull User user, @NonNull World world, double value)
-    {
+    public boolean has(@NonNull User user, @NonNull World world, double value) {
         return has(addon.getIslands().getIsland(Objects.requireNonNull(Util.getWorld(world)), user), Money.of(value));
     }
 
@@ -241,13 +254,12 @@ public class BankManager implements Listener {
      * This method checks and returns if in given world given user bank account is at least given value of money. If
      * bank account has exactly required amount, it returns {@code true}.
      *
-     * @param user the user which account must be checked.
+     * @param user  the user which account must be checked.
      * @param world the world where island is located.
      * @param value the value that must be checked.
      * @return {@code true} if in islands bank account is at least given value, {@code false} otherwise.
      */
-    public boolean has(@NonNull User user, @NonNull World world, @Nullable Money value)
-    {
+    public boolean has(@NonNull User user, @NonNull World world, @Nullable Money value) {
         return has(addon.getIslands().getIsland(Objects.requireNonNull(Util.getWorld(world)), user), value);
     }
 
@@ -257,11 +269,10 @@ public class BankManager implements Listener {
      * If bank account has exactly required amount, it returns {@code true}.
      *
      * @param island the island with bank account.
-     * @param value the value that must be checked.
+     * @param value  the value that must be checked.
      * @return {@code true} if in islands bank account is at least given value, {@code false} otherwise.
      */
-    public boolean has(@Nullable Island island, double value)
-    {
+    public boolean has(@Nullable Island island, double value) {
         return has(island, Money.of(value));
     }
 
@@ -271,17 +282,13 @@ public class BankManager implements Listener {
      * If bank account has exactly required amount, it returns {@code true}.
      *
      * @param island the island with bank account.
-     * @param value the value that must be checked.
+     * @param value  the value that must be checked.
      * @return {@code true} if in islands bank account is at least given value, {@code false} otherwise.
      */
-    public boolean has(@Nullable Island island, @Nullable Money value)
-    {
-        if (island == null || value == null)
-        {
+    public boolean has(@Nullable Island island, @Nullable Money value) {
+        if (island == null || value == null) {
             return false;
-        }
-        else
-        {
+        } else {
             return Money.compare(this.balances.getOrDefault(island.getUniqueId(), new Money()), value) >= 0;
         }
     }
@@ -289,6 +296,7 @@ public class BankManager implements Listener {
 
     /**
      * Get balance for island
+     *
      * @param island - island
      * @return balance. 0 if unknown
      */
@@ -300,8 +308,19 @@ public class BankManager implements Listener {
     }
 
     /**
+     * Get balance for island
+     *
+     * @param island - island
+     * @return balance. 0 if unknown
+     */
+    public Money getBalance(UUID island) {
+        return balances.getOrDefault(island.toString(), new Money());
+    }
+
+    /**
      * Get balance for user in world
-     * @param user - user
+     *
+     * @param user  - user
      * @param world - world
      * @return balance. 0 if unknown
      */
@@ -311,6 +330,7 @@ public class BankManager implements Listener {
 
     /**
      * Get history for island
+     *
      * @param island - island
      * @return list of {@link AccountHistory}
      */
@@ -334,6 +354,7 @@ public class BankManager implements Listener {
 
     /**
      * Get balances for a world
+     *
      * @param world - world
      * @return the balances
      */
@@ -346,11 +367,12 @@ public class BankManager implements Listener {
 
     /**
      * Sets an island's account value to an amount
-     * @param user - user who is doing the setting or island owner for interest
-     * @param islandID - island unique id
-     * @param amount - amount being added or removed
+     *
+     * @param user       - user who is doing the setting or island owner for interest
+     * @param islandID   - island unique id
+     * @param amount     - amount being added or removed
      * @param newBalance - the resulting new balance
-     * @param type - type of transaction
+     * @param type       - type of transaction
      * @return BankResponse
      */
     public CompletableFuture<BankResponse> set(@NonNull User user, @NonNull String islandID, Money amount, Money newBalance, TxType type) {
