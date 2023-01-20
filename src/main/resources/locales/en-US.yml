@@ -32,6 +32,7 @@ bank:
     description: "deposit amount into your island account"
     parameters: <amount>
     success: "&a Success! Your new island bank balance is [number]."
+    alert: '&a [name] deposited [number] into the island bank.'
   errors: 
     bank-error: "&c Error loading bank account info - please try again later"
     low-balance: "&c Your island bank balance is not high enough!"
@@ -68,6 +69,7 @@ bank:
     description: "withdraw amount from your island account"
     parameters: <amount>
     success: "&a Success! Your new island bank balance is [number]."
+    alert: '&a [name] withdrew [number] from the island bank.'
 protection: 
   flags: 
     BANK_ACCESS: 
