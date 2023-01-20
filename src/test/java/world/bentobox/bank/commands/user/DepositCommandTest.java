@@ -175,6 +175,16 @@ public class DepositCommandTest {
      * Test method for {@link world.bentobox.bank.commands.user.DepositCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
+    public void testCanExecuteAllSuccess() {
+        when(bankManager.getBalance(eq(user), eq(world))).thenReturn(new Money(555D));
+        assertTrue(dct.canExecute(user, "deposit", Collections.singletonList("all")));
+        verify(user, never()).sendMessage(any());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.commands.user.DepositCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     */
+    @Test
     public void testCanExecuteOneArgNumberSuccess() {
         when(bankManager.getBalance(eq(user), eq(world))).thenReturn(new Money(555D));
         assertTrue(dct.canExecute(user, "deposit", Collections.singletonList("123.30")));
