@@ -46,7 +46,7 @@ public class Settings implements ConfigObject {
     @ConfigEntry(path = "bank.sendAlert")
     @ConfigComment("Should other members of the island get a message when someone deposits/withdraws")
     @ConfigComment("from the bank?")
-    private boolean sendBankAlert = false;
+    private boolean sendBankAlert = true;
 
     /**
      * @return the gameModes
