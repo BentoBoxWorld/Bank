@@ -43,6 +43,11 @@ public class Settings implements ConfigObject {
     @ConfigComment("Interest calculations are done when the server starts or when the player logs in.")
     private float compoundPeriod = 1;
 
+    @ConfigEntry(path = "bank.sendAlert")
+    @ConfigComment("Should other members of the island get a message when someone deposits/withdraws")
+    @ConfigComment("from the bank?")
+    private boolean sendBankAlert = true;
+
     /**
      * @return the gameModes
      */
@@ -150,5 +155,17 @@ public class Settings implements ConfigObject {
         return (long) (compoundPeriod * 24 * 60 * 60 * 1000);
     }
 
+    /**
+     * @return the sendBankAlert
+     */
+    public boolean isSendBankAlert() {
+        return sendBankAlert;
+    }
 
+    /**
+     * @param sendBankAlert the sendBankAlert to set
+     */
+    public void setSendBankAlert(boolean sendBankAlert) {
+        this.sendBankAlert = sendBankAlert;
+    }
 }
