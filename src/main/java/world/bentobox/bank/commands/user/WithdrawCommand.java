@@ -64,7 +64,7 @@ public class WithdrawCommand extends AbstractBankCommand {
     @Override
     public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
         String balance = String.valueOf(addon.getBankManager().getBalance(user, getWorld()).getValue());
-        return Optional.of(Collections.singletonList(balance));
+        return Optional.of(List.of(balance, "all"));
     }
 
 }

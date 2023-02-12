@@ -77,6 +77,6 @@ public class DepositCommand extends AbstractBankCommand {
     public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
         VaultHook vault = addon.getVault();
         String balance = String.valueOf(vault.getBalance(user, getWorld()));
-        return Optional.of(Collections.singletonList(balance));
+        return Optional.of(List.of(balance, "all"));
     }
 }
