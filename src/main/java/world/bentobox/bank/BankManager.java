@@ -29,6 +29,7 @@ import world.bentobox.bentobox.api.events.island.IslandPreclearEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.paperlib.PaperLib;
 import world.bentobox.bentobox.util.Util;
 
 /**
@@ -219,6 +220,72 @@ public class BankManager implements Listener {
         // Success
         return this.set(user, island.getUniqueId(), amount, Money.subtract(account.getBalance(), amount), type);
     }
+
+
+    /**
+     * This method checks and returns if in given world given user bank account is at least given value of money. If
+     * bank account has exactly required amount, it returns {@code true}.
+     *
+     * @param user the user which account must be checked.
+     * @param world the world where island is located.
+     * @param value the value that must be checked.
+     * @return {@code true} if in islands bank account is at least given value, {@code false} otherwise.
+     */
+    public boolean has(@NonNull User user, @NonNull World world, double value)
+    {
+        return has(addon.getIslands().getIsland(Objects.requireNonNull(Util.getWorld(world)), user), Money.of(value));
+    }
+
+
+    /**
+     * This method checks and returns if in given world given user bank account is at least given value of money. If
+     * bank account has exactly required amount, it returns {@code true}.
+     *
+     * @param user the user which account must be checked.
+     * @param world the world where island is located.
+     * @param value the value that must be checked.
+     * @return {@code true} if in islands bank account is at least given value, {@code false} otherwise.
+     */
+    public boolean has(@NonNull User user, @NonNull World world, @Nullable Money value)
+    {
+        return has(addon.getIslands().getIsland(Objects.requireNonNull(Util.getWorld(world)), user), value);
+    }
+
+
+    /**
+     * This method checks and returns if in given island bank account is at least given value of money.
+     * If bank account has exactly required amount, it returns {@code true}.
+     *
+     * @param island the island with bank account.
+     * @param value the value that must be checked.
+     * @return {@code true} if in islands bank account is at least given value, {@code false} otherwise.
+     */
+    public boolean has(@Nullable Island island, double value)
+    {
+        return has(island, Money.of(value));
+    }
+
+
+    /**
+     * This method checks and returns if in given island bank account is at least given value of money.
+     * If bank account has exactly required amount, it returns {@code true}.
+     *
+     * @param island the island with bank account.
+     * @param value the value that must be checked.
+     * @return {@code true} if in islands bank account is at least given value, {@code false} otherwise.
+     */
+    public boolean has(@Nullable Island island, @Nullable Money value)
+    {
+        if (island == null || value == null)
+        {
+            return false;
+        }
+        else
+        {
+            return Money.compare(this.balances.getOrDefault(island.getUniqueId(), new Money()), value) >= 0;
+        }
+    }
+
 
     /**
      * Get balance for island

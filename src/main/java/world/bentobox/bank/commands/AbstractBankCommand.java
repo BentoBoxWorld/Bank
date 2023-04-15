@@ -8,11 +8,13 @@ import java.util.Map;
 import org.apache.commons.lang.math.NumberUtils;
 
 import world.bentobox.bank.Bank;
+import world.bentobox.bank.data.BankAccounts;
 import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.hooks.VaultHook;
 import world.bentobox.bentobox.util.Util;
 
 /**
@@ -110,16 +112,27 @@ public abstract class AbstractBankCommand extends CompositeCommand {
         if (args.isEmpty() || (!isUser && args.size() == 1)) return true;
         // Check value
         String v = args.get(args.size() - 1);
-        if (!NumberUtils.isNumber(v)) {
+        if (!NumberUtils.isNumber(v) && !v.equalsIgnoreCase("all")) {
             user.sendMessage("bank.errors.must-be-a-number");
             return false;
         }
-        return parseValue(user, v);
+        return parseValue(user, v, type);
     }
 
-    protected boolean parseValue(User user, String arg) {
+    protected boolean parseValue(User user, String arg, RequestType type) {
         try {
-            value = Money.parseMoney(arg);
+            if(arg.equalsIgnoreCase("all")) {
+                if(type.equals(RequestType.USER_DEPOSIT)) {
+                    VaultHook vault = addon.getVault();
+
+                    value = new Money(vault.getBalance(user, getWorld()));
+                } else if(type.equals(RequestType.USER_WITHDRAWAL)) {
+                    value = new Money(addon.getBankManager().getBalance(user, getWorld()).getValue());
+                }
+
+            } else {
+                value = Money.parseMoney(arg);
+            }
         } catch (Exception e) {
             if (e.getMessage().startsWith("bank")) {
                 user.sendMessage(e.getMessage());

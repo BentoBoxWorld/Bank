@@ -1,14 +1,16 @@
 package world.bentobox.bank.commands.user;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import world.bentobox.bank.commands.AbstractBankCommand;
 import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.managers.RanksManager;
 
 /**
  * @author tastybento
@@ -55,6 +57,18 @@ public class WithdrawCommand extends AbstractBankCommand {
                 default -> {
                     addon.getVault().deposit(user, value.getValue(), getWorld());
                     user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
+
+                    if(!addon.getSettings().isSendBankAlert()) return;
+                    Island island = getPlugin().getIslands().getIsland(getWorld(), user);
+
+                    final Set<UUID> members = island.getMemberSet(RanksManager.MEMBER_RANK);
+                    for(UUID member : members) {
+                        final Player player = Bukkit.getPlayer(member);
+
+                        if(player == null || user.getUniqueId().equals(member)) continue;
+
+                        User.getInstance(member).sendMessage("bank.withdraw.alert", "[name]", user.getName(), "[number]", String.valueOf(value.getValue()));
+                    }
                 }
             }
         });
@@ -64,7 +78,7 @@ public class WithdrawCommand extends AbstractBankCommand {
     @Override
     public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
         String balance = String.valueOf(addon.getBankManager().getBalance(user, getWorld()).getValue());
-        return Optional.of(Collections.singletonList(balance));
+        return Optional.of(List.of(balance, "all"));
     }
 
 }

@@ -1,9 +1,9 @@
-name: Pladdon
+name: BentoBox-Bank
 main: world.bentobox.bank.BankPladdon
-version: ${version}
+version: ${project.version}${build.number}
 api-version: "1.16"
-description: Bank Addon
-author: tastybento
-depend:
-  - BentoBox
 
+authors: [tastybento]
+contributors: ["The BentoBoxWorld Community"]
+website: https://bentobox.world
+description: ${project.description}

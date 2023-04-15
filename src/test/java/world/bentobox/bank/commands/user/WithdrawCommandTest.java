@@ -164,6 +164,17 @@ public class WithdrawCommandTest {
      * Test method for {@link world.bentobox.bank.commands.user.WithdrawCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
+    public void testCanExecuteAllArg() {
+        when(bankManager.getBalance(eq(user), eq(world))).thenReturn(new Money(555D));
+        assertTrue(wct.canExecute(user, "withdraw", Collections.singletonList("all")));
+        verify(user, never()).sendMessage(eq("bank.errors.must-be-a-number"));
+        verify(user, never()).sendMessage(any());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.commands.user.WithdrawCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
+     */
+    @Test
     public void testCanExecuteOneArgNumberNoRank() {
         when(island.isAllowed(eq(user), any())).thenReturn(false);
         assertFalse(wct.canExecute(user, "withdraw", Collections.singletonList("123.30")));

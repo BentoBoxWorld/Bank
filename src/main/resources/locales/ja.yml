@@ -5,6 +5,7 @@ bank:
     give:
       parameters: "<プレーヤー> <金額>"
       description: プレイヤーのアイランドアカウントに金額を追加する
+      success: "&a成功！ [name]の島の銀行残高は[number]になりました。"
     take:
       parameters: "<プレーヤー> <金額>"
       description: プレイヤーのアイランドアカウントから金額を取得します
@@ -35,10 +36,13 @@ bank:
   errors:
     bank-error: "&c銀行口座情報の読み込み中にエラーが発生しました-後でもう一度お試しください"
     low-balance: "&cあなたの島の銀行の残高は十分に高くありません！"
+    too-low: "＆cアイランドバランスが低すぎます。"
     must-be-a-number: "&c金額は数値である必要があります"
     no-rank: "&cあなたのランクは銀行を使うのに十分高くありません。"
     too-much: "&cデポジットする金額がありません。"
     value-must-be-positive: "&c金額は正でなければなりません。"
+    scientific: "＆c科学的記数法はサポートされていません。"
+    too-long: "&c値は10桁未満である必要があります"
   statement:
     balance:
       name: "&9 銀行預金残高:"
@@ -46,6 +50,7 @@ bank:
     deposit: 預り金
     description: 島の銀行の歴史を表示する
     give: 管理者が与える
+    interest: 銀行利子
     latest: 最新のもので並べ替え
     oldest: 最も古いもので並べ替え
     set: 管理者セット
