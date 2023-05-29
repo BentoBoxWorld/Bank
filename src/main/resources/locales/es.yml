@@ -33,6 +33,7 @@ bank:
     description: depositar cantidad en su cuenta de la isla
     parameters: "<cantidad>"
     success: "&a ¡Éxito! Su nuevo saldo en el banco de la isla es [number]."
+    alert: "&a [name] ha depositado [number] en el banco de la isla."
   errors:
     bank-error: "&c Error al cargar la información de la cuenta bancaria. Vuelve a
       intentarlo más tarde."
@@ -70,6 +71,7 @@ bank:
     description: retirar cantidad de su cuenta de la isla
     parameters: "<cantidad>"
     success: "&a ¡Éxito! Su nuevo saldo en el banco de la isla es [number]."
+    alert: "&a [name] ha depositado [number] en el banco de la isla."
 protection:
   flags:
     BANK_ACCESS:
