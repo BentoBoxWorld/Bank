@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.commons.lang.math.NumberUtils;
 
 import world.bentobox.bank.Bank;
-import world.bentobox.bank.data.BankAccounts;
 import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;

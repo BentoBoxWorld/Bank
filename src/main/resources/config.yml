@@ -23,4 +23,7 @@ bank:
   # Period that interest is compounded in hours. Default 1 hour
   # Do not make this time longer than the time your server is on before it reboots
   compound-period: 1
+  # Cooldown time for user withdrawl and deposit commands. This should be set long enought
+  # so that database writes can be made in time. Default is 60 seconds.
+  cooldown: 60
   

@@ -43,10 +43,15 @@ public class Settings implements ConfigObject {
     @ConfigComment("Interest calculations are done when the server starts or when the player logs in.")
     private float compoundPeriod = 1;
 
+    @ConfigComment("Cooldown time for user withdrawl and deposit commands. This should be set long enough")
+    @ConfigComment("so that database writes can be made in time. Default is 60 seconds.")
+    private int cooldown = 60;
+
     @ConfigEntry(path = "bank.sendAlert")
     @ConfigComment("Should other members of the island get a message when someone deposits/withdraws")
     @ConfigComment("from the bank?")
     private boolean sendBankAlert = true;
+
 
     /**
      * @return the gameModes
@@ -167,5 +172,19 @@ public class Settings implements ConfigObject {
      */
     public void setSendBankAlert(boolean sendBankAlert) {
         this.sendBankAlert = sendBankAlert;
+    }
+
+    /**
+     * @return the cooldown
+     */
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    /**
+     * @param cooldown the cooldown to set
+     */
+    public void setCooldown(int cooldown) {
+        this.cooldown = cooldown;
     }
 }
