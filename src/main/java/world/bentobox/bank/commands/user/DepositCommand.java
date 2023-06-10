@@ -35,11 +35,15 @@ public class DepositCommand extends AbstractBankCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
+        if (this.checkCooldown(user)) {
+            return false;
+        }
         return canAbstractExecute(user, args, RequestType.USER_DEPOSIT);
     }
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
+        this.setCooldown(user.getUniqueId(), addon.getSettings().getCooldown());
         // Check if the player has the balance
         VaultHook vault = addon.getVault();
         double balance = vault.getBalance(user, getWorld());
@@ -52,27 +56,27 @@ public class DepositCommand extends AbstractBankCommand {
         if (response.type == ResponseType.SUCCESS) {
             addon.getBankManager().deposit(user, value, getWorld()).thenAccept(result -> {
                 switch (result) {
-                    case FAILURE_LOAD_ERROR -> user.sendMessage("bank.errors.bank-error");
-                    case FAILURE_LOW_BALANCE -> user.sendMessage("bank.errors.low-balance");
-                    case FAILURE_NO_ISLAND -> user.sendMessage("general.errors.no-island");
-                    case SUCCESS -> {
-                        user.sendMessage("bank.deposit.success", TextVariables.NUMBER, vault.format(addon.getBankManager().getBalance(island).getValue()));
+                case FAILURE_LOAD_ERROR -> user.sendMessage("bank.errors.bank-error");
+                case FAILURE_LOW_BALANCE -> user.sendMessage("bank.errors.low-balance");
+                case FAILURE_NO_ISLAND -> user.sendMessage("general.errors.no-island");
+                case SUCCESS -> {
+                    user.sendMessage("bank.deposit.success", TextVariables.NUMBER, vault.format(addon.getBankManager().getBalance(island).getValue()));
 
-                        if(!addon.getSettings().isSendBankAlert()) return;
+                    if(!addon.getSettings().isSendBankAlert()) return;
 
-                        Island island = addon.getIslands().getIsland(getWorld(), user);
+                    Island island = addon.getIslands().getIsland(getWorld(), user);
 
-                        final Set<UUID> members = island.getMemberSet(RanksManager.MEMBER_RANK);
-                        for (UUID member : members) {
-                            final Player player = Bukkit.getPlayer(member);
+                    final Set<UUID> members = island.getMemberSet(RanksManager.MEMBER_RANK);
+                    for (UUID member : members) {
+                        final Player player = Bukkit.getPlayer(member);
 
-                            if (player == null || user.getUniqueId().equals(member)) continue;
+                        if (player == null || user.getUniqueId().equals(member)) continue;
 
-                            User otherUser = User.getInstance(player);
+                        User otherUser = User.getInstance(player);
 
-                            otherUser.sendMessage("bank.deposit.alert", "[name]", user.getName(), "[number]", String.valueOf(value.getValue()));
-                        }
+                        otherUser.sendMessage("bank.deposit.alert", "[name]", user.getName(), "[number]", String.valueOf(value.getValue()));
                     }
+                }
                 }
             });
             return true;

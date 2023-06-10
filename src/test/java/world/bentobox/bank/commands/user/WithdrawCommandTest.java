@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.World;
@@ -29,6 +30,7 @@ import org.powermock.reflect.Whitebox;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
 import world.bentobox.bank.BankResponse;
+import world.bentobox.bank.Settings;
 import world.bentobox.bank.data.Money;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -70,6 +72,7 @@ public class WithdrawCommandTest {
     private BankManager bankManager;
     @Mock
     private VaultHook vh;
+    private Settings settings;
 
 
     /**
@@ -82,6 +85,7 @@ public class WithdrawCommandTest {
 
         when(ic.getWorld()).thenReturn(world);
         when(user.getWorld()).thenReturn(world);
+        when(user.getUniqueId()).thenReturn(UUID.randomUUID());
 
         // IWM friendly name
         IslandWorldManager iwm = mock(IslandWorldManager.class);
@@ -95,6 +99,11 @@ public class WithdrawCommandTest {
 
         // Island flag allowed
         when(island.isAllowed(eq(user), any())).thenReturn(true);
+
+        // Settings
+        settings = new Settings();
+        when(addon.getSettings()).thenReturn(settings);
+
 
         when(ic.getAddon()).thenReturn(addon);
         when(addon.getBankManager()).thenReturn(bankManager);

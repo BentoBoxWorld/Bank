@@ -33,6 +33,9 @@ public class WithdrawCommand extends AbstractBankCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
+        if (this.checkCooldown(user)) {
+            return false;
+        }
         if (!canAbstractExecute(user, args, RequestType.USER_WITHDRAWAL)) {
             return false;
         }
@@ -47,29 +50,29 @@ public class WithdrawCommand extends AbstractBankCommand {
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
-
+        this.setCooldown(user.getUniqueId(), addon.getSettings().getCooldown());
         // Success
         addon.getBankManager().withdraw(user, value, getWorld()).thenAccept(result -> {
             switch (result) {
-                case FAILURE_LOAD_ERROR -> user.sendMessage("bank.errors.bank-error");
-                case FAILURE_LOW_BALANCE -> user.sendMessage("bank.errors.low-balance");
-                case FAILURE_NO_ISLAND -> user.sendMessage("general.errors.no-island");
-                default -> {
-                    addon.getVault().deposit(user, value.getValue(), getWorld());
-                    user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
+            case FAILURE_LOAD_ERROR -> user.sendMessage("bank.errors.bank-error");
+            case FAILURE_LOW_BALANCE -> user.sendMessage("bank.errors.low-balance");
+            case FAILURE_NO_ISLAND -> user.sendMessage("general.errors.no-island");
+            default -> {
+                addon.getVault().deposit(user, value.getValue(), getWorld());
+                user.sendMessage("bank.withdraw.success", TextVariables.NUMBER, addon.getVault().format(addon.getBankManager().getBalance(island).getValue()));
 
-                    if(!addon.getSettings().isSendBankAlert()) return;
-                    Island island = getPlugin().getIslands().getIsland(getWorld(), user);
+                if(!addon.getSettings().isSendBankAlert()) return;
+                Island island = getPlugin().getIslands().getIsland(getWorld(), user);
 
-                    final Set<UUID> members = island.getMemberSet(RanksManager.MEMBER_RANK);
-                    for(UUID member : members) {
-                        final Player player = Bukkit.getPlayer(member);
+                final Set<UUID> members = island.getMemberSet(RanksManager.MEMBER_RANK);
+                for(UUID member : members) {
+                    final Player player = Bukkit.getPlayer(member);
 
-                        if(player == null || user.getUniqueId().equals(member)) continue;
+                    if(player == null || user.getUniqueId().equals(member)) continue;
 
-                        User.getInstance(member).sendMessage("bank.withdraw.alert", "[name]", user.getName(), "[number]", String.valueOf(value.getValue()));
-                    }
+                    User.getInstance(member).sendMessage("bank.withdraw.alert", "[name]", user.getName(), "[number]", String.valueOf(value.getValue()));
                 }
+            }
             }
         });
         return true;
