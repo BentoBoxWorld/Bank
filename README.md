@@ -15,6 +15,8 @@ Created and maintained by [tastybento](https://github.com/tastybento).
 
 Each island has a bank account. Players can deposit or withdraw money from their regular economy accounts into the island account where it is pooled. The island owner can decide which rank of team member can access the account via the settings menu. There is a `baltop` command that players can use to see which island has the most, or least money. 
 
+<img src=https://github.com/BentoBoxWorld/Bank/assets/4407265/b496e8d1-6342-4c70-86a2-49f203a7ce93 width="400">
+
 ### Features
 
 * Save or spend money as an island team
