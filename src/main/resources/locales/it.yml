@@ -1,0 +1,42 @@
+---
+bank:
+  admin:
+    description: comando di amministrazione per la banca dell'isola
+    give:
+      success: "&aFatto! Il saldo bancario dell'isola di [nome] è ora [numero]."
+    take: {}
+    balance: {}
+    set:
+      success: "&aIl bilancio di [name] è stato impostato su [number]."
+    statement: {}
+  balance:
+    description: mostra il bilancio della tua isola
+    island-balance: "&aIl bilancio dell'isola è [number]."
+  baltop:
+    description: mostra la classifica dei bilanci
+    description-syntax: "&d [number]"
+    name-syntax: "&d [name]"
+    title: I bilanci più alti
+  deposit:
+    description: deposita l'importo nella banca dell'isola
+    success: "&Fatto! Il tuo nuovo saldo bancario sull'isola è [number]."
+    alert: "&a[name] ha depositato [number] nella banca dell'isola."
+  errors:
+    low-balance: "&c Il saldo della tua isola non è abbastanza alto!"
+  statement:
+    balance:
+      description: "&6 [number]"
+    deposit: Deposito
+    give: Regalo amministratore
+    syntax: |
+      &9 [date]
+      &9 [time]
+      &7 [name]
+      &6 [number]
+  user: {}
+  withdraw:
+    success: "&Fatto! Il tuo nuovo saldo bancario sull'isola è [number]."
+    alert: "&un [name] ritirò [number] dalla banca dell'isola."
+protection:
+  flags:
+    BANK_ACCESS: {}
