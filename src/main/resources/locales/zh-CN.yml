@@ -1,7 +1,7 @@
 ---
 bank:
   admin:
-    description: " 岛屿银行的管理员命令"
+    description: 岛屿银行管理员命令
     give:
       parameters: "<玩家> <金额>"
       description: 向玩家的空岛银行增加金钱
@@ -32,8 +32,8 @@ bank:
   deposit:
     description: 将金额存入您的岛屿账户
     parameters: "<金额>"
-    success: "＆a成功！您的新岛银行余额为[number]。"
-    alert: "&a [name]向岛屿银行存入了[number]."
+    success: "＆成功！您的新岛银行余额为[number]。"
+    alert: "&a [name]向岛屿银行存入了[number]。"
   errors:
     bank-error: "＆c加载银行帐户信息时出错-请稍后重试"
     low-balance: "＆c您的岛屿银行余额不足！"
@@ -66,7 +66,7 @@ bank:
     description: 从您的岛屿账户中提款
     parameters: "<金额>"
     success: "&a成功！您的新岛银行余额为[number]。"
-    alert: "&a [name]从空岛银行取出了[number] "
+    alert: "&a [name]从岛屿银行取出了[number]。"
 protection:
   flags:
     BANK_ACCESS:

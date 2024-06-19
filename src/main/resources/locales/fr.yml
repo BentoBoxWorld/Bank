@@ -33,6 +33,7 @@ bank:
     description: déposer le montant sur votre compte insulaire
     parameters: "<montant>"
     success: "&a Succès! Le nouveau solde bancaire de votre île est de [number]."
+    alert: "&a [name] a déposé [number] à la banque de l'île."
   errors:
     bank-error: "&c Erreur lors du chargement des informations du compte bancaire
       - veuillez réessayer plus tard"
@@ -70,6 +71,7 @@ bank:
     description: retirer le montant de votre compte insulaire
     parameters: "<montant>"
     success: "&a Succès! Le nouveau solde bancaire de votre île est de [number]."
+    alert: "&a [name] a retiré [number] de la banque de l'île."
 protection:
   flags:
     BANK_ACCESS:
