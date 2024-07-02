@@ -27,12 +27,18 @@ public class BankAccounts implements DataObject {
     @Expose
     private Double balance;
 
+    /**
+     * The balance in {@link Money}
+     */
     @Expose
     private Money moneyBalance;
 
     @Expose
     private final Map<Long, String> history = new TreeMap<>();
 
+    /**
+     * Timestamp for when interest was last paid
+     */
     @Expose
     private Long interestLastPaid;
 
