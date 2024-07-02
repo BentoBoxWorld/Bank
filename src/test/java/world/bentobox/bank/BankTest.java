@@ -135,6 +135,7 @@ public class BankTest {
 
     @Before
     public void setUp() throws Exception {
+        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         // Set up plugin
         Whitebox.setInternalState(BentoBox.class, "instance", plugin);
 
@@ -169,7 +170,6 @@ public class BankTest {
         when(user.getTranslation(anyString())).thenAnswer((Answer<String>) invocation -> invocation.getArgument(0, String.class));
 
         // Server
-        PowerMockito.mockStatic(Bukkit.class);
         Server server = mock(Server.class);
         when(Bukkit.getServer()).thenReturn(server);
         when(Bukkit.getLogger()).thenReturn(Logger.getAnonymousLogger());
@@ -204,7 +204,6 @@ public class BankTest {
 
 
         // Bukkit
-        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         when(Bukkit.getScheduler()).thenReturn(scheduler);
         ItemMeta meta = mock(ItemMeta.class);
         ItemFactory itemFactory = mock(ItemFactory.class);
