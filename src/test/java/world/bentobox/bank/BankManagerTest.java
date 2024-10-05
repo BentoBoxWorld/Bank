@@ -56,7 +56,7 @@ import world.bentobox.bentobox.util.Util;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, BentoBox.class, DatabaseSetup.class, Util.class})
+@PrepareForTest({ Bukkit.class, BentoBox.class, DatabaseSetup.class, Util.class, IslandsManager.class })
 public class BankManagerTest {
 
     @Mock
@@ -105,6 +105,7 @@ public class BankManagerTest {
         Whitebox.setInternalState(BentoBox.class, "instance", plugin);
 
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
+        PowerMockito.mockStatic(IslandsManager.class, Mockito.RETURNS_MOCKS);
         // The database type has to be created one line before the thenReturn() to work!
         DatabaseType value = DatabaseType.JSON;
         when(plugin.getSettings()).thenReturn(pluginSettings);

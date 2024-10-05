@@ -13,12 +13,14 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -45,7 +47,7 @@ import world.bentobox.bentobox.util.Util;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({BentoBox.class, Util.class})
+@PrepareForTest({ BentoBox.class, Util.class, Bukkit.class })
 public class AdminBalanceCommandTest {
 
     @Mock
@@ -73,6 +75,7 @@ public class AdminBalanceCommandTest {
 
     @Before
     public void setUp() {
+        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         // Set up plugin
         BentoBox plugin = mock(BentoBox.class);
         Whitebox.setInternalState(BentoBox.class, "instance", plugin);

@@ -9,10 +9,13 @@ import world.bentobox.bentobox.api.addons.Pladdon;
  *
  */
 public class BankPladdon extends Pladdon {
+    private Addon addon;
 
     @Override
     public Addon getAddon() {
-        return new Bank();
+        if (addon == null) {
+            addon = new Bank();
+        }
+        return addon;
     }
-
 }
