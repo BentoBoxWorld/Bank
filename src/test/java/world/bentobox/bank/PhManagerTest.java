@@ -25,6 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -33,6 +35,7 @@ import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.AddonDescription;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.database.DatabaseSetup;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.hooks.VaultHook;
 import world.bentobox.bentobox.managers.IslandsManager;
@@ -44,7 +47,7 @@ import world.bentobox.bentobox.managers.PlayersManager;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, BentoBox.class})
+@PrepareForTest({ Bukkit.class, BentoBox.class, DatabaseSetup.class, IslandsManager.class })
 public class PhManagerTest {
 
     // Class under test
@@ -73,11 +76,10 @@ public class PhManagerTest {
     @Mock
     private PlayersManager plm;
 
-
-    /**
-     */
     @Before
     public void setUp() {
+
+        PowerMockito.mockStatic(IslandsManager.class, Mockito.RETURNS_MOCKS);
 
         AddonDescription desc = new AddonDescription.Builder("main", "AcidIsland", "1.0.2").build();
         when(gm.getDescription()).thenReturn(desc);
@@ -91,6 +93,7 @@ public class PhManagerTest {
         when(addon.getVault()).thenReturn(vh);
         when(addon.getIslands()).thenReturn(im);
         when(user.getLocation()).thenReturn(location);
+        
         when(im.getIslandAt(eq(location))).thenReturn(Optional.of(island));
         when(bm.getBalance(eq(island))).thenReturn(new Money(1234.56D));
         map = new LinkedHashMap<>();

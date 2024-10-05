@@ -68,7 +68,7 @@ import world.bentobox.bentobox.managers.PlaceholdersManager;
 
 @SuppressWarnings("deprecation")
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, BentoBox.class, User.class})
+@PrepareForTest({ Bukkit.class, BentoBox.class, User.class, IslandsManager.class })
 public class BankTest {
 
     private static File jFile;
@@ -136,6 +136,7 @@ public class BankTest {
     @Before
     public void setUp() throws Exception {
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
+        PowerMockito.mockStatic(IslandsManager.class, Mockito.RETURNS_MOCKS);
         // Set up plugin
         Whitebox.setInternalState(BentoBox.class, "instance", plugin);
 
