@@ -26,4 +26,10 @@ bank:
   # Cooldown time for user withdrawl and deposit commands. This should be set long enought
   # so that database writes can be made in time. Default is 60 seconds.
   cooldown: 60
+  units:
+    # Shorthand units
+    kilo: k
+    mega: M
+    giga: G
+    tera: T
   

@@ -52,6 +52,15 @@ public class Settings implements ConfigObject {
     @ConfigComment("from the bank?")
     private boolean sendBankAlert = true;
 
+    @ConfigComment("Shorthand units")
+    @ConfigEntry(path = "units.kilo")
+    private String kilo = "k";
+    @ConfigEntry(path = "units.mega")
+    private String mega = "M";
+    @ConfigEntry(path = "units.giga")
+    private String giga = "G";
+    @ConfigEntry(path = "units.tera")
+    private String tera = "T";
 
     /**
      * @return the gameModes
@@ -186,5 +195,61 @@ public class Settings implements ConfigObject {
      */
     public void setCooldown(int cooldown) {
         this.cooldown = cooldown;
+    }
+
+    /**
+     * @return the kilo
+     */
+    public String getKilo() {
+        return kilo;
+    }
+
+    /**
+     * @param kilo the kilo to set
+     */
+    public void setKilo(String kilo) {
+        this.kilo = kilo;
+    }
+
+    /**
+     * @return the mega
+     */
+    public String getMega() {
+        return mega;
+    }
+
+    /**
+     * @param mega the mega to set
+     */
+    public void setMega(String mega) {
+        this.mega = mega;
+    }
+
+    /**
+     * @return the giga
+     */
+    public String getGiga() {
+        return giga;
+    }
+
+    /**
+     * @param giga the giga to set
+     */
+    public void setGiga(String giga) {
+        this.giga = giga;
+    }
+
+    /**
+     * @return the tera
+     */
+    public String getTera() {
+        return tera;
+    }
+
+    /**
+     * @param tera the tera to set
+     */
+    public void setTera(String tera) {
+        this.tera = tera;
     }
 }
