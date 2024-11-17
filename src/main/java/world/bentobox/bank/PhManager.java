@@ -22,15 +22,7 @@ import world.bentobox.bentobox.api.user.User;
  */
 public class PhManager {
     private static final BigInteger THOUSAND = BigInteger.valueOf(1000);
-    private static final TreeMap<BigInteger, String> LEVELS;
-    static {
-        LEVELS = new TreeMap<>();
-
-        LEVELS.put(THOUSAND, "k");
-        LEVELS.put(THOUSAND.pow(2), "M");
-        LEVELS.put(THOUSAND.pow(3), "G");
-        LEVELS.put(THOUSAND.pow(4), "T");
-    }
+    private static final TreeMap<BigInteger, String> LEVELS = new TreeMap<>();
 
     private final BentoBox plugin;
     private final BankManager bankManager;
@@ -49,6 +41,10 @@ public class PhManager {
         this.addon = addon;
         this.plugin = addon.getPlugin();
         this.bankManager = bankManager;
+        LEVELS.put(THOUSAND, addon.getSettings().getKilo());
+        LEVELS.put(THOUSAND.pow(2), addon.getSettings().getMega());
+        LEVELS.put(THOUSAND.pow(3), addon.getSettings().getGiga());
+        LEVELS.put(THOUSAND.pow(4), addon.getSettings().getTera());
     }
 
     protected boolean registerPlaceholders(GameModeAddon gm) {
