@@ -104,6 +104,7 @@ public class PhManagerTest {
             Island i = new Island();
             i.setUniqueId(id);
             i.setOwner(UUID.fromString(id));
+            i.setName(id);
             return Optional.of(i);
         });
         when(plm.getName(any())).thenAnswer(arg -> arg.getArgument(0, UUID.class).toString());
@@ -129,6 +130,7 @@ public class PhManagerTest {
         verify(phm).registerPlaceholder(eq(addon), eq("acidisland_island_balance"), any());
         for (int i = 1; i < 11; i++) {
             verify(phm).registerPlaceholder(eq(addon), eq("acidisland_top_name_" + i), any());
+            verify(phm).registerPlaceholder(eq(addon), eq("acidisland_top_island_" + i), any());
             verify(phm).registerPlaceholder(eq(addon), eq("acidisland_top_value_" + i), any());
         }
         verify(phm).registerPlaceholder(eq(addon), eq("acidisland_visited_island_balance"), any());
@@ -225,6 +227,14 @@ public class PhManagerTest {
     }
 
     /**
+     * Test method for {@link world.bentobox.bank.PhManager#getRankIsland(org.bukkit.World, int)}.
+     */
+    @Test
+    public void testGetRankIsland() {
+        assertEquals("", pm.getRankIsland(world, 5));
+    }
+
+    /**
      * Test method for {@link world.bentobox.bank.PhManager#getRankBalance(org.bukkit.World, int)}.
      */
     @Test
@@ -263,6 +273,7 @@ public class PhManagerTest {
         for (int i = 1; i < 11; i++) {
             pm.checkCache(world, i);
             assertEquals(pm.getBalances().get(i-1), "$" + map.get(pm.getNames().get(i - 1)).getValue());
+            assertEquals(pm.getBalances().get(i-1), "$" + map.get(pm.getIslands().get(i - 1)).getValue());
         }
     }
 
