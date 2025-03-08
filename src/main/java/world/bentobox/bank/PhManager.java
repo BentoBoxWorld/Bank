@@ -28,6 +28,7 @@ public class PhManager {
     private final BankManager bankManager;
     private final Bank addon;
     private List<String> names = new ArrayList<>();
+    private List<String> islands = new ArrayList<>();
     private final List<String> balances = new ArrayList<>();
     private long lastSorted = System.currentTimeMillis();
     private static final long CACHETIME = 10000;
@@ -82,6 +83,9 @@ public class PhManager {
             // Name
             plugin.getPlaceholdersManager().registerPlaceholder(addon,
                     gm.getDescription().getName().toLowerCase() + "_top_name_" + i, u -> getRankName(gm.getOverWorld(), rank));
+            // Island
+            plugin.getPlaceholdersManager().registerPlaceholder(addon,
+                    gm.getDescription().getName().toLowerCase() + "_top_island_" + i, u -> getRankIsland(gm.getOverWorld(), rank));
             // Level
             plugin.getPlaceholdersManager().registerPlaceholder(addon,
                     gm.getDescription().getName().toLowerCase() + "_top_value_" + i, u -> getRankBalance(gm.getOverWorld(), rank));
@@ -116,6 +120,11 @@ public class PhManager {
         return rank < names.size() + 1 ? names.get(rank - 1) : "";
     }
 
+    String getRankIsland(World world, int rank) {
+        rank = checkCache(world, rank);
+        return rank < islands.size() + 1 ? islands.get(rank - 1) : "";
+    }
+
     String getRankBalance(World world, int rank) {
         checkCache(world, rank);
         return rank < balances.size() + 1 ? balances.get(rank - 1) : "";
@@ -127,6 +136,7 @@ public class PhManager {
         if (names.isEmpty() || (System.currentTimeMillis() - lastSorted) > CACHETIME) {
             // Clear the old top
             names.clear();
+            islands.clear();
             balances.clear();
             // Get a new balance map, sort it and save it to two sorted lists
             bankManager.getBalances(world).entrySet()
@@ -135,6 +145,8 @@ public class PhManager {
             .forEach(en -> {
                 names.add(addon.getIslands().getIslandById(en.getKey())
                         .map(i -> addon.getPlayers().getName(i.getOwner())).orElse(""));
+                islands.add(addon.getIslands().getIslandById(en.getKey())
+                        .map(i -> Objects.requireNonNullElse(i.getName(), "")).orElse(""));
                 balances.add(addon.getVault().format(en.getValue().getValue()));
             });
             lastSorted = System.currentTimeMillis();
@@ -161,6 +173,13 @@ public class PhManager {
      */
     protected List<String> getNames() {
         return names;
+    }
+
+    /**
+     * @return the islands
+     */
+    protected List<String> getIslands() {
+        return islands;
     }
 
     /**
