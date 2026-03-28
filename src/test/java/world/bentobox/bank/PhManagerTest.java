@@ -30,7 +30,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import world.bentobox.bank.data.AccountHistory;
 import world.bentobox.bank.data.Money;
+import world.bentobox.bank.data.TxType;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.AddonDescription;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
@@ -109,6 +111,7 @@ public class PhManagerTest {
         });
         when(plm.getName(any())).thenAnswer(arg -> arg.getArgument(0, UUID.class).toString());
         when(user.isPlayer()).thenReturn(true);
+        when(im.getIsland(any(World.class), any(User.class))).thenReturn(island);
         pm = new PhManager(addon, bm);
     }
 
@@ -301,12 +304,77 @@ public class PhManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#checkCache(World, int)}.
+     * Test method for {@link world.bentobox.bank.PhManager#registerPlaceholders(world.bentobox.bentobox.api.addons.GameModeAddon)}.
      */
     @Test
     public void testCheckCacheOutOfBounds() {
         assertEquals(1, pm.checkCache(world, 0));
         assertEquals(10, pm.checkCache(world, 100));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
+     */
+    @Test
+    public void testGetLatestTransactionDeposit() {
+        AccountHistory ah = new AccountHistory(System.currentTimeMillis(), "tastybento", 500.0, TxType.DEPOSIT);
+        when(bm.getLatestHistory(eq(island))).thenReturn(ah);
+        assertEquals("tastybento Deposited $500.0", pm.getLatestTransaction(user, world));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
+     */
+    @Test
+    public void testGetLatestTransactionWithdraw() {
+        AccountHistory ah = new AccountHistory(System.currentTimeMillis(), "tastybento", 200.0, TxType.WITHDRAW);
+        when(bm.getLatestHistory(eq(island))).thenReturn(ah);
+        assertEquals("tastybento Withdrew $200.0", pm.getLatestTransaction(user, world));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
+     */
+    @Test
+    public void testGetLatestTransactionNoHistory() {
+        when(bm.getLatestHistory(eq(island))).thenReturn(null);
+        assertEquals("", pm.getLatestTransaction(user, world));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
+     */
+    @Test
+    public void testGetLatestTransactionNoIsland() {
+        when(im.getIsland(any(World.class), any(User.class))).thenReturn(null);
+        assertEquals("", pm.getLatestTransaction(user, world));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
+     */
+    @Test
+    public void testGetLatestTransactionNullUser() {
+        assertEquals("", pm.getLatestTransaction(null, world));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
+     */
+    @Test
+    public void testGetLatestTransactionNotPlayer() {
+        when(user.isPlayer()).thenReturn(false);
+        assertEquals("", pm.getLatestTransaction(user, world));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.bank.PhManager#registerPlaceholders(world.bentobox.bentobox.api.addons.GameModeAddon)}.
+     * Verifies that the latest_transaction placeholder is registered.
+     */
+    @Test
+    public void testRegisterPlaceholdersLatestTransaction() {
+        assertTrue(pm.registerPlaceholders(gm));
+        verify(phm).registerPlaceholder(eq(addon), eq("acidisland_latest_transaction"), any());
     }
 
 }

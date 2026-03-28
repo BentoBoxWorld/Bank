@@ -332,6 +332,30 @@ public class BankManager implements Listener {
     }
 
     /**
+     * Get the latest transaction history entry for an island
+     * @param island - island
+     * @return latest {@link AccountHistory} or null if no history exists
+     */
+    public AccountHistory getLatestHistory(Island island) {
+        if (island == null) return null;
+        try {
+            BankAccounts account = getAccount(island.getUniqueId());
+            Map<Long, String> history = account.getHistory();
+            if (history.isEmpty()) return null;
+            Long latestKey = Collections.max(history.keySet());
+            String value = history.get(latestKey);
+            String[] split = value.split(":");
+            if (split.length == 3) {
+                TxType type = Enums.getIfPresent(TxType.class, split[1]).or(TxType.UNKNOWN);
+                return new AccountHistory(latestKey, split[0], Double.parseDouble(split[2]), type);
+            }
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
      * Get balances for a world
      * @param world - world
      * @return the balances
