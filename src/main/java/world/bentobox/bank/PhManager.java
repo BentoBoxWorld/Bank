@@ -10,10 +10,13 @@ import java.util.TreeMap;
 
 import org.bukkit.World;
 
+import world.bentobox.bank.data.AccountHistory;
 import world.bentobox.bank.data.Money;
+import world.bentobox.bank.data.TxType;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.database.objects.Island;
 
 /**
  * Registers placeholders for the addon
@@ -77,6 +80,11 @@ public class PhManager {
         plugin.getPlaceholdersManager().registerPlaceholder(addon,
                 gm.getDescription().getName().toLowerCase() + "_visited_island_balance_formatted", user -> getVisitedIslandBalance(gm, user, true, false));
 
+        // Latest Transaction
+        plugin.getPlaceholdersManager().registerPlaceholder(addon,
+                gm.getDescription().getName().toLowerCase() + "_latest_transaction",
+                user -> getLatestTransaction(user, gm.getOverWorld()));
+
         // Register Ranked Placeholders
         for (int i = 1; i <= Objects.requireNonNull(addon.getSettings()).getRanksNumber(); i++) {
             final int rank = i;
@@ -108,6 +116,46 @@ public class PhManager {
             return String.valueOf(balance);
         }
         return formatted ? format(balance) : addon.getVault().format(balance);
+    }
+
+    /**
+     * Get the latest transaction for a user's island as a formatted string
+     * @param user - user
+     * @param world - world
+     * @return formatted latest transaction string, e.g., "tastybento Deposited $500.0", or empty string if none
+     */
+    String getLatestTransaction(User user, World world) {
+        if (user == null || !user.isPlayer()) return "";
+        Island island = addon.getIslands().getIsland(world, user);
+        if (island == null) return "";
+        return formatTransaction(bankManager.getLatestHistory(island));
+    }
+
+    /**
+     * Format an AccountHistory entry as "[Name] [TxType] [Amount]"
+     * @param history - the account history entry
+     * @return formatted string or empty string if null
+     */
+    private String formatTransaction(AccountHistory history) {
+        if (history == null) return "";
+        return history.getName() + " " + getTxTypeDisplay(history.getType()) + " " + addon.getVault().format(history.getAmount());
+    }
+
+    /**
+     * Get display-friendly name for transaction type
+     * @param type - transaction type
+     * @return display name
+     */
+    private String getTxTypeDisplay(TxType type) {
+        switch (type) {
+        case DEPOSIT: return "Deposited";
+        case WITHDRAW: return "Withdrew";
+        case GIVE: return "Received";
+        case TAKE: return "Lost";
+        case SET: return "Set";
+        case INTEREST: return "Earned";
+        default: return "Unknown";
+        }
     }
 
     /**
