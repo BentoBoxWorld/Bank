@@ -36,15 +36,26 @@ public class Settings implements ConfigObject {
     @ConfigEntry(path = "bank.placeholders.number-of-ranks")
     private int ranksNumber = 10;
 
-    @ConfigComment("The annual interest rate for accounts. If zero or less, interest will not be paid.")
+    @ConfigComment("The annual interest rate as a percentage for island bank accounts.")
+    @ConfigComment("e.g., 10 = 10% interest per year.")
+    @ConfigComment("If zero or less, interest will not be paid.")
     private int interestRate = 10;
 
-    @ConfigComment("Period that interest is compounded in days. Default is 1 day.")
-    @ConfigComment("Interest calculations are done when the server starts or when the player logs in.")
+    @ConfigComment("The period in days over which interest is compounded. Default is 1 day.")
+    @ConfigComment("Interest is calculated using the compound interest formula:")
+    @ConfigComment("  A = P * (1 + r/n)^(n*t)")
+    @ConfigComment("where P = current balance, r = annual interest rate (as a decimal),")
+    @ConfigComment("n = number of compounding periods per year (365 / compound-period),")
+    @ConfigComment("and t = elapsed time in years.")
+    @ConfigComment("Interest is only applied when at least one compound-period has elapsed since")
+    @ConfigComment("the last payment. It is calculated on server start, player login, deposit,")
+    @ConfigComment("or withdrawal. Do not make this longer than your server's uptime between reboots.")
     private float compoundPeriod = 1;
 
-    @ConfigComment("Cooldown time for user withdrawl and deposit commands. This should be set long enough")
-    @ConfigComment("so that database writes can be made in time. Default is 60 seconds.")
+    @ConfigComment("Cooldown in seconds between a player's deposit and withdrawal commands.")
+    @ConfigComment("This should be long enough for database writes to complete.")
+    @ConfigComment("Note: this setting does NOT affect how often interest is paid.")
+    @ConfigComment("Default is 60 seconds.")
     private int cooldown = 60;
 
     @ConfigEntry(path = "bank.sendAlert")
@@ -149,14 +160,14 @@ public class Settings implements ConfigObject {
     }
 
     /**
-     * @return the compound periods per year
+     * @return the number of compound periods per year (365 / compoundPeriod)
      */
     public long getCompoundPeriodsPerYear() {
-        return (long) (compoundPeriod * 365);
+        return (long) (365 / compoundPeriod);
     }
 
     /**
-     * @param compoundPeriod the compoundPeriod to set in hours
+     * @param compoundPeriod the compoundPeriod to set in days
      */
     public void setCompoundPeriod(float compoundPeriod) {
         this.compoundPeriod = compoundPeriod;

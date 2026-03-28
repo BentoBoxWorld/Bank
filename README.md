@@ -49,7 +49,52 @@ Admin commands make money by magic.
 
 
 
-## Configuration
+## Interest
+
+The Bank addon supports automatic compound interest on island bank balances.
+
+Interest is configured with three settings in `config.yml`:
+
+| Setting | Default | Description |
+|---|---|---|
+| `interest-rate` | `10` | Annual interest rate as a percentage (e.g. `10` = 10% per year). Set to `0` or less to disable interest. |
+| `compound-period` | `1` | How often interest is compounded, in **days**. |
+| `cooldown` | `60` | Cooldown in **seconds** between a player's deposit and withdrawal commands. This does **not** affect how often interest is paid. |
+
+### How interest is calculated
+
+Interest is calculated using the standard **compound interest formula**:
+
+```
+A = P × (1 + r/n)^(n×t)
+```
+
+Where:
+- **P** = current island bank balance
+- **r** = annual interest rate as a decimal (e.g. `10` → `0.10`)
+- **n** = number of compounding periods per year (`365 / compound-period`)
+- **t** = elapsed time in years since interest was last paid
+
+The interest paid is `A − P`. It is only applied when at least one full `compound-period` has elapsed since the last payment, and only if the amount is at least `0.01`.
+
+### Example
+
+With the defaults (`interest-rate: 10`, `compound-period: 1`) and a balance of **10,000**:
+
+- After **1 day**: `10,000 × (1 + 0.10/365)^1 ≈ 10,002.74` (interest ≈ **2.74**)
+- After **1 year**: `10,000 × (1 + 0.10/365)^365 ≈ 11,051.56` (interest ≈ **1,051.56**)
+
+### When interest is calculated
+
+Interest is recalculated (lazily) whenever:
+- The server starts
+- A player logs in
+- A player deposits money
+- A player withdraws money
+
+> **Tip:** Do not set `compound-period` longer than your server's typical uptime between reboots, otherwise interest may not be paid regularly.
+
+
 
 ```
 bank:
