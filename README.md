@@ -1,6 +1,5 @@
 # Bank
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Bank&metric=bugs)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Bank)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Bank&metric=coverage)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Bank)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Bank&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Bank)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Bank&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Bank)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Bank&metric=security_rating)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Bank)
