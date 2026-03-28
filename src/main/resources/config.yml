@@ -18,13 +18,24 @@ bank:
     # %Bank_[gamemode]_top_name_1% with island level: %Bank_[gamemode]_top_value_1%
     # [gamemode] is bskyblock, acidisland, etc.
     number-of-ranks: 10
-  # The annual interest rate for accounts.
+  # The annual interest rate as a percentage for island bank accounts.
+  # e.g., 10 = 10% interest per year.
+  # If zero or less, interest will not be paid.
   interest-rate: 10
-  # Period that interest is compounded in hours. Default 1 hour
-  # Do not make this time longer than the time your server is on before it reboots
+  # The period in days over which interest is compounded. Default is 1 day.
+  # Interest is calculated using the compound interest formula:
+  #   A = P * (1 + r/n)^(n*t)
+  # where P = current balance, r = annual interest rate (as a decimal),
+  # n = number of compounding periods per year (365 / compound-period),
+  # and t = elapsed time in years.
+  # Interest is only applied when at least one compound-period has elapsed since
+  # the last payment. It is calculated on server start, player login, deposit,
+  # or withdrawal. Do not make this longer than your server's uptime between reboots.
   compound-period: 1
-  # Cooldown time for user withdrawl and deposit commands. This should be set long enought
-  # so that database writes can be made in time. Default is 60 seconds.
+  # Cooldown in seconds between a player's deposit and withdrawal commands.
+  # This should be long enough for database writes to complete.
+  # Note: this setting does NOT affect how often interest is paid.
+  # Default is 60 seconds.
   cooldown: 60
   units:
     # Shorthand units
