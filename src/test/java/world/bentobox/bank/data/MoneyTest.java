@@ -1,6 +1,9 @@
 package world.bentobox.bank.data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 
@@ -19,19 +22,14 @@ public class MoneyTest {
 
     Money m;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         m = new Money();
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
+        // Nothing to tear down
     }
 
     /**
@@ -204,12 +202,12 @@ public class MoneyTest {
     @SuppressWarnings("unlikely-arg-type")
     @Test
     public void testEqualsObject() {
-        assertTrue(m.equals(m));
-        assertFalse(m.equals("string"));
-        assertFalse(m.equals(null));
-        assertFalse(m.equals(new Money(123)));
+        assertEquals(m, m);
+        assertNotEquals("string", m);
+        assertNotEquals(null, m);
+        assertNotEquals(new Money(123), m);
         m = new Money(345);
-        assertTrue(m.equals(new Money(345)));
+        assertEquals(m, new Money(345));
     }
 
     /**

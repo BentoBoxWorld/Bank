@@ -77,8 +77,8 @@ public class StatementCommandTest {
     @Before
     public void setUp() {
         // Set up plugin
-        BentoBox plugin = mock(BentoBox.class);
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+        BentoBox pluginMock = mock(BentoBox.class);
+        Whitebox.setInternalState(BentoBox.class, "instance", pluginMock);
 
         when(ic.getWorld()).thenReturn(world);
         when(user.getWorld()).thenReturn(world);
@@ -87,12 +87,12 @@ public class StatementCommandTest {
         // IWM friendly name
         IslandWorldManager iwm = mock(IslandWorldManager.class);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
-        when(plugin.getIWM()).thenReturn(iwm);
+        when(pluginMock.getIWM()).thenReturn(iwm);
         when(iwm.inWorld(any(World.class))).thenReturn(true);
 
         // Islands
-        when(plugin.getIslands()).thenReturn(im);
-        when(im.getIsland(eq(world), eq(user))).thenReturn(island);
+        when(pluginMock.getIslands()).thenReturn(im);
+        when(im.getIsland(world, user)).thenReturn(island);
 
         // Island flag allowed
         when(island.isAllowed(eq(user), any())).thenReturn(true);
@@ -105,7 +105,7 @@ public class StatementCommandTest {
         when(vh.withdraw(eq(user), anyDouble(), eq(world))).thenReturn(er);
 
         // Settings
-        when(plugin.getSettings()).thenReturn(new Settings());
+        when(pluginMock.getSettings()).thenReturn(new Settings());
 
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         PowerMockito.mockStatic(Util.class);
@@ -131,7 +131,7 @@ public class StatementCommandTest {
     @Test
     public void testCanExecuteArgs() {
         assertFalse(sc.canExecute(user, "statement", Collections.singletonList("fff")));
-        verify(user).sendMessage(eq("commands.help.header"), eq(TextVariables.LABEL), eq("BSkyBlock"));
+        verify(user).sendMessage("commands.help.header", TextVariables.LABEL, "BSkyBlock");
     }
 
     /**
@@ -139,9 +139,9 @@ public class StatementCommandTest {
      */
     @Test
     public void testCanExecuteNoIsland() {
-        when(im.getIsland(eq(world), eq(user))).thenReturn(null);
+        when(im.getIsland(world, user)).thenReturn(null);
         assertFalse(sc.canExecute(user, "statement", Collections.emptyList()));
-        verify(user).sendMessage(eq("general.errors.no-island"));
+        verify(user).sendMessage("general.errors.no-island");
     }
 
     /**
@@ -151,7 +151,7 @@ public class StatementCommandTest {
     public void testCanExecuteNoRank() {
         when(island.isAllowed(eq(user), any())).thenReturn(false);
         assertFalse(sc.canExecute(user, "statement", Collections.emptyList()));
-        verify(user).sendMessage(eq("bank.errors.no-rank"));
+        verify(user).sendMessage("bank.errors.no-rank");
 
     }
 

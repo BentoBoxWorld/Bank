@@ -74,8 +74,8 @@ public class BalanceCommandTest {
     public void setUp() {
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         // Set up plugin
-        BentoBox plugin = mock(BentoBox.class);
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+        BentoBox pluginMock = mock(BentoBox.class);
+        Whitebox.setInternalState(BentoBox.class, "instance", pluginMock);
 
         when(ic.getWorld()).thenReturn(world);
         when(user.getWorld()).thenReturn(world);
@@ -83,12 +83,12 @@ public class BalanceCommandTest {
         // IWM friendly name
         IslandWorldManager iwm = mock(IslandWorldManager.class);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
-        when(plugin.getIWM()).thenReturn(iwm);
+        when(pluginMock.getIWM()).thenReturn(iwm);
         when(iwm.inWorld(any(World.class))).thenReturn(true);
 
         // Islands
-        when(plugin.getIslands()).thenReturn(im);
-        when(im.getIsland(eq(world), eq(user))).thenReturn(island);
+        when(pluginMock.getIslands()).thenReturn(im);
+        when(im.getIsland(world, user)).thenReturn(island);
 
         // Island flag allowed
         when(island.isAllowed(eq(user), any())).thenReturn(true);
@@ -124,7 +124,7 @@ public class BalanceCommandTest {
     @Test
     public void testCanExecuteArgs() {
         assertFalse(bc.canExecute(user, "balance", Collections.singletonList("fff")));
-        verify(user).sendMessage(eq("commands.help.header"), eq(TextVariables.LABEL), eq("BSkyBlock"));
+        verify(user).sendMessage("commands.help.header", TextVariables.LABEL, "BSkyBlock");
     }
 
     /**
@@ -132,9 +132,9 @@ public class BalanceCommandTest {
      */
     @Test
     public void testCanExecuteNoIsland() {
-        when(im.getIsland(eq(world), eq(user))).thenReturn(null);
+        when(im.getIsland(world, user)).thenReturn(null);
         assertFalse(bc.canExecute(user, "balance", Collections.emptyList()));
-        verify(user).sendMessage(eq("general.errors.no-island"));
+        verify(user).sendMessage("general.errors.no-island");
     }
 
     /**
@@ -144,7 +144,7 @@ public class BalanceCommandTest {
     public void testCanExecuteNoRank() {
         when(island.isAllowed(eq(user), any())).thenReturn(false);
         assertFalse(bc.canExecute(user, "balance", Collections.emptyList()));
-        verify(user).sendMessage(eq("bank.errors.no-rank"));
+        verify(user).sendMessage("bank.errors.no-rank");
 
     }
 
@@ -162,7 +162,7 @@ public class BalanceCommandTest {
     @Test
     public void testExecuteUserStringListOfString() {
         assertTrue(bc.execute(user, "balance", Collections.emptyList()));
-        verify(user).sendMessage(eq("bank.balance.island-balance"), eq(TextVariables.NUMBER), eq("0.0"));
+        verify(user).sendMessage("bank.balance.island-balance", TextVariables.NUMBER, "0.0");
     }
 
 }

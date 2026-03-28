@@ -325,7 +325,7 @@ public class BankManager implements Listener {
                     return new AccountHistory(en.getKey(), split[0], Double.parseDouble(split[2]), type);
                 }
                 return null;
-            }).filter(Objects::nonNull).collect(Collectors.toList());
+            }).filter(Objects::nonNull).toList();
         } catch (IOException e) {
             return Collections.emptyList();
         }

@@ -81,8 +81,8 @@ public class AdminStatementCommandTest {
     @Before
     public void setUp() {
         // Set up plugin
-        BentoBox plugin = mock(BentoBox.class);
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+        BentoBox pluginMock = mock(BentoBox.class);
+        Whitebox.setInternalState(BentoBox.class, "instance", pluginMock);
 
         when(ic.getWorld()).thenReturn(world);
         when(user.getWorld()).thenReturn(world);
@@ -91,16 +91,16 @@ public class AdminStatementCommandTest {
         // IWM friendly name
         IslandWorldManager iwm = mock(IslandWorldManager.class);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
-        when(plugin.getIWM()).thenReturn(iwm);
+        when(pluginMock.getIWM()).thenReturn(iwm);
         when(iwm.inWorld(any(World.class))).thenReturn(true);
 
         // Islands
-        when(plugin.getIslands()).thenReturn(im);
-        when(im.getIsland(eq(world), eq(user))).thenReturn(island);
+        when(pluginMock.getIslands()).thenReturn(im);
+        when(im.getIsland(world, user)).thenReturn(island);
 
         // Players
         when(addon.getPlayers()).thenReturn(pm);
-        when(pm.getUser(eq("tastybento"))).thenReturn(user);
+        when(pm.getUser("tastybento")).thenReturn(user);
 
         // Island flag allowed
         when(island.isAllowed(eq(user), any())).thenReturn(true);
@@ -113,7 +113,7 @@ public class AdminStatementCommandTest {
         when(vh.withdraw(eq(user), anyDouble(), eq(world))).thenReturn(er);
 
         // Settings
-        when(plugin.getSettings()).thenReturn(new Settings());
+        when(pluginMock.getSettings()).thenReturn(new Settings());
 
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
 
@@ -142,7 +142,7 @@ public class AdminStatementCommandTest {
     @Test
     public void testCanExecuteArgsNoArgs() {
         assertFalse(bc.canExecute(user, "statement", Collections.emptyList()));
-        verify(user).sendMessage(eq("commands.help.header"), eq(TextVariables.LABEL), eq("BSkyBlock"));
+        verify(user).sendMessage("commands.help.header", TextVariables.LABEL, "BSkyBlock");
     }
 
     /**
@@ -150,9 +150,9 @@ public class AdminStatementCommandTest {
      */
     @Test
     public void testCanExecuteNoIsland() {
-        when(im.getIsland(eq(world), eq(user))).thenReturn(null);
+        when(im.getIsland(world, user)).thenReturn(null);
         assertFalse(bc.canExecute(user, "statement", Collections.singletonList("tastybento")));
-        verify(user).sendMessage(eq("general.errors.no-island"));
+        verify(user).sendMessage("general.errors.no-island");
     }
 
     /**
@@ -162,7 +162,7 @@ public class AdminStatementCommandTest {
     public void testCanExecuteUnknownTarget() {
         when(pm.getUser(anyString())).thenReturn(null);
         assertFalse(bc.canExecute(user, "statement", Collections.singletonList("bonne")));
-        verify(user).sendMessage(eq("general.errors.unknown-player"), eq(TextVariables.NAME), eq("bonne"));    }
+        verify(user).sendMessage("general.errors.unknown-player", TextVariables.NAME, "bonne");    }
 
     /**
      * Test method for {@link world.bentobox.bank.commands.admin.AdminStatementCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.

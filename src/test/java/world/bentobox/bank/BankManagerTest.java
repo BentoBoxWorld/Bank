@@ -3,7 +3,6 @@ package world.bentobox.bank;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -118,7 +117,7 @@ public class BankManagerTest {
         when(location.getWorld()).thenReturn(world);
         when(location.clone()).thenReturn(location);
         island.setCenter(location);
-        when(im.getIsland(eq(world), eq(user))).thenReturn(island);
+        when(im.getIsland(world, user)).thenReturn(island);
 
         PowerMockito.mockStatic(Util.class);
         when(Util.getWorld(any())).thenAnswer(arg -> arg.getArgument(0, World.class));
@@ -257,7 +256,7 @@ public class BankManagerTest {
             e = e.getNewEvent().get();
         }
         bm.onIslandDelete((IslandPreclearEvent)e);
-        verify(h).deleteID(eq(uniqueId));
+        verify(h).deleteID(uniqueId);
     }
 
     /**

@@ -77,8 +77,8 @@ public class AdminTakeCommandTest {
     @Before
     public void setUp() {
         // Set up plugin
-        BentoBox plugin = mock(BentoBox.class);
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+        BentoBox pluginMock = mock(BentoBox.class);
+        Whitebox.setInternalState(BentoBox.class, "instance", pluginMock);
 
         when(ic.getWorld()).thenReturn(world);
         when(user.getWorld()).thenReturn(world);
@@ -86,16 +86,16 @@ public class AdminTakeCommandTest {
         // IWM friendly name
         IslandWorldManager iwm = mock(IslandWorldManager.class);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
-        when(plugin.getIWM()).thenReturn(iwm);
+        when(pluginMock.getIWM()).thenReturn(iwm);
         when(iwm.inWorld(any(World.class))).thenReturn(true);
 
         // Islands
-        when(plugin.getIslands()).thenReturn(im);
-        when(im.getIsland(eq(world), eq(user))).thenReturn(island);
+        when(pluginMock.getIslands()).thenReturn(im);
+        when(im.getIsland(world, user)).thenReturn(island);
 
         // Players
         when(addon.getPlayers()).thenReturn(pm);
-        when(pm.getUser(eq("tastybento"))).thenReturn(user);
+        when(pm.getUser("tastybento")).thenReturn(user);
         when(user.getName()).thenReturn("tastybento");
 
         // Island flag allowed
@@ -133,7 +133,7 @@ public class AdminTakeCommandTest {
     @Test
     public void testCanExecuteArgsNoArgs() {
         assertFalse(bc.canExecute(user, "take", Collections.emptyList()));
-        verify(user).sendMessage(eq("commands.help.header"), eq(TextVariables.LABEL), eq("BSkyBlock"));
+        verify(user).sendMessage("commands.help.header", TextVariables.LABEL, "BSkyBlock");
     }
 
     /**
@@ -142,7 +142,7 @@ public class AdminTakeCommandTest {
     @Test
     public void testCanExecuteArgsOneArg() {
         assertFalse(bc.canExecute(user, "take", Collections.singletonList("tastybento")));
-        verify(user).sendMessage(eq("commands.help.header"), eq(TextVariables.LABEL), eq("BSkyBlock"));
+        verify(user).sendMessage("commands.help.header", TextVariables.LABEL, "BSkyBlock");
     }
 
     /**
@@ -150,9 +150,9 @@ public class AdminTakeCommandTest {
      */
     @Test
     public void testCanExecuteNoIsland() {
-        when(im.getIsland(eq(world), eq(user))).thenReturn(null);
+        when(im.getIsland(world, user)).thenReturn(null);
         assertFalse(bc.canExecute(user, "take", Arrays.asList("tastybento", "100")));
-        verify(user).sendMessage(eq("general.errors.no-island"));
+        verify(user).sendMessage("general.errors.no-island");
     }
 
     /**
@@ -162,7 +162,7 @@ public class AdminTakeCommandTest {
     public void testCanExecuteUnknownTarget() {
         when(pm.getUser(anyString())).thenReturn(null);
         assertFalse(bc.canExecute(user, "take", Arrays.asList("bonne", "100")));
-        verify(user).sendMessage(eq("general.errors.unknown-player"), eq(TextVariables.NAME), eq("bonne"));
+        verify(user).sendMessage("general.errors.unknown-player", TextVariables.NAME, "bonne");
     }
 
     /**
@@ -171,7 +171,7 @@ public class AdminTakeCommandTest {
     @Test
     public void testCanExecuteNotANumber() {
         assertFalse(bc.canExecute(user, "take", Arrays.asList("tastybento", "xxx")));
-        verify(user).sendMessage(eq("bank.errors.must-be-a-number"));
+        verify(user).sendMessage("bank.errors.must-be-a-number");
     }
 
     /**
@@ -180,7 +180,7 @@ public class AdminTakeCommandTest {
     @Test
     public void testCanExecuteNegativeNumber() {
         assertFalse(bc.canExecute(user, "take", Arrays.asList("tastybento", "-99")));
-        verify(user).sendMessage(eq("bank.errors.value-must-be-positive"));
+        verify(user).sendMessage("bank.errors.value-must-be-positive");
     }
 
     /**
@@ -208,9 +208,9 @@ public class AdminTakeCommandTest {
     public void testExecuteUserStringListOfString() {
         testCanExecuteSuccess();
         assertTrue(bc.execute(user, "take", Arrays.asList("tastybento", "100")));
-        verify(user).sendMessage(eq("bank.admin.give.success"),
-                eq(TextVariables.NAME), eq("tastybento"),
-                eq(TextVariables.NUMBER), eq("0.0"));
+        verify(user).sendMessage("bank.admin.give.success",
+                TextVariables.NAME, "tastybento",
+                TextVariables.NUMBER, "0.0");
     }
 
     /**
@@ -221,7 +221,7 @@ public class AdminTakeCommandTest {
         testCanExecuteSuccess();
         when(bankManager.withdraw(eq(user), any(), any(), eq(TxType.TAKE))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
         assertTrue(bc.execute(user, "take", Arrays.asList("tastybento", "100")));
-        verify(user).sendMessage(eq("bank.errors.too-low"));
+        verify(user).sendMessage("bank.errors.too-low");
     }
 
     /**
@@ -231,7 +231,7 @@ public class AdminTakeCommandTest {
     public void testExecuteUserStringListOfStringError() {
         when(bankManager.withdraw(eq(user), any(), any(), eq(TxType.TAKE))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR));
         assertTrue(bc.execute(user, "take", Arrays.asList("tastybento", "100")));
-        verify(user).sendMessage(eq("bank.errors.bank-error"));
+        verify(user).sendMessage("bank.errors.bank-error");
     }
 
 

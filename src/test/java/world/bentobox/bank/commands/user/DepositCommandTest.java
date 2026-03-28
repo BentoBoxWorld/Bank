@@ -85,8 +85,8 @@ public class DepositCommandTest {
     public void setUp() {
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         // Set up plugin
-        BentoBox plugin = mock(BentoBox.class);
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+        BentoBox pluginMock = mock(BentoBox.class);
+        Whitebox.setInternalState(BentoBox.class, "instance", pluginMock);
 
         when(ic.getWorld()).thenReturn(world);
         when(user.getWorld()).thenReturn(world);
@@ -96,12 +96,12 @@ public class DepositCommandTest {
         // IWM friendly name
         IslandWorldManager iwm = mock(IslandWorldManager.class);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
-        when(plugin.getIWM()).thenReturn(iwm);
+        when(pluginMock.getIWM()).thenReturn(iwm);
         when(iwm.inWorld(any(World.class))).thenReturn(true);
 
         // Islands
-        when(plugin.getIslands()).thenReturn(im);
-        when(im.getIsland(eq(world), eq(user))).thenReturn(island);
+        when(pluginMock.getIslands()).thenReturn(im);
+        when(im.getIsland(world, user)).thenReturn(island);
 
         // Island flag allowed
         when(island.isAllowed(eq(user), any())).thenReturn(true);
@@ -112,9 +112,9 @@ public class DepositCommandTest {
 
         when(ic.getAddon()).thenReturn(addon);
         when(addon.getBankManager()).thenReturn(bankManager);
-        when(bankManager.getBalance(eq(island))).thenReturn(new Money(100D));
+        when(bankManager.getBalance(island)).thenReturn(new Money(100D));
         when(addon.getVault()).thenReturn(vh);
-        when(vh.getBalance(eq(user), eq(world))).thenReturn(1000D);
+        when(vh.getBalance(user, world)).thenReturn(1000D);
         when(vh.format(anyDouble())).thenAnswer(i -> String.valueOf(i.getArgument(0, Double.class)));
         EconomyResponse er = new EconomyResponse(0, 0, ResponseType.SUCCESS, "");
         when(vh.withdraw(eq(user), anyDouble(), eq(world))).thenReturn(er);
@@ -142,7 +142,7 @@ public class DepositCommandTest {
     @Test
     public void testCanExecuteNoArgs() {
         assertFalse(dct.canExecute(user, "deposit", Collections.emptyList()));
-        verify(user).sendMessage(eq("commands.help.header"), eq(TextVariables.LABEL), eq("BSkyBlock"));
+        verify(user).sendMessage("commands.help.header", TextVariables.LABEL, "BSkyBlock");
     }
 
     /**
@@ -151,7 +151,7 @@ public class DepositCommandTest {
     @Test
     public void testCanExecuteOneArgNotANumber() {
         assertFalse(dct.canExecute(user, "deposit", Collections.singletonList("hello")));
-        verify(user).sendMessage(eq("bank.errors.must-be-a-number"));
+        verify(user).sendMessage("bank.errors.must-be-a-number");
     }
 
     /**
@@ -160,7 +160,7 @@ public class DepositCommandTest {
     @Test
     public void testCanExecuteOneArgNegativeNumber() {
         assertFalse(dct.canExecute(user, "deposit", Collections.singletonList("-50")));
-        verify(user).sendMessage(eq("bank.errors.value-must-be-positive"));
+        verify(user).sendMessage("bank.errors.value-must-be-positive");
     }
 
     /**
@@ -170,7 +170,7 @@ public class DepositCommandTest {
     public void testCanExecuteOneArgNumberNoRank() {
         when(island.isAllowed(eq(user), any())).thenReturn(false);
         assertFalse(dct.canExecute(user, "deposit", Collections.singletonList("123.30")));
-        verify(user).sendMessage(eq("bank.errors.no-rank"));
+        verify(user).sendMessage("bank.errors.no-rank");
     }
 
     /**
@@ -178,9 +178,9 @@ public class DepositCommandTest {
      */
     @Test
     public void testCanExecuteOneArgNumberNoIsland() {
-        when(im.getIsland(eq(world), eq(user))).thenReturn(null);
+        when(im.getIsland(world, user)).thenReturn(null);
         assertFalse(dct.canExecute(user, "deposit", Collections.singletonList("123.30")));
-        verify(user).sendMessage(eq("general.errors.no-island"));
+        verify(user).sendMessage("general.errors.no-island");
     }
 
     /**
@@ -188,7 +188,7 @@ public class DepositCommandTest {
      */
     @Test
     public void testCanExecuteAllSuccess() {
-        when(bankManager.getBalance(eq(user), eq(world))).thenReturn(new Money(555D));
+        when(bankManager.getBalance(user, world)).thenReturn(new Money(555D));
         assertTrue(dct.canExecute(user, "deposit", Collections.singletonList("all")));
         verify(user, never()).sendMessage(any());
     }
@@ -198,7 +198,7 @@ public class DepositCommandTest {
      */
     @Test
     public void testCanExecuteOneArgNumberSuccess() {
-        when(bankManager.getBalance(eq(user), eq(world))).thenReturn(new Money(555D));
+        when(bankManager.getBalance(user, world)).thenReturn(new Money(555D));
         assertTrue(dct.canExecute(user, "deposit", Collections.singletonList("123.30")));
         verify(user, never()).sendMessage(any());
     }
@@ -254,8 +254,8 @@ public class DepositCommandTest {
         testCanExecuteOneArgNumberSuccess();
         when(bankManager.deposit(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.SUCCESS));
         assertTrue(dct.execute(user, "deposit", Collections.singletonList("123.30")));
-        verify(vh).withdraw(eq(user), eq(123.3D), eq(world));
-        verify(user).sendMessage(eq("bank.deposit.success"), eq(TextVariables.NUMBER), eq("100.0"));
+        verify(vh).withdraw(user, 123.3D, world);
+        verify(user).sendMessage("bank.deposit.success", TextVariables.NUMBER, "100.0");
     }
 
     /**
@@ -265,7 +265,7 @@ public class DepositCommandTest {
     public void testCanExecuteOneArgNumberLowBalance() {
         when(bankManager.deposit(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
         assertTrue(dct.execute(user, "deposit", Collections.singletonList("123.30")));
-        verify(user).sendMessage(eq("bank.errors.low-balance"));
+        verify(user).sendMessage("bank.errors.low-balance");
     }
 
     /**

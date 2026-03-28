@@ -83,8 +83,8 @@ public class WithdrawCommandTest {
     public void setUp() {
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         // Set up plugin
-        BentoBox plugin = mock(BentoBox.class);
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+        BentoBox pluginMock = mock(BentoBox.class);
+        Whitebox.setInternalState(BentoBox.class, "instance", pluginMock);
 
         when(ic.getWorld()).thenReturn(world);
         when(user.getWorld()).thenReturn(world);
@@ -93,12 +93,12 @@ public class WithdrawCommandTest {
         // IWM friendly name
         IslandWorldManager iwm = mock(IslandWorldManager.class);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
-        when(plugin.getIWM()).thenReturn(iwm);
+        when(pluginMock.getIWM()).thenReturn(iwm);
         when(iwm.inWorld(any(World.class))).thenReturn(true);
 
         // Islands
-        when(plugin.getIslands()).thenReturn(im);
-        when(im.getIsland(eq(world), eq(user))).thenReturn(island);
+        when(pluginMock.getIslands()).thenReturn(im);
+        when(im.getIsland(world, user)).thenReturn(island);
 
         // Island flag allowed
         when(island.isAllowed(eq(user), any())).thenReturn(true);
@@ -111,7 +111,7 @@ public class WithdrawCommandTest {
         when(ic.getAddon()).thenReturn(addon);
         when(addon.getBankManager()).thenReturn(bankManager);
         when(bankManager.getBalance(any(), any())).thenReturn(new Money());
-        when(bankManager.getBalance(eq(island))).thenReturn(new Money(100D));
+        when(bankManager.getBalance(island)).thenReturn(new Money(100D));
         when(addon.getVault()).thenReturn(vh);
         when(vh.format(anyDouble())).thenAnswer(i -> String.valueOf(i.getArgument(0, Double.class)));
 
@@ -141,7 +141,7 @@ public class WithdrawCommandTest {
     @Test
     public void testCanExecuteNoArgs() {
         assertFalse(wct.canExecute(user, "withdraw", Collections.emptyList()));
-        verify(user).sendMessage(eq("commands.help.header"), eq(TextVariables.LABEL), eq("BSkyBlock"));
+        verify(user).sendMessage("commands.help.header", TextVariables.LABEL, "BSkyBlock");
     }
 
     /**
@@ -150,7 +150,7 @@ public class WithdrawCommandTest {
     @Test
     public void testCanExecuteOneArgNotANumber() {
         assertFalse(wct.canExecute(user, "withdraw", Collections.singletonList("hello")));
-        verify(user).sendMessage(eq("bank.errors.must-be-a-number"));
+        verify(user).sendMessage("bank.errors.must-be-a-number");
     }
 
     /**
@@ -159,7 +159,7 @@ public class WithdrawCommandTest {
     @Test
     public void testCanExecuteOneArgNegativeNumber() {
         assertFalse(wct.canExecute(user, "withdraw", Collections.singletonList("-50")));
-        verify(user).sendMessage(eq("bank.errors.value-must-be-positive"));
+        verify(user).sendMessage("bank.errors.value-must-be-positive");
     }
 
     /**
@@ -168,8 +168,8 @@ public class WithdrawCommandTest {
     @Test
     public void testCanExecuteOneArgNumberLowBalance() {
         assertFalse(wct.canExecute(user, "withdraw", Collections.singletonList("123.30")));
-        verify(user, never()).sendMessage(eq("bank.errors.must-be-a-number"));
-        verify(user).sendMessage(eq("bank.errors.low-balance"));
+        verify(user, never()).sendMessage("bank.errors.must-be-a-number");
+        verify(user).sendMessage("bank.errors.low-balance");
     }
 
     /**
@@ -177,9 +177,9 @@ public class WithdrawCommandTest {
      */
     @Test
     public void testCanExecuteAllArg() {
-        when(bankManager.getBalance(eq(user), eq(world))).thenReturn(new Money(555D));
+        when(bankManager.getBalance(user, world)).thenReturn(new Money(555D));
         assertTrue(wct.canExecute(user, "withdraw", Collections.singletonList("all")));
-        verify(user, never()).sendMessage(eq("bank.errors.must-be-a-number"));
+        verify(user, never()).sendMessage("bank.errors.must-be-a-number");
         verify(user, never()).sendMessage(any());
     }
 
@@ -190,7 +190,7 @@ public class WithdrawCommandTest {
     public void testCanExecuteOneArgNumberNoRank() {
         when(island.isAllowed(eq(user), any())).thenReturn(false);
         assertFalse(wct.canExecute(user, "withdraw", Collections.singletonList("123.30")));
-        verify(user).sendMessage(eq("bank.errors.no-rank"));
+        verify(user).sendMessage("bank.errors.no-rank");
     }
 
     /**
@@ -198,9 +198,9 @@ public class WithdrawCommandTest {
      */
     @Test
     public void testCanExecuteOneArgNumberNoIsland() {
-        when(im.getIsland(eq(world), eq(user))).thenReturn(null);
+        when(im.getIsland(world, user)).thenReturn(null);
         assertFalse(wct.canExecute(user, "withdraw", Collections.singletonList("123.30")));
-        verify(user).sendMessage(eq("general.errors.no-island"));
+        verify(user).sendMessage("general.errors.no-island");
     }
 
     /**
@@ -208,7 +208,7 @@ public class WithdrawCommandTest {
      */
     @Test
     public void testCanExecuteOneArgNumberSuccess() {
-        when(bankManager.getBalance(eq(user), eq(world))).thenReturn(new Money(555D));
+        when(bankManager.getBalance(user, world)).thenReturn(new Money(555D));
         assertTrue(wct.canExecute(user, "withdraw", Collections.singletonList("123.30")));
         verify(user, never()).sendMessage(any());
     }
@@ -219,7 +219,6 @@ public class WithdrawCommandTest {
     @Test
     public void testExecuteUserStringListOfStringLoadError() {
         when(bankManager.withdraw(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOAD_ERROR));
-        //testCanExecuteOneArgNumberSuccess();
         assertTrue(wct.execute(user, "withdraw", Collections.emptyList()));
         verify(user).sendMessage("bank.errors.bank-error");
     }
@@ -230,7 +229,6 @@ public class WithdrawCommandTest {
     @Test
     public void testExecuteUserStringListOfStringLowBalance() {
         when(bankManager.withdraw(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_LOW_BALANCE));
-        //testCanExecuteOneArgNumberSuccess();
         assertTrue(wct.execute(user, "withdraw", Collections.emptyList()));
         verify(user).sendMessage("bank.errors.low-balance");
     }
@@ -241,7 +239,6 @@ public class WithdrawCommandTest {
     @Test
     public void testExecuteUserStringListOfStringNoIsland() {
         when(bankManager.withdraw(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.FAILURE_NO_ISLAND));
-        //testCanExecuteOneArgNumberSuccess();
         assertTrue(wct.execute(user, "withdraw", Collections.emptyList()));
         verify(user).sendMessage("general.errors.no-island");
     }
@@ -253,10 +250,9 @@ public class WithdrawCommandTest {
     public void testExecuteUserStringListOfStringSuccess() {
         testCanExecuteOneArgNumberSuccess();
         when(bankManager.withdraw(eq(user), any(), eq(world))).thenReturn(CompletableFuture.completedFuture(BankResponse.SUCCESS));
-        //testCanExecuteOneArgNumberSuccess();
         assertTrue(wct.execute(user, "withdraw", Collections.singletonList("123.30")));
-        verify(vh).deposit(eq(user), eq(123.3D), eq(world));
-        verify(user).sendMessage(eq("bank.withdraw.success"), eq(TextVariables.NUMBER), eq("100.0"));
+        verify(vh).deposit(user, 123.3D, world);
+        verify(user).sendMessage("bank.withdraw.success", TextVariables.NUMBER, "100.0");
     }
 
     /**

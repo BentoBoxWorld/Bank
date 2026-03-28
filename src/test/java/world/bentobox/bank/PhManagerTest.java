@@ -89,15 +89,15 @@ public class PhManagerTest {
         when(plugin.getPlaceholdersManager()).thenReturn(phm);
         when(addon.getSettings()).thenReturn(new Settings());
         when(user.getWorld()).thenReturn(world);
-        when(gm.inWorld(eq(world))).thenReturn(true);
+        when(gm.inWorld(world)).thenReturn(true);
         VaultHook vh = mock(VaultHook.class);
         when(vh.format(anyDouble())).thenAnswer(args -> "$" + args.getArgument(0, Double.class));
         when(addon.getVault()).thenReturn(vh);
         when(addon.getIslands()).thenReturn(im);
         when(user.getLocation()).thenReturn(location);
-        
-        when(im.getIslandAt(eq(location))).thenReturn(Optional.of(island));
-        when(bm.getBalance(eq(island))).thenReturn(new Money(1234.56D));
+
+        when(im.getIslandAt(location)).thenReturn(Optional.of(island));
+        when(bm.getBalance(island)).thenReturn(new Money(1234.56D));
         map = new LinkedHashMap<>();
         when(bm.getBalances(any())).thenReturn(map);
         when(addon.getPlayers()).thenReturn(plm);
@@ -144,7 +144,7 @@ public class PhManagerTest {
      */
     @Test
     public void testGetVisitedIslandBalanceWrongWorld() {
-        when(gm.inWorld(eq(world))).thenReturn(false);
+        when(gm.inWorld(world)).thenReturn(false);
         assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, false, false));
         assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, true, false));
         assertEquals("0.0", pm.getVisitedIslandBalance(gm, user, false, true));
@@ -156,7 +156,7 @@ public class PhManagerTest {
      */
     @Test
     public void testGetVisitedIslandBalanceNoIsland() {
-        when(im.getIslandAt(eq(location))).thenReturn(Optional.empty());
+        when(im.getIslandAt(location)).thenReturn(Optional.empty());
         assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, false, false));
         assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, true, false));
         assertEquals("0.0", pm.getVisitedIslandBalance(gm, user, false, true));
@@ -179,7 +179,7 @@ public class PhManagerTest {
      */
     @Test
     public void testGetVisitedIslandBalanceLargest() {
-        when(bm.getBalance(eq(island))).thenReturn(new Money(Double.MAX_VALUE));
+        when(bm.getBalance(island)).thenReturn(new Money(Double.MAX_VALUE));
         assertEquals("9223372T", pm.getVisitedIslandBalance(gm, user, true, false));
         assertEquals("1.7976931348623157E308", pm.getVisitedIslandBalance(gm, user, true, true));
     }
@@ -189,7 +189,7 @@ public class PhManagerTest {
      */
     @Test
     public void testGetVisitedIslandBalanceBig() {
-        when(bm.getBalance(eq(island))).thenReturn(new Money(123456789D));
+        when(bm.getBalance(island)).thenReturn(new Money(123456789D));
         assertEquals("123.5M", pm.getVisitedIslandBalance(gm, user, true, false));
         assertEquals("1.23456789E8", pm.getVisitedIslandBalance(gm, user, true, true));
     }
@@ -287,7 +287,7 @@ public class PhManagerTest {
     public void testCheckCacheNoNamesChange() {
         pm.setLastSorted(System.currentTimeMillis() + 10000);
         assertEquals(5, pm.checkCache(world, 5));
-        verify(bm).getBalances(eq(world));
+        verify(bm).getBalances(world);
     }
 
     /**
