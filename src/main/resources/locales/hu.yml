@@ -1,0 +1,81 @@
+---
+bank:
+  admin:
+    description: admin parancs a sziget bankhoz
+    give:
+      parameters: "<player> <amount>"
+      description: összeg hozzáadása a játékos sziget számlájához
+      success: "&a Siker! [name] sziget bankegyenlege most [number]."
+    take:
+      parameters: "<player> <amount>"
+      description: összeg levonása a játékos sziget számlájáról
+    balance:
+      parameters: "<player>"
+      description: a játékos sziget számlájának egyenlege
+    set:
+      parameters: "<player> <amount>"
+      description: összeg beállítása a játékos sziget számláján
+      success: "&a [name] számlája [number] értékre állítva."
+    statement:
+      parameters: "<player>"
+      description: a játékos sziget bank kivonatának megtekintése
+  balance:
+    description: megmutatja a sziget bankegyenlegedet
+    island-balance: "&a A sziget bankegyenlege [number]."
+  baltop:
+    description: egyenleg rangsor megjelenítése
+    description-syntax: "&d [number]"
+    highest: Rendezés a legmagasabb szerint
+    lowest: Rendezés a legalacsonyabb szerint
+    name-syntax: "&d [name]"
+    title: Legjobb egyenlegek
+  deposit:
+    description: összeg befizetése a sziget számládra
+    parameters: "<amount>"
+    success: "&a Siker! Az új sziget bankegyenleged [number]."
+    alert: "&a [name] befizetett [number] összeget a sziget bankba."
+  errors:
+    bank-error: "&c Hiba a bankszámla adatainak betöltésekor - kérlek próbáld újra
+      később"
+    low-balance: "&c A sziget bankegyenleged nem elég magas!"
+    too-low: "&c A sziget egyenlege túl alacsony."
+    must-be-a-number: "&c Az összegnek számnak kell lennie"
+    no-rank: "&c A rangod nem elég magas a bank használatához."
+    too-much: "&c Nincs ennyi befizetni való összeged."
+    value-must-be-positive: "&c Az összegnek pozitívnak kell lennie."
+    scientific: "&c A tudományos jelölés nem támogatott."
+    too-long: "&c Az értéknek kevesebb mint 10 számjegyűnek kell lennie"
+  statement:
+    balance:
+      name: "&9 Egyenleg:"
+      description: "&6 [number]"
+    deposit: Befizetés
+    description: a sziget bank előzményeinek megjelenítése
+    give: Admin adás
+    interest: Kamat
+    latest: Rendezés a legújabb szerint
+    oldest: Rendezés a legrégebbi szerint
+    set: Admin beállítás
+    syntax: |
+        &9 [date]
+        &9 [time]
+        &7 [name]
+        &6 [number]
+    take: Admin elvétel
+    title: Számlatörténet
+    unknown: Ismeretlen típus
+    withdrawal: Kivétel
+  user:
+    description: sziget bank parancs
+  withdraw:
+    description: összeg kivétele a sziget számládról
+    parameters: "<amount>"
+    success: "&a Siker! Az új sziget bankegyenleged [number]."
+    alert: "&a [name] kivett [number] összeget a sziget bankból."
+protection:
+  flags:
+    BANK_ACCESS:
+      description: |-
+          &f Hozzáférés engedélyezése
+          &f a sziget bankhoz
+      name: Sziget bank hozzáférés

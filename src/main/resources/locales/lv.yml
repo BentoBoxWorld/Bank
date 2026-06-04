@@ -1,0 +1,81 @@
+---
+bank:
+  admin:
+    description: administratora komanda salas bankai
+    give:
+      parameters: "<player> <amount>"
+      description: pievienot summu spēlētāja salas kontam
+      success: "&a Veiksmīgi! Spēlētāja [name] salas bankas atlikums tagad ir [number]."
+    take:
+      parameters: "<player> <amount>"
+      description: noņemt summu no spēlētāja salas konta
+    balance:
+      parameters: "<player>"
+      description: skatīt spēlētāja salas konta atlikumu
+    set:
+      parameters: "<player> <amount>"
+      description: iestatīt summu spēlētāja salas kontā
+      success: "&a Spēlētāja [name] konts iestatīts uz [number]."
+    statement:
+      parameters: "<player>"
+      description: skatīt spēlētāja salas bankas izrakstu
+  balance:
+    description: parāda jūsu salas bankas atlikumu
+    island-balance: "&a Salas bankas atlikums ir [number]."
+  baltop:
+    description: rādīt atlikumu reitingu
+    description-syntax: "&d [number]"
+    highest: Kārtot pēc augstākā
+    lowest: Kārtot pēc zemākā
+    name-syntax: "&d [name]"
+    title: Lielākie atlikumi
+  deposit:
+    description: iemaksāt summu jūsu salas kontā
+    parameters: "<amount>"
+    success: "&a Veiksmīgi! Jūsu jaunais salas bankas atlikums ir [number]."
+    alert: "&a [name] iemaksāja [number] salas bankā."
+  errors:
+    bank-error: "&c Kļūda, ielādējot bankas konta informāciju - lūdzu, mēģiniet vēlreiz
+      vēlāk"
+    low-balance: "&c Jūsu salas bankas atlikums nav pietiekami liels!"
+    too-low: "&c Salas atlikums ir pārāk zems."
+    must-be-a-number: "&c Summai jābūt skaitlim"
+    no-rank: "&c Jūsu rangs nav pietiekami augsts, lai izmantotu banku."
+    too-much: "&c Jums nav tādas summas, ko iemaksāt."
+    value-must-be-positive: "&c Summai jābūt pozitīvai."
+    scientific: "&c Zinātniskais pieraksts netiek atbalstīts."
+    too-long: "&c Vērtībai jābūt mazākai par 10 cipariem"
+  statement:
+    balance:
+      name: "&9 Atlikums:"
+      description: "&6 [number]"
+    deposit: Iemaksa
+    description: parādīt jūsu salas bankas vēsturi
+    give: Administratora piešķīrums
+    interest: Procenti
+    latest: Kārtot pēc jaunākā
+    oldest: Kārtot pēc vecākā
+    set: Administratora iestatījums
+    syntax: |
+        &9 [date]
+        &9 [time]
+        &7 [name]
+        &6 [number]
+    take: Administratora noņemšana
+    title: Konta vēsture
+    unknown: Nezināms tips
+    withdrawal: Izņemšana
+  user:
+    description: salas bankas komanda
+  withdraw:
+    description: izņemt summu no jūsu salas konta
+    parameters: "<amount>"
+    success: "&a Veiksmīgi! Jūsu jaunais salas bankas atlikums ir [number]."
+    alert: "&a [name] izņēma [number] no salas bankas."
+protection:
+  flags:
+    BANK_ACCESS:
+      description: |-
+          &f Atļaut piekļuvi
+          &f salas bankai
+      name: Piekļuve salas bankai

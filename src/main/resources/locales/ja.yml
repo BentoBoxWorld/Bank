@@ -33,6 +33,7 @@ bank:
     description: 島の口座に入金金額
     parameters: "<金額>"
     success: "&a成功！新しい島の銀行の残高は[number]です。"
+    alert: "&a[name]が島の銀行に[number]を入金しました。"
   errors:
     bank-error: "&c銀行口座情報の読み込み中にエラーが発生しました-後でもう一度お試しください"
     low-balance: "&cあなたの島の銀行の残高は十分に高くありません！"
@@ -65,6 +66,7 @@ bank:
     description: アイランドアカウントから金額を引き出す
     parameters: "<金額>"
     success: "&a成功！新しい島の銀行の残高は[number]です。"
+    alert: "&a[name]が島の銀行から[number]を引き出しました。"
 protection:
   flags:
     BANK_ACCESS:

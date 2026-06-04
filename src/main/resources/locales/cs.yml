@@ -33,6 +33,7 @@ bank:
     description: vložte částku na svůj ostrovní účet
     parameters: "<množství>"
     success: "&a Úspěch! Váš nový zůstatek na ostrovní bance je [number]."
+    alert: "&a [name] vložil [number] do ostrovní banky."
   errors:
     bank-error: "&c Chyba při načítání informací o bankovním účtu - zkuste to znovu
       později"
@@ -70,6 +71,7 @@ bank:
     description: vybrat částku ze svého ostrovního účtu
     parameters: "<množství>"
     success: "&a Úspěch! Váš nový zůstatek na ostrovní bance je [number]."
+    alert: "&a [name] vybral [number] z ostrovní banky."
 protection:
   flags:
     BANK_ACCESS:

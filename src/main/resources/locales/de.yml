@@ -33,6 +33,7 @@ bank:
     description: Betrag auf Ihr Inselkonto einzahlen
     parameters: "<amount>"
     success: "&ein Erfolg! Ihr neuer Kontostand auf der Insel beträgt [number]."
+    alert: "&a [name] hat [number] in die Inselbank eingezahlt."
   errors:
     bank-error: "&c Fehler beim Laden der Bankkontoinformationen - bitte versuchen
       Sie es später erneut"
@@ -70,6 +71,7 @@ bank:
     description: Betrag von Ihrem Inselkonto abheben
     parameters: "<amount>"
     success: "&ein Erfolg! Ihr neuer Kontostand auf der Insel beträgt [number]."
+    alert: "&a [name] hat [number] von der Inselbank abgehoben."
 protection:
   flags:
     BANK_ACCESS:
