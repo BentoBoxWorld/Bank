@@ -1,0 +1,81 @@
+---
+bank:
+  admin:
+    description: ada bankası için yönetici komutu
+    give:
+      parameters: "<player> <amount>"
+      description: oyuncunun ada hesabına miktar ekle
+      success: "&a Başarılı! [name] adlı oyuncunun ada banka bakiyesi şimdi [number]."
+    take:
+      parameters: "<player> <amount>"
+      description: oyuncunun ada hesabından miktar al
+    balance:
+      parameters: "<player>"
+      description: oyuncunun ada hesabının bakiyesini görüntüle
+    set:
+      parameters: "<player> <amount>"
+      description: oyuncunun ada hesabındaki miktarı ayarla
+      success: "&a [name] adlı oyuncunun hesabı [number] olarak ayarlandı."
+    statement:
+      parameters: "<player>"
+      description: oyuncunun ada banka ekstresini görüntüle
+  balance:
+    description: ada banka bakiyenizi gösterir
+    island-balance: "&a Ada banka bakiyesi [number]."
+  baltop:
+    description: bakiye sıralamasını göster
+    description-syntax: "&d [number]"
+    highest: En yüksekten sırala
+    lowest: En düşükten sırala
+    name-syntax: "&d [name]"
+    title: En yüksek bakiyeler
+  deposit:
+    description: ada hesabınıza miktar yatırın
+    parameters: "<amount>"
+    success: "&a Başarılı! Yeni ada banka bakiyeniz [number]."
+    alert: "&a [name] ada bankasına [number] yatırdı."
+  errors:
+    bank-error: "&c Banka hesabı bilgileri yüklenirken hata oluştu - lütfen daha
+      sonra tekrar deneyin"
+    low-balance: "&c Ada banka bakiyeniz yeterince yüksek değil!"
+    too-low: "&c Ada bakiyesi çok düşük."
+    must-be-a-number: "&c Miktar bir sayı olmalı"
+    no-rank: "&c Rütbeniz bankayı kullanmak için yeterince yüksek değil."
+    too-much: "&c Yatıracak o kadar miktarınız yok."
+    value-must-be-positive: "&c Miktar pozitif olmalı."
+    scientific: "&c Bilimsel gösterim desteklenmiyor."
+    too-long: "&c Değer 10 haneden az olmalı"
+  statement:
+    balance:
+      name: "&9 Bakiye:"
+      description: "&6 [number]"
+    deposit: Yatırma
+    description: ada banka geçmişinizi göster
+    give: Yönetici verme
+    interest: Faiz
+    latest: En yeniden sırala
+    oldest: En eskiden sırala
+    set: Yönetici ayarlama
+    syntax: |
+        &9 [date]
+        &9 [time]
+        &7 [name]
+        &6 [number]
+    take: Yönetici alma
+    title: Hesap geçmişi
+    unknown: Bilinmeyen tür
+    withdrawal: Çekme
+  user:
+    description: ada bankası komutu
+  withdraw:
+    description: ada hesabınızdan miktar çekin
+    parameters: "<amount>"
+    success: "&a Başarılı! Yeni ada banka bakiyeniz [number]."
+    alert: "&a [name] ada bankasından [number] çekti."
+protection:
+  flags:
+    BANK_ACCESS:
+      description: |-
+          &f Ada bankasına
+          &f erişime izin ver
+      name: Ada bankası erişimi

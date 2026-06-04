@@ -1,0 +1,80 @@
+---
+bank:
+  admin:
+    description: 島嶼銀行的管理員指令
+    give:
+      parameters: "<player> <amount>"
+      description: 將金額加入玩家的島嶼帳戶
+      success: "&a 成功！[name] 的島嶼銀行餘額現在是 [number]。"
+    take:
+      parameters: "<player> <amount>"
+      description: 從玩家的島嶼帳戶扣除金額
+    balance:
+      parameters: "<player>"
+      description: 查看玩家島嶼帳戶的餘額
+    set:
+      parameters: "<player> <amount>"
+      description: 設定玩家島嶼帳戶的金額
+      success: "&a [name] 的帳戶已設定為 [number]。"
+    statement:
+      parameters: "<player>"
+      description: 查看玩家的島嶼銀行明細
+  balance:
+    description: 顯示你的島嶼銀行餘額
+    island-balance: "&a 島嶼銀行餘額是 [number]。"
+  baltop:
+    description: 顯示餘額排行榜
+    description-syntax: "&d [number]"
+    highest: 由高至低排序
+    lowest: 由低至高排序
+    name-syntax: "&d [name]"
+    title: 餘額排行榜
+  deposit:
+    description: 將金額存入你的島嶼帳戶
+    parameters: "<amount>"
+    success: "&a 成功！你新的島嶼銀行餘額是 [number]。"
+    alert: "&a [name] 存入了 [number] 到島嶼銀行。"
+  errors:
+    bank-error: "&c 載入銀行帳戶資料時發生錯誤 - 請稍後再試"
+    low-balance: "&c 你的島嶼銀行餘額不足！"
+    too-low: "&c 島嶼餘額太低。"
+    must-be-a-number: "&c 金額必須是數字"
+    no-rank: "&c 你的等級不足以使用銀行。"
+    too-much: "&c 你沒有那麼多金額可以存入。"
+    value-must-be-positive: "&c 金額必須為正數。"
+    scientific: "&c 不支援科學記數法。"
+    too-long: "&c 數值必須少於 10 位數"
+  statement:
+    balance:
+      name: "&9 餘額："
+      description: "&6 [number]"
+    deposit: 存款
+    description: 顯示你的島嶼銀行紀錄
+    give: 管理員給予
+    interest: 利息
+    latest: 由最新排序
+    oldest: 由最舊排序
+    set: 管理員設定
+    syntax: |
+        &9 [date]
+        &9 [time]
+        &7 [name]
+        &6 [number]
+    take: 管理員扣除
+    title: 帳戶紀錄
+    unknown: 未知類型
+    withdrawal: 提款
+  user:
+    description: 島嶼銀行指令
+  withdraw:
+    description: 從你的島嶼帳戶提取金額
+    parameters: "<amount>"
+    success: "&a 成功！你新的島嶼銀行餘額是 [number]。"
+    alert: "&a [name] 從島嶼銀行提取了 [number]。"
+protection:
+  flags:
+    BANK_ACCESS:
+      description: |-
+          &f 允許存取
+          &f 島嶼銀行
+      name: 島嶼銀行存取
