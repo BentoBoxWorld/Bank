@@ -4,7 +4,7 @@ bank:
     give:
       parameters: "<player> <amount>"
       description: "add amount to player's island account"
-      success: "&a Success! [name]'s island bank balance is now [number]."
+      success: "<green> Success! [name]'s island bank balance is now [number]."
     take:
       parameters: "<player> <amount>"
       description: "take amount from player's island account"
@@ -14,39 +14,39 @@ bank:
     set:
       parameters: "<player> <amount>"
       description: "set amount in player's island account"
-      success: "&a [name]'s account set to [number]."
+      success: "<green> [name]'s account set to [number]."
     statement:
       parameters: "<player>"
       description: "view island bank statement for player"
   balance: 
     description: "shows your island bank balance"
-    island-balance: "&a Island bank balance is [number]."
+    island-balance: "<green> Island bank balance is [number]."
   baltop: 
     description: "show balance rankings"
-    description-syntax: "&d [number]"
+    description-syntax: "<light_purple> [number]"
     highest: "Sort by Highest"
     lowest: "Sort by Lowest"
-    name-syntax: "&d [name]"
+    name-syntax: "<light_purple> [name]"
     title: "Top Balances"
   deposit: 
     description: "deposit amount into your island account"
     parameters: <amount>
-    success: "&a Success! Your new island bank balance is [number]."
-    alert: '&a [name] deposited [number] into the island bank.'
+    success: "<green> Success! Your new island bank balance is [number]."
+    alert: '<green> [name] deposited [number] into the island bank.'
   errors: 
-    bank-error: "&c Error loading bank account info - please try again later"
-    low-balance: "&c Your island bank balance is not high enough!"
-    too-low: "&c The island balance is too low."
-    must-be-a-number: "&c Amount must be a number"
-    no-rank: "&c Your rank is not high enough to use the bank."
-    too-much: "&c You do not have that amount to deposit."
-    value-must-be-positive: "&c Amount must be positive."
-    scientific: "&c Scientific notation is not supported."
-    too-long: "&c Value must be less than 10 digits"
+    bank-error: "<red> Error loading bank account info - please try again later"
+    low-balance: "<red> Your island bank balance is not high enough!"
+    too-low: "<red> The island balance is too low."
+    must-be-a-number: "<red> Amount must be a number"
+    no-rank: "<red> Your rank is not high enough to use the bank."
+    too-much: "<red> You do not have that amount to deposit."
+    value-must-be-positive: "<red> Amount must be positive."
+    scientific: "<red> Scientific notation is not supported."
+    too-long: "<red> Value must be less than 10 digits"
   statement:
     balance:
-      name: "&9 Balance:"
-      description: "&6 [number]"
+      name: "<blue> Balance:"
+      description: "<gold> [number]"
     deposit: Deposit
     description: "show your island bank history"
     give: "Admin Give"
@@ -55,10 +55,10 @@ bank:
     oldest: "Sort by oldest"
     set: "Admin Set"
     syntax: |
-        &9 [date]
-        &9 [time]
-        &7 [name]
-        &6 [number]
+        <blue> [date]
+        <blue> [time]
+        <gray> [name]
+        <gold> [number]
     take: "Admin Take"
     title: "Account history"
     unknown: "Unknown Type"
@@ -68,12 +68,12 @@ bank:
   withdraw: 
     description: "withdraw amount from your island account"
     parameters: <amount>
-    success: "&a Success! Your new island bank balance is [number]."
-    alert: '&a [name] withdrew [number] from the island bank.'
+    success: "<green> Success! Your new island bank balance is [number]."
+    alert: '<green> [name] withdrew [number] from the island bank.'
 protection: 
   flags: 
     BANK_ACCESS: 
       description: |-
-          &f Allow acces to
-          &f the island bank
+          <white> Allow acces to
+          <white> the island bank
       name: "Island Bank Access"
