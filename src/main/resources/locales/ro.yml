@@ -1,0 +1,81 @@
+---
+bank:
+  admin:
+    description: comandă de administrator pentru banca insulei
+    give:
+      parameters: "<player> <amount>"
+      description: adaugă sumă în contul de insulă al jucătorului
+      success: "&a Succes! Soldul băncii insulei lui [name] este acum [number]."
+    take:
+      parameters: "<player> <amount>"
+      description: ia sumă din contul de insulă al jucătorului
+    balance:
+      parameters: "<player>"
+      description: vezi soldul contului de insulă al jucătorului
+    set:
+      parameters: "<player> <amount>"
+      description: setează sumă în contul de insulă al jucătorului
+      success: "&a Contul lui [name] a fost setat la [number]."
+    statement:
+      parameters: "<player>"
+      description: vezi extrasul băncii insulei pentru jucător
+  balance:
+    description: arată soldul băncii insulei tale
+    island-balance: "&a Soldul băncii insulei este [number]."
+  baltop:
+    description: arată clasamentul soldurilor
+    description-syntax: "&d [number]"
+    highest: Sortează după cel mai mare
+    lowest: Sortează după cel mai mic
+    name-syntax: "&d [name]"
+    title: Cele mai mari solduri
+  deposit:
+    description: depune sumă în contul insulei tale
+    parameters: "<amount>"
+    success: "&a Succes! Noul tău sold al băncii insulei este [number]."
+    alert: "&a [name] a depus [number] în banca insulei."
+  errors:
+    bank-error: "&c Eroare la încărcarea informațiilor contului bancar - te rog
+      încearcă din nou mai târziu"
+    low-balance: "&c Soldul băncii insulei tale nu este suficient de mare!"
+    too-low: "&c Soldul insulei este prea mic."
+    must-be-a-number: "&c Suma trebuie să fie un număr"
+    no-rank: "&c Rangul tău nu este suficient de mare pentru a folosi banca."
+    too-much: "&c Nu ai această sumă pentru a o depune."
+    value-must-be-positive: "&c Suma trebuie să fie pozitivă."
+    scientific: "&c Notația științifică nu este acceptată."
+    too-long: "&c Valoarea trebuie să aibă mai puțin de 10 cifre"
+  statement:
+    balance:
+      name: "&9 Sold:"
+      description: "&6 [number]"
+    deposit: Depunere
+    description: arată istoricul băncii insulei tale
+    give: Acordare admin
+    interest: Dobândă
+    latest: Sortează după cele mai noi
+    oldest: Sortează după cele mai vechi
+    set: Setare admin
+    syntax: |
+        &9 [date]
+        &9 [time]
+        &7 [name]
+        &6 [number]
+    take: Retragere admin
+    title: Istoricul contului
+    unknown: Tip necunoscut
+    withdrawal: Retragere
+  user:
+    description: comanda băncii insulei
+  withdraw:
+    description: retrage sumă din contul insulei tale
+    parameters: "<amount>"
+    success: "&a Succes! Noul tău sold al băncii insulei este [number]."
+    alert: "&a [name] a retras [number] din banca insulei."
+protection:
+  flags:
+    BANK_ACCESS:
+      description: |-
+          &f Permite accesul la
+          &f banca insulei
+      name: Acces la banca insulei

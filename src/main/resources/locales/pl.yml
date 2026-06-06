@@ -1,0 +1,81 @@
+---
+bank:
+  admin:
+    description: komenda administratora dla banku wyspy
+    give:
+      parameters: "<player> <amount>"
+      description: dodaj kwotę do konta wyspy gracza
+      success: "&a Sukces! Saldo banku wyspy gracza [name] wynosi teraz [number]."
+    take:
+      parameters: "<player> <amount>"
+      description: zabierz kwotę z konta wyspy gracza
+    balance:
+      parameters: "<player>"
+      description: zobacz saldo konta wyspy gracza
+    set:
+      parameters: "<player> <amount>"
+      description: ustaw kwotę na koncie wyspy gracza
+      success: "&a Konto gracza [name] ustawione na [number]."
+    statement:
+      parameters: "<player>"
+      description: zobacz wyciąg z banku wyspy gracza
+  balance:
+    description: pokazuje saldo twojego banku wyspy
+    island-balance: "&a Saldo banku wyspy wynosi [number]."
+  baltop:
+    description: pokaż ranking sald
+    description-syntax: "&d [number]"
+    highest: Sortuj od najwyższego
+    lowest: Sortuj od najniższego
+    name-syntax: "&d [name]"
+    title: Najwyższe salda
+  deposit:
+    description: wpłać kwotę na konto swojej wyspy
+    parameters: "<amount>"
+    success: "&a Sukces! Twoje nowe saldo banku wyspy wynosi [number]."
+    alert: "&a [name] wpłacił [number] do banku wyspy."
+  errors:
+    bank-error: "&c Błąd podczas ładowania informacji o koncie bankowym - spróbuj
+      ponownie później"
+    low-balance: "&c Saldo twojego banku wyspy jest za niskie!"
+    too-low: "&c Saldo wyspy jest za niskie."
+    must-be-a-number: "&c Kwota musi być liczbą"
+    no-rank: "&c Twoja ranga nie jest wystarczająco wysoka, aby korzystać z banku."
+    too-much: "&c Nie masz takiej kwoty do wpłaty."
+    value-must-be-positive: "&c Kwota musi być dodatnia."
+    scientific: "&c Notacja naukowa nie jest obsługiwana."
+    too-long: "&c Wartość musi mieć mniej niż 10 cyfr"
+  statement:
+    balance:
+      name: "&9 Saldo:"
+      description: "&6 [number]"
+    deposit: Wpłata
+    description: pokaż historię twojego banku wyspy
+    give: Przyznanie administratora
+    interest: Odsetki
+    latest: Sortuj od najnowszych
+    oldest: Sortuj od najstarszych
+    set: Ustawienie administratora
+    syntax: |
+        &9 [date]
+        &9 [time]
+        &7 [name]
+        &6 [number]
+    take: Pobranie administratora
+    title: Historia konta
+    unknown: Nieznany typ
+    withdrawal: Wypłata
+  user:
+    description: komenda banku wyspy
+  withdraw:
+    description: wypłać kwotę z konta swojej wyspy
+    parameters: "<amount>"
+    success: "&a Sukces! Twoje nowe saldo banku wyspy wynosi [number]."
+    alert: "&a [name] wypłacił [number] z banku wyspy."
+protection:
+  flags:
+    BANK_ACCESS:
+      description: |-
+          &f Zezwól na dostęp do
+          &f banku wyspy
+      name: Dostęp do banku wyspy

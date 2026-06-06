@@ -1,0 +1,81 @@
+---
+bank:
+  admin:
+    description: admin naredba za otočnu banku
+    give:
+      parameters: "<player> <amount>"
+      description: dodaj iznos na igračev otočni račun
+      success: "&a Uspjeh! Stanje otočne banke igrača [name] sada je [number]."
+    take:
+      parameters: "<player> <amount>"
+      description: uzmi iznos s igračeva otočnog računa
+    balance:
+      parameters: "<player>"
+      description: prikaži stanje igračeva otočnog računa
+    set:
+      parameters: "<player> <amount>"
+      description: postavi iznos na igračevu otočnom računu
+      success: "&a Račun igrača [name] postavljen je na [number]."
+    statement:
+      parameters: "<player>"
+      description: prikaži izvod otočne banke za igrača
+  balance:
+    description: prikazuje stanje vaše otočne banke
+    island-balance: "&a Stanje otočne banke je [number]."
+  baltop:
+    description: prikaži poredak po stanju
+    description-syntax: "&d [number]"
+    highest: Poredaj po najvišem
+    lowest: Poredaj po najnižem
+    name-syntax: "&d [name]"
+    title: Najveća stanja
+  deposit:
+    description: položi iznos na svoj otočni račun
+    parameters: "<amount>"
+    success: "&a Uspjeh! Vaše novo stanje otočne banke je [number]."
+    alert: "&a [name] je položio [number] u otočnu banku."
+  errors:
+    bank-error: "&c Pogreška pri učitavanju podataka o bankovnom računu - pokušajte
+      ponovno kasnije"
+    low-balance: "&c Stanje vaše otočne banke nije dovoljno visoko!"
+    too-low: "&c Stanje otoka je prenisko."
+    must-be-a-number: "&c Iznos mora biti broj"
+    no-rank: "&c Vaš rang nije dovoljno visok za korištenje banke."
+    too-much: "&c Nemate toliki iznos za polaganje."
+    value-must-be-positive: "&c Iznos mora biti pozitivan."
+    scientific: "&c Znanstveni zapis nije podržan."
+    too-long: "&c Vrijednost mora imati manje od 10 znamenki"
+  statement:
+    balance:
+      name: "&9 Stanje:"
+      description: "&6 [number]"
+    deposit: Polog
+    description: prikaži povijest vaše otočne banke
+    give: Admin dodjela
+    interest: Kamate
+    latest: Poredaj po najnovijem
+    oldest: Poredaj po najstarijem
+    set: Admin postavljanje
+    syntax: |
+        &9 [date]
+        &9 [time]
+        &7 [name]
+        &6 [number]
+    take: Admin oduzimanje
+    title: Povijest računa
+    unknown: Nepoznata vrsta
+    withdrawal: Podizanje
+  user:
+    description: naredba otočne banke
+  withdraw:
+    description: podigni iznos sa svog otočnog računa
+    parameters: "<amount>"
+    success: "&a Uspjeh! Vaše novo stanje otočne banke je [number]."
+    alert: "&a [name] je podigao [number] iz otočne banke."
+protection:
+  flags:
+    BANK_ACCESS:
+      description: |-
+          &f Dopusti pristup
+          &f otočnoj banci
+      name: Pristup otočnoj banci

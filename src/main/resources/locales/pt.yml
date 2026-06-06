@@ -1,0 +1,81 @@
+---
+bank:
+  admin:
+    description: comando de administrador para o banco da ilha
+    give:
+      parameters: "<player> <amount>"
+      description: adicionar quantia à conta da ilha do jogador
+      success: "&a Sucesso! O saldo do banco da ilha de [name] é agora [number]."
+    take:
+      parameters: "<player> <amount>"
+      description: retirar quantia da conta da ilha do jogador
+    balance:
+      parameters: "<player>"
+      description: ver o saldo da conta da ilha do jogador
+    set:
+      parameters: "<player> <amount>"
+      description: definir quantia na conta da ilha do jogador
+      success: "&a Conta de [name] definida para [number]."
+    statement:
+      parameters: "<player>"
+      description: ver o extrato do banco da ilha do jogador
+  balance:
+    description: mostra o saldo do banco da tua ilha
+    island-balance: "&a O saldo do banco da ilha é [number]."
+  baltop:
+    description: mostrar a classificação de saldos
+    description-syntax: "&d [number]"
+    highest: Ordenar do mais alto
+    lowest: Ordenar do mais baixo
+    name-syntax: "&d [name]"
+    title: Maiores saldos
+  deposit:
+    description: depositar quantia na conta da tua ilha
+    parameters: "<amount>"
+    success: "&a Sucesso! O novo saldo do banco da tua ilha é [number]."
+    alert: "&a [name] depositou [number] no banco da ilha."
+  errors:
+    bank-error: "&c Erro ao carregar as informações da conta bancária - por favor
+      tenta novamente mais tarde"
+    low-balance: "&c O saldo do banco da tua ilha não é suficientemente alto!"
+    too-low: "&c O saldo da ilha é demasiado baixo."
+    must-be-a-number: "&c A quantia deve ser um número"
+    no-rank: "&c A tua categoria não é suficientemente alta para usar o banco."
+    too-much: "&c Não tens essa quantia para depositar."
+    value-must-be-positive: "&c A quantia deve ser positiva."
+    scientific: "&c Notação científica não é suportada."
+    too-long: "&c O valor deve ter menos de 10 dígitos"
+  statement:
+    balance:
+      name: "&9 Saldo:"
+      description: "&6 [number]"
+    deposit: Depósito
+    description: mostrar o histórico do banco da tua ilha
+    give: Dádiva do administrador
+    interest: Juros
+    latest: Ordenar do mais recente
+    oldest: Ordenar do mais antigo
+    set: Definição do administrador
+    syntax: |
+        &9 [date]
+        &9 [time]
+        &7 [name]
+        &6 [number]
+    take: Retirada do administrador
+    title: Histórico da conta
+    unknown: Tipo desconhecido
+    withdrawal: Levantamento
+  user:
+    description: comando do banco da ilha
+  withdraw:
+    description: levantar quantia da conta da tua ilha
+    parameters: "<amount>"
+    success: "&a Sucesso! O novo saldo do banco da tua ilha é [number]."
+    alert: "&a [name] levantou [number] do banco da ilha."
+protection:
+  flags:
+    BANK_ACCESS:
+      description: |-
+          &f Permitir acesso ao
+          &f banco da ilha
+      name: Acesso ao banco da ilha
