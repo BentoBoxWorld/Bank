@@ -1,7 +1,7 @@
 name: BentoBox-Bank
 main: world.bentobox.bank.BankPladdon
 version: ${project.version}${build.number}
-api-version: "1.16"
+api-version: "1.21"
 
 authors: [tastybento]
 contributors: ["The BentoBoxWorld Community"]
