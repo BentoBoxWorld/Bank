@@ -42,8 +42,8 @@ Output JAR goes to `target/`. The build requires Java 21+.
 
 ## Key Dependencies (provided at runtime, not bundled)
 
-- Spigot API 1.21.3
-- BentoBox 2.7.1-SNAPSHOT
+- Paper API 1.21.x
+- BentoBox 3.14.0-SNAPSHOT
 - Vault API 1.7
 
 ## Localization
