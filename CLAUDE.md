@@ -14,7 +14,7 @@ mvn test                   # Run tests only
 mvn verify                 # Build + tests + coverage
 ```
 
-Output JAR goes to `target/`. The build requires Java 17+.
+Output JAR goes to `target/`. The build requires Java 21+.
 
 ## Testing
 
