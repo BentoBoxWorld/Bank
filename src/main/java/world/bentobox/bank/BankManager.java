@@ -346,9 +346,11 @@ public class BankManager implements Listener {
             Map<Long, String> history = account.getHistory();
             if (history.isEmpty()) return null;
 
-            Long latestKey = Collections.max(history.keySet());
-            String value = history.get(latestKey);
-            if (value == null) return null;
+            java.util.Map.Entry<Long, String> latest = ((java.util.NavigableMap<Long, String>) history).lastEntry();
+            if (latest == null || latest.getValue() == null) return null;
+
+            Long latestKey = latest.getKey();
+            String value = latest.getValue();
 
             String[] split = value.split(":", 3);
             if (split.length != 3) return null;
