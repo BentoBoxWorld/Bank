@@ -5,7 +5,7 @@ bank:
     give:
       parameters: "<giocatore> <importo>"
       description: aggiungi importo al conto dell'isola del giocatore
-      success: "<green>Fatto! Il saldo bancario dell'isola di [nome] è ora [numero]."
+      success: "<green>Fatto! Il saldo bancario dell'isola di [name] è ora [number]."
     take:
       parameters: "<giocatore> <importo>"
       description: preleva l'importo dal conto dell'isola del giocatore
