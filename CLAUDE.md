@@ -18,7 +18,7 @@ Output JAR goes to `target/`. The build requires Java 21+.
 
 ## Testing
 
-- JUnit 4 with PowerMock (required to mock Bukkit/BentoBox static methods)
+- JUnit 5 (Jupiter) with Mockito (incl. static mocking) and MockBukkit
 - Run a single test: `mvn test -Dtest=BankManagerTest`
 - Tests are in `src/test/java/world/bentobox/bank/` mirroring main source structure
 - JaCoCo coverage reports: `target/site/jacoco/`
