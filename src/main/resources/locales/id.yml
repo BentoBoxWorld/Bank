@@ -5,7 +5,7 @@ bank:
     give:
       parameters: "<player> <amount>"
       description: menambah jumlah saldo ke rekening pulau pemain
-      success: "&a Sukses! Saldo bank pulau [name] sekarang [number]."
+      success: "<green> Sukses! Saldo bank pulau [name] sekarang [number]."
     take:
       parameters: "<player> <amount>"
       description: mengambil jumlah saldo dari rekening pulau pemain
@@ -15,39 +15,39 @@ bank:
     set:
       parameters: "<player> <amount>"
       description: mengatur jumlah saldo di rekening pulau pemain
-      success: "&a Rekening [name] diatur menjadi [number]."
+      success: "<green> Rekening [name] diatur menjadi [number]."
     statement:
       parameters: "<player>"
       description: melihat rekening koran pulau untuk pemain
   balance:
     description: menunjukkan saldo bank pulau kamu
-    island-balance: "&a Saldo bank pulau adalah [number]."
+    island-balance: "<green> Saldo bank pulau adalah [number]."
   baltop:
     description: menunjukkan peringkat saldo
-    description-syntax: "&d [number]"
+    description-syntax: "<light_purple> [number]"
     highest: Urutkan dari Tertinggi
     lowest: Urutkan dari Terendah
-    name-syntax: "&d [name]"
+    name-syntax: "<light_purple> [name]"
     title: Saldo Teratas
   deposit:
     description: menyetor jumlah saldo ke rekening pulau kamu
     parameters: "<amount>"
-    success: "&a Sukses! Saldo bank pulau kamu yang baru adalah [number]."
-    alert: "&a [name] menyetor [number] ke bank pulau."
+    success: "<green> Sukses! Saldo bank pulau kamu yang baru adalah [number]."
+    alert: "<green> [name] menyetor [number] ke bank pulau."
   errors:
-    bank-error: "&c Kesalahan memuat info rekening bank - silahkan coba lagi nanti"
-    low-balance: "&c Saldo bank pulau kamu tidak cukup tinggi!"
-    too-low: "&c Saldo pulau terlalu rendah."
-    must-be-a-number: "&c Jumlah harus berupa angka"
-    no-rank: "&c Rank kamu tidak cukup tinggi untuk menggunakan bank."
-    too-much: "&c Kamu tidak punya jumlah tersebut untuk disetor."
-    value-must-be-positive: "&c Jumlah harus positif."
-    scientific: "&c Notasi ilmiah tidak didukung."
-    too-long: "&c Nilai harus kurang dari 10 digit"
+    bank-error: "<red> Kesalahan memuat info rekening bank - silahkan coba lagi nanti"
+    low-balance: "<red> Saldo bank pulau kamu tidak cukup tinggi!"
+    too-low: "<red> Saldo pulau terlalu rendah."
+    must-be-a-number: "<red> Jumlah harus berupa angka"
+    no-rank: "<red> Rank kamu tidak cukup tinggi untuk menggunakan bank."
+    too-much: "<red> Kamu tidak punya jumlah tersebut untuk disetor."
+    value-must-be-positive: "<red> Jumlah harus positif."
+    scientific: "<red> Notasi ilmiah tidak didukung."
+    too-long: "<red> Nilai harus kurang dari 10 digit"
   statement:
     balance:
-      name: "&9 Saldo:"
-      description: "&6 [number]"
+      name: "<blue> Saldo:"
+      description: "<gold> [number]"
     deposit: Setor
     description: menunjukkan sejarah bank pulau kamu
     give: Admin Memberi
@@ -56,10 +56,10 @@ bank:
     oldest: Urut dari terlama
     set: Admin Mengubah
     syntax: |
-      &9 [date]
-      &9 [time]
-      &7 [name]
-      &6 [number]
+      <blue> [date]
+      <blue> [time]
+      <gray> [name]
+      <gold> [number]
     take: Admin Mengambil
     title: Sejarah rekening
     unknown: Tipe Tidak Diketahui
@@ -69,12 +69,12 @@ bank:
   withdraw:
     description: menarik jumlah saldo dari rekening pulau kamu
     parameters: "<amount>"
-    success: "&a Sukses! Saldo bank pulau kamu yang baru adalah [number]."
-    alert: "&a [name] menarik [number] dari bank pulau."
+    success: "<green> Sukses! Saldo bank pulau kamu yang baru adalah [number]."
+    alert: "<green> [name] menarik [number] dari bank pulau."
 protection:
   flags:
     BANK_ACCESS:
       description: |-
-        &f Mengizinkan akses ke
-        &f bank pulau
+        <white> Mengizinkan akses ke
+        <white> bank pulau
       name: Akses Bank Pulau
