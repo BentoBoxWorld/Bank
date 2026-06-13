@@ -69,7 +69,7 @@ bank:
   withdraw:
     description: Betrag von Ihrem Inselkonto abheben
     parameters: "<amount>"
-    success: "<yellow>in Erfolg! Ihr neuer Kontostand auf der Insel beträgt [number]."
+    success: "<yellow>Ein Erfolg! Ihr neuer Kontostand auf der Insel beträgt [number]."
 protection:
   flags:
     BANK_ACCESS:
