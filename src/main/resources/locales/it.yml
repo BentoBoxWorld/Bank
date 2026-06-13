@@ -70,7 +70,7 @@ bank:
   withdraw:
     description: prelevare l'importo dal conto dell'isola
     parameters: "<importo>"
-    success: "<white>atto! Il tuo nuovo saldo bancario sull'isola è [number]."
+    success: "<white>Fatto! Il tuo nuovo saldo bancario sull'isola è [number]."
     alert: "&un [name] ritirò [number] dalla banca dell'isola."
 protection:
   flags:
