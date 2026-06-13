@@ -1,35 +1,27 @@
 package world.bentobox.bank.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
 public class MoneyTest {
 
     Money m;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         m = new Money();
-    }
-
-    @After
-    public void tearDown() {
-        // Nothing to tear down
     }
 
     /**
@@ -175,17 +167,17 @@ public class MoneyTest {
     /**
      * Test method for {@link world.bentobox.bank.data.Money#parseMoney(java.lang.String)}.
      */
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testParseMoneyNPE() {
-        Money.parseMoney(null);
+        assertThrows(NullPointerException.class, () -> Money.parseMoney(null));
     }
 
     /**
      * Test method for {@link world.bentobox.bank.data.Money#parseMoney(java.lang.String)}.
      */
-    @Test(expected = NumberFormatException.class)
+    @Test
     public void testParseMoneyNFE() {
-        Money.parseMoney("tastybento");
+        assertThrows(NumberFormatException.class, () -> Money.parseMoney("tastybento"));
     }
 
     /**

@@ -1,8 +1,8 @@
 package world.bentobox.bank;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -17,18 +17,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.eclipse.jdt.annotation.Nullable;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bank.data.AccountHistory;
 import world.bentobox.bank.data.Money;
@@ -37,7 +35,6 @@ import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.AddonDescription;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.DatabaseSetup;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.hooks.VaultHook;
 import world.bentobox.bentobox.managers.IslandsManager;
@@ -48,9 +45,9 @@ import world.bentobox.bentobox.managers.PlayersManager;
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Bukkit.class, BentoBox.class, DatabaseSetup.class, IslandsManager.class })
-public class PhManagerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class PhManagerTest {
 
     // Class under test
     private PhManager pm;
@@ -78,11 +75,8 @@ public class PhManagerTest {
     @Mock
     private PlayersManager plm;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-
-        PowerMockito.mockStatic(IslandsManager.class, Mockito.RETURNS_MOCKS);
-
         AddonDescription desc = new AddonDescription.Builder("main", "AcidIsland", "1.0.2").build();
         when(gm.getDescription()).thenReturn(desc);
         when(addon.getPlugin()).thenReturn(plugin);
@@ -119,16 +113,16 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#registerPlaceholders(world.bentobox.bentobox.api.addons.GameModeAddon)}.
      */
     @Test
-    public void testRegisterPlaceholdersNoPHM() {
+    void testRegisterPlaceholdersNoPHM() {
         when(plugin.getPlaceholdersManager()).thenReturn(null);
         assertFalse(pm.registerPlaceholders(gm));
-
     }
+
     /**
      * Test method for {@link world.bentobox.bank.PhManager#registerPlaceholders(world.bentobox.bentobox.api.addons.GameModeAddon)}.
      */
     @Test
-    public void testRegisterPlaceholders() {
+    void testRegisterPlaceholders() {
         assertTrue(pm.registerPlaceholders(gm));
         verify(phm).registerPlaceholder(eq(addon), eq("acidisland_island_balance"), any());
         for (int i = 1; i < 11; i++) {
@@ -140,10 +134,10 @@ public class PhManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User, boolean, boolean)}.
      */
     @Test
-    public void testGetVisitedIslandBalanceWrongWorld() {
+    void testGetVisitedIslandBalanceWrongWorld() {
         when(gm.inWorld(world)).thenReturn(false);
         assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, false, false));
         assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, true, false));
@@ -152,10 +146,10 @@ public class PhManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User, boolean, boolean)}.
      */
     @Test
-    public void testGetVisitedIslandBalanceNoIsland() {
+    void testGetVisitedIslandBalanceNoIsland() {
         when(im.getIslandAt(location)).thenReturn(Optional.empty());
         assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, false, false));
         assertEquals("$0.0", pm.getVisitedIslandBalance(gm, user, true, false));
@@ -164,10 +158,10 @@ public class PhManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User, boolean, boolean)}.
      */
     @Test
-    public void testGetVisitedIslandBalance() {
+    void testGetVisitedIslandBalance() {
         assertEquals("$1234.56", pm.getVisitedIslandBalance(gm, user, false, false));
         assertEquals("1.2k", pm.getVisitedIslandBalance(gm, user, true, false));
         assertEquals("1234.56", pm.getVisitedIslandBalance(gm, user, false, true));
@@ -175,39 +169,38 @@ public class PhManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User, boolean, boolean)}.
      */
     @Test
-    public void testGetVisitedIslandBalanceLargest() {
+    void testGetVisitedIslandBalanceLargest() {
         when(bm.getBalance(island)).thenReturn(new Money(Double.MAX_VALUE));
         assertEquals("9223372T", pm.getVisitedIslandBalance(gm, user, true, false));
         assertEquals("1.7976931348623157E308", pm.getVisitedIslandBalance(gm, user, true, true));
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.bank.PhManager#getVisitedIslandBalance(world.bentobox.bentobox.api.addons.GameModeAddon, world.bentobox.bentobox.api.user.User, boolean, boolean)}.
      */
     @Test
-    public void testGetVisitedIslandBalanceBig() {
+    void testGetVisitedIslandBalanceBig() {
         when(bm.getBalance(island)).thenReturn(new Money(123456789D));
         assertEquals("123.5M", pm.getVisitedIslandBalance(gm, user, true, false));
         assertEquals("1.23456789E8", pm.getVisitedIslandBalance(gm, user, true, true));
     }
 
-
     /**
      * Test method for {@link world.bentobox.bank.PhManager#getRankName(org.bukkit.World, int)}.
      */
     @Test
-    public void testGetRankNameSub0() {
-        assertEquals("",pm.getRankName(world, -1));
+    void testGetRankNameSub0() {
+        assertEquals("", pm.getRankName(world, -1));
     }
 
     /**
      * Test method for {@link world.bentobox.bank.PhManager#getRankName(org.bukkit.World, int)}.
      */
     @Test
-    public void testGetRankNameOverMax() {
+    void testGetRankNameOverMax() {
         assertEquals("", pm.getRankName(world, 100));
     }
 
@@ -215,7 +208,7 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#getRankName(org.bukkit.World, int)}.
      */
     @Test
-    public void testGetRankNameNone() {
+    void testGetRankNameNone() {
         for (int i = 1; i < 11; i++) {
             assertEquals("", pm.getRankName(world, i));
         }
@@ -225,7 +218,7 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#getRankName(org.bukkit.World, int)}.
      */
     @Test
-    public void testGetRankName() {
+    void testGetRankName() {
         assertEquals("", pm.getRankName(world, 5));
     }
 
@@ -233,7 +226,7 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#getRankIsland(org.bukkit.World, int)}.
      */
     @Test
-    public void testGetRankIsland() {
+    void testGetRankIsland() {
         assertEquals("", pm.getRankIsland(world, 5));
     }
 
@@ -241,24 +234,24 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#getRankBalance(org.bukkit.World, int)}.
      */
     @Test
-    public void testGetRankBalance() {
+    void testGetRankBalance() {
         assertEquals("", pm.getRankBalance(world, 5));
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#checkCache(World, int)}.
+     * Test method for {@link world.bentobox.bank.PhManager#checkCache(org.bukkit.World, int)}.
      */
     @Test
-    public void testCheckCache() {
+    void testCheckCache() {
         assertEquals(5, pm.checkCache(world, 5));
         verify(bm).getBalances(world);
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#checkCache(World, int)}.
+     * Test method for {@link world.bentobox.bank.PhManager#checkCache(org.bukkit.World, int)}.
      */
     @Test
-    public void testCheckCacheWithBalances() {
+    void testCheckCacheWithBalances() {
         map.put(UUID.randomUUID().toString(), new Money(123.45));
         map.put(UUID.randomUUID().toString(), new Money(1230.45));
         map.put(UUID.randomUUID().toString(), new Money(12300.45));
@@ -275,26 +268,26 @@ public class PhManagerTest {
         when(bm.getBalances(world)).thenReturn(map);
         for (int i = 1; i < 11; i++) {
             pm.checkCache(world, i);
-            assertEquals(pm.getBalances().get(i-1), "$" + map.get(pm.getNames().get(i - 1)).getValue());
-            assertEquals(pm.getBalances().get(i-1), "$" + map.get(pm.getIslands().get(i - 1)).getValue());
+            assertEquals(pm.getBalances().get(i - 1), "$" + map.get(pm.getNames().get(i - 1)).getValue());
+            assertEquals(pm.getBalances().get(i - 1), "$" + map.get(pm.getIslands().get(i - 1)).getValue());
         }
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#checkCache(World, int)}.
+     * Test method for {@link world.bentobox.bank.PhManager#checkCache(org.bukkit.World, int)}.
      */
     @Test
-    public void testCheckCacheNoNamesChange() {
+    void testCheckCacheNoNamesChange() {
         pm.setLastSorted(System.currentTimeMillis() + 10000);
         assertEquals(5, pm.checkCache(world, 5));
         verify(bm).getBalances(world);
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#checkCache(World, int)}.
+     * Test method for {@link world.bentobox.bank.PhManager#checkCache(org.bukkit.World, int)}.
      */
     @Test
-    public void testCheckCacheNoChange() {
+    void testCheckCacheNoChange() {
         // Cache should not refresh because there is a name and the time is in the future
         pm.setNames(Collections.singletonList("tastybento"));
         pm.setLastSorted(System.currentTimeMillis() + 10000);
@@ -304,10 +297,10 @@ public class PhManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.bank.PhManager#registerPlaceholders(world.bentobox.bentobox.api.addons.GameModeAddon)}.
+     * Test method for {@link world.bentobox.bank.PhManager#checkCache(org.bukkit.World, int)}.
      */
     @Test
-    public void testCheckCacheOutOfBounds() {
+    void testCheckCacheOutOfBounds() {
         assertEquals(1, pm.checkCache(world, 0));
         assertEquals(10, pm.checkCache(world, 100));
     }
@@ -316,7 +309,7 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
      */
     @Test
-    public void testGetLatestTransactionDeposit() {
+    void testGetLatestTransactionDeposit() {
         AccountHistory ah = new AccountHistory(System.currentTimeMillis(), "tastybento", 500.0, TxType.DEPOSIT);
         when(bm.getLatestHistory(eq(island))).thenReturn(ah);
         assertEquals("tastybento Deposited $500.0", pm.getLatestTransaction(user, world));
@@ -326,7 +319,7 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
      */
     @Test
-    public void testGetLatestTransactionWithdraw() {
+    void testGetLatestTransactionWithdraw() {
         AccountHistory ah = new AccountHistory(System.currentTimeMillis(), "tastybento", 200.0, TxType.WITHDRAW);
         when(bm.getLatestHistory(eq(island))).thenReturn(ah);
         assertEquals("tastybento Withdrew $200.0", pm.getLatestTransaction(user, world));
@@ -336,7 +329,7 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
      */
     @Test
-    public void testGetLatestTransactionNoHistory() {
+    void testGetLatestTransactionNoHistory() {
         when(bm.getLatestHistory(eq(island))).thenReturn(null);
         assertEquals("", pm.getLatestTransaction(user, world));
     }
@@ -345,7 +338,7 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
      */
     @Test
-    public void testGetLatestTransactionNoIsland() {
+    void testGetLatestTransactionNoIsland() {
         when(im.getIsland(any(World.class), any(User.class))).thenReturn(null);
         assertEquals("", pm.getLatestTransaction(user, world));
     }
@@ -354,7 +347,7 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
      */
     @Test
-    public void testGetLatestTransactionNullUser() {
+    void testGetLatestTransactionNullUser() {
         assertEquals("", pm.getLatestTransaction(null, world));
     }
 
@@ -362,7 +355,7 @@ public class PhManagerTest {
      * Test method for {@link world.bentobox.bank.PhManager#getLatestTransaction(world.bentobox.bentobox.api.user.User, org.bukkit.World)}.
      */
     @Test
-    public void testGetLatestTransactionNotPlayer() {
+    void testGetLatestTransactionNotPlayer() {
         when(user.isPlayer()).thenReturn(false);
         assertEquals("", pm.getLatestTransaction(user, world));
     }
@@ -372,7 +365,7 @@ public class PhManagerTest {
      * Verifies that the latest_transaction placeholder is registered.
      */
     @Test
-    public void testRegisterPlaceholdersLatestTransaction() {
+    void testRegisterPlaceholdersLatestTransaction() {
         assertTrue(pm.registerPlaceholders(gm));
         verify(phm).registerPlaceholder(eq(addon), eq("acidisland_latest_transaction"), any());
     }
