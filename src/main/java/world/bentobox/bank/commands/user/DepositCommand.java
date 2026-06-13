@@ -75,6 +75,8 @@ public class DepositCommand extends AbstractBankCommand {
         if (!addon.getSettings().isSendBankAlert()) return;
 
         Island island = addon.getIslands().getIsland(getWorld(), user);
+        if (island == null) return;
+
         final Set<UUID> members = island.getMemberSet(RanksManager.MEMBER_RANK);
         for (UUID member : members) {
             final Player player = Bukkit.getPlayer(member);
