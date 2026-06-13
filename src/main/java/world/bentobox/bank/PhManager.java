@@ -147,15 +147,18 @@ public class PhManager {
      * @return display name
      */
     private String getTxTypeDisplay(TxType type) {
-        switch (type) {
-        case DEPOSIT: return "Deposited";
-        case WITHDRAW: return "Withdrew";
-        case GIVE: return "Received";
-        case TAKE: return "Lost";
-        case SET: return "Set";
-        case INTEREST: return "Earned";
-        default: return "Unknown";
+        if (type == null) {
+            return "Unknown";
         }
+        return switch (type) {
+        case DEPOSIT -> "Deposited";
+        case WITHDRAW -> "Withdrew";
+        case GIVE -> "Received";
+        case TAKE -> "Lost";
+        case SET -> "Set";
+        case INTEREST -> "Earned";
+        default -> "Unknown";
+        };
     }
 
     /**
