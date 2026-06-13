@@ -340,16 +340,25 @@ public class BankManager implements Listener {
         if (island == null) return null;
         try {
             BankAccounts account = getAccount(island.getUniqueId());
+            // Keep behavior consistent with getHistory(): apply interest before reading history
+            this.getBalancePlusInterest(account);
+
             Map<Long, String> history = account.getHistory();
             if (history.isEmpty()) return null;
+
             Long latestKey = Collections.max(history.keySet());
             String value = history.get(latestKey);
-            String[] split = value.split(":");
-            if (split.length == 3) {
-                TxType type = Enums.getIfPresent(TxType.class, split[1]).or(TxType.UNKNOWN);
+            if (value == null) return null;
+
+            String[] split = value.split(":", 3);
+            if (split.length != 3) return null;
+
+            TxType type = Enums.getIfPresent(TxType.class, split[1]).or(TxType.UNKNOWN);
+            try {
                 return new AccountHistory(latestKey, split[0], Double.parseDouble(split[2]), type);
+            } catch (NumberFormatException e) {
+                return null;
             }
-            return null;
         } catch (IOException e) {
             return null;
         }
