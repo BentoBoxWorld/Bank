@@ -74,6 +74,6 @@ protection:
   flags: 
     BANK_ACCESS: 
       description: |-
-          <white> Allow acces to
+          <white> Allow access to
           <white> the island bank
       name: "Island Bank Access"
