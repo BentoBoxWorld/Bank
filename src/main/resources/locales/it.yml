@@ -32,7 +32,7 @@ bank:
   deposit:
     description: deposita l'importo nella banca dell'isola
     parameters: "<importo>"
-    success: "<white>atto! Il tuo nuovo saldo bancario sull'isola è [number]."
+    success: "<white>Fatto! Il tuo nuovo saldo bancario sull'isola è [number]."
     alert: "<green>[name] ha depositato [number] nella banca dell'isola."
   errors:
     bank-error: "<red> Errore durante il caricamento dei dati del conto bancario: riprova
