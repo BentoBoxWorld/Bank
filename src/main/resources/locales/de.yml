@@ -32,7 +32,7 @@ bank:
   deposit:
     description: Betrag auf Ihr Inselkonto einzahlen
     parameters: "<amount>"
-    success: "<yellow>in Erfolg! Ihr neuer Kontostand auf der Insel beträgt [number]."
+    success: "<yellow>Ein Erfolg! Ihr neuer Kontostand auf der Insel beträgt [number]."
   errors:
     bank-error: "<red> Fehler beim Laden der Bankkontoinformationen - bitte versuchen
       Sie es später erneut"
