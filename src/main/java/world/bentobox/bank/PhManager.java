@@ -126,7 +126,9 @@ public class PhManager {
      */
     String getLatestTransaction(User user, World world) {
         if (user == null || !user.isPlayer()) return "";
-        Island island = addon.getIslands().getIsland(world, user);
+        World actualWorld = world == null ? null : world.bentobox.bentobox.util.Util.getWorld(world);
+        if (actualWorld == null) return "";
+        Island island = addon.getIslands().getIsland(actualWorld, user);
         if (island == null) return "";
         return formatTransaction(bankManager.getLatestHistory(island));
     }
