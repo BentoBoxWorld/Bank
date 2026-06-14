@@ -318,16 +318,28 @@ public class BankManager implements Listener {
             BankAccounts account = getAccount(island.getUniqueId());
             // Calculate interest
             this.getBalancePlusInterest(account);
-            return account.getHistory().entrySet().stream().map(en -> {
-                String[] split = en.getValue().split(":");
-                if (split.length == 3) {
-                    TxType type = Enums.getIfPresent(TxType.class, split[1]).or(TxType.UNKNOWN);
-                    return new AccountHistory(en.getKey(), split[0], Double.parseDouble(split[2]), type);
-                }
-                return null;
-            }).filter(Objects::nonNull).toList();
+            return account.getHistory().entrySet().stream().map(en -> parseEntry(en.getKey(), en.getValue()))
+                    .filter(Objects::nonNull).toList();
         } catch (IOException e) {
             return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Parse a single stored history entry ({@code name:type:amount}) into an {@link AccountHistory}.
+     * @param key - timestamp key
+     * @param value - stored value
+     * @return parsed {@link AccountHistory} or null if the value is malformed
+     */
+    private AccountHistory parseEntry(Long key, String value) {
+        if (value == null) return null;
+        String[] split = value.split(":");
+        if (split.length != 3) return null;
+        TxType type = Enums.getIfPresent(TxType.class, split[1]).or(TxType.UNKNOWN);
+        try {
+            return new AccountHistory(key, split[0], Double.parseDouble(split[2]), type);
+        } catch (NumberFormatException e) {
+            return null;
         }
     }
 
@@ -343,24 +355,12 @@ public class BankManager implements Listener {
             // Keep behavior consistent with getHistory(): apply interest before reading history
             this.getBalancePlusInterest(account);
 
+            // Find the most recent entry by timestamp key. Don't assume the concrete Map type:
+            // when loaded from the database Gson may not preserve the TreeMap, so avoid casting to NavigableMap.
             Map<Long, String> history = account.getHistory();
             if (history.isEmpty()) return null;
-
-            java.util.Map.Entry<Long, String> latest = ((java.util.NavigableMap<Long, String>) history).lastEntry();
-            if (latest == null || latest.getValue() == null) return null;
-
-            Long latestKey = latest.getKey();
-            String value = latest.getValue();
-
-            String[] split = value.split(":", 3);
-            if (split.length != 3) return null;
-
-            TxType type = Enums.getIfPresent(TxType.class, split[1]).or(TxType.UNKNOWN);
-            try {
-                return new AccountHistory(latestKey, split[0], Double.parseDouble(split[2]), type);
-            } catch (NumberFormatException e) {
-                return null;
-            }
+            Long latestKey = Collections.max(history.keySet());
+            return parseEntry(latestKey, history.get(latestKey));
         } catch (IOException e) {
             return null;
         }

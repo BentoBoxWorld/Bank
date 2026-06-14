@@ -128,37 +128,38 @@ public class PhManager {
         if (user == null || !user.isPlayer() || world == null) return "";
         Island island = addon.getIslands().getIsland(world, user);
         if (island == null) return "";
-        return formatTransaction(bankManager.getLatestHistory(island));
+        return formatTransaction(user, bankManager.getLatestHistory(island));
     }
 
     /**
      * Format an AccountHistory entry as "[Name] [TxType] [Amount]"
+     * @param user - user, used to localise the transaction type
      * @param history - the account history entry
      * @return formatted string or empty string if null
      */
-    private String formatTransaction(AccountHistory history) {
+    private String formatTransaction(User user, AccountHistory history) {
         if (history == null) return "";
-        return history.getName() + " " + getTxTypeDisplay(history.getType()) + " " + addon.getVault().format(history.getAmount());
+        return history.getName() + " " + getTxTypeDisplay(user, history.getType()) + " " + addon.getVault().format(history.getAmount());
     }
 
     /**
-     * Get display-friendly name for transaction type
+     * Get the localised, display-friendly name for a transaction type. Reuses the
+     * same {@code bank.statement.*} locale keys as the statement panel.
+     * @param user - user whose locale is used
      * @param type - transaction type
-     * @return display name
+     * @return localised display name
      */
-    private String getTxTypeDisplay(TxType type) {
-        if (type == null) {
-            return "Unknown";
-        }
-        return switch (type) {
-        case DEPOSIT -> "Deposited";
-        case WITHDRAW -> "Withdrew";
-        case GIVE -> "Received";
-        case TAKE -> "Lost";
-        case SET -> "Set";
-        case INTEREST -> "Earned";
-        default -> "Unknown";
+    private String getTxTypeDisplay(User user, TxType type) {
+        String key = switch (type == null ? TxType.UNKNOWN : type) {
+        case DEPOSIT -> "deposit";
+        case WITHDRAW -> "withdrawal";
+        case GIVE -> "give";
+        case TAKE -> "take";
+        case SET -> "set";
+        case INTEREST -> "interest";
+        default -> "unknown";
         };
+        return user.getTranslation("bank.statement." + key);
     }
 
     /**

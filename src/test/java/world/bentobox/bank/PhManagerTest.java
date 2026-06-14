@@ -106,6 +106,16 @@ class PhManagerTest {
         when(plm.getName(any())).thenAnswer(arg -> arg.getArgument(0, UUID.class).toString());
         when(user.isPlayer()).thenReturn(true);
         when(im.getIsland(any(World.class), any(User.class))).thenReturn(island);
+        // Localised transaction type names (see bank.statement.* in the locale files)
+        when(user.getTranslation(anyString())).thenAnswer(arg -> switch (arg.getArgument(0, String.class)) {
+        case "bank.statement.deposit" -> "Deposit";
+        case "bank.statement.withdrawal" -> "Withdrawal";
+        case "bank.statement.interest" -> "Interest";
+        case "bank.statement.give" -> "Admin Give";
+        case "bank.statement.take" -> "Admin Take";
+        case "bank.statement.set" -> "Admin Set";
+        default -> "Unknown Type";
+        });
         pm = new PhManager(addon, bm);
     }
 
@@ -312,7 +322,7 @@ class PhManagerTest {
     void testGetLatestTransactionDeposit() {
         AccountHistory ah = new AccountHistory(System.currentTimeMillis(), "tastybento", 500.0, TxType.DEPOSIT);
         when(bm.getLatestHistory(eq(island))).thenReturn(ah);
-        assertEquals("tastybento Deposited $500.0", pm.getLatestTransaction(user, world));
+        assertEquals("tastybento Deposit $500.0", pm.getLatestTransaction(user, world));
     }
 
     /**
@@ -322,7 +332,7 @@ class PhManagerTest {
     void testGetLatestTransactionWithdraw() {
         AccountHistory ah = new AccountHistory(System.currentTimeMillis(), "tastybento", 200.0, TxType.WITHDRAW);
         when(bm.getLatestHistory(eq(island))).thenReturn(ah);
-        assertEquals("tastybento Withdrew $200.0", pm.getLatestTransaction(user, world));
+        assertEquals("tastybento Withdrawal $200.0", pm.getLatestTransaction(user, world));
     }
 
     /**
