@@ -125,10 +125,8 @@ public class PhManager {
      * @return formatted latest transaction string, e.g., "tastybento Deposited $500.0", or empty string if none
      */
     String getLatestTransaction(User user, World world) {
-        if (user == null || !user.isPlayer()) return "";
-        World actualWorld = world == null ? null : world.bentobox.bentobox.util.Util.getWorld(world);
-        if (actualWorld == null) return "";
-        Island island = addon.getIslands().getIsland(actualWorld, user);
+        if (user == null || !user.isPlayer() || world == null) return "";
+        Island island = addon.getIslands().getIsland(world, user);
         if (island == null) return "";
         return formatTransaction(bankManager.getLatestHistory(island));
     }
