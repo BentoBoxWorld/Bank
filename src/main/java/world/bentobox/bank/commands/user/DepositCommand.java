@@ -61,21 +61,7 @@ public class DepositCommand extends AbstractBankCommand {
                 case FAILURE_NO_ISLAND -> user.sendMessage("general.errors.no-island");
                 case SUCCESS -> {
                     user.sendMessage("bank.deposit.success", TextVariables.NUMBER, vault.format(addon.getBankManager().getBalance(island).getValue()));
-
-                    if(!addon.getSettings().isSendBankAlert()) return;
-
-                    Island island = addon.getIslands().getIsland(getWorld(), user);
-
-                    final Set<UUID> members = island.getMemberSet(RanksManager.MEMBER_RANK);
-                    for (UUID member : members) {
-                        final Player player = Bukkit.getPlayer(member);
-
-                        if (player == null || user.getUniqueId().equals(member)) continue;
-
-                        User otherUser = User.getInstance(player);
-
-                        otherUser.sendMessage("bank.deposit.alert", "[name]", user.getName(), "[number]", String.valueOf(value.getValue()));
-                    }
+                    notifyMembers(user, value);
                 }
                 }
             });
@@ -83,6 +69,21 @@ public class DepositCommand extends AbstractBankCommand {
         }
         user.sendMessage("bank.errors.bank-error");
         return false;
+    }
+
+    private void notifyMembers(User user, Money amount) {
+        if (!addon.getSettings().isSendBankAlert()) return;
+
+        Island island = addon.getIslands().getIsland(getWorld(), user);
+        if (island == null) return;
+
+        final Set<UUID> members = island.getMemberSet(RanksManager.MEMBER_RANK);
+        for (UUID member : members) {
+            final Player player = Bukkit.getPlayer(member);
+            if (player == null || user.getUniqueId().equals(member)) continue;
+            User otherUser = User.getInstance(player);
+            otherUser.sendMessage("bank.deposit.alert", "[name]", user.getName(), "[number]", String.valueOf(amount.getValue()));
+        }
     }
 
     @Override

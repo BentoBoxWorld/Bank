@@ -1,0 +1,82 @@
+# ######################################################################################## #
+# Это YML файл. Будьте осторожны при редактировании. Проверяйте свои правки                #
+# в YAML валидаторе, например, на http://yaml-online-parser.appspot.com                    #
+# ######################################################################################## #
+
+bank:
+  admin:
+    description: административная команда островного банка
+    give:
+      parameters: <игрок> <сумма>
+      description: добавить сумму на счёт банка игрока
+      success: <green>Успешно! Баланс банка острова [name] теперь [number].</green>
+    take:
+      parameters: <игрок> <сумма>
+      description: снять сумму со счёта банка игрока
+    balance:
+      parameters: <игрок>
+      description: просмотреть баланс банка острова игрока
+    set:
+      parameters: <игрок> <сумма>
+      description: установить сумму на счёте банка игрока
+      success: <green>Счёт [name] установлен на [number].</green>
+    statement:
+      parameters: <игрок>
+      description: просмотреть выписку по банку острова игрока
+  balance:
+    description: показывает баланс вашего островного банка
+    island-balance: '<green>Баланс островного банка: [number].</green>'
+  baltop:
+    description: показать рейтинг балансов
+    description-syntax: <light_purple>[number]</light_purple>
+    highest: Сортировать по убыванию
+    lowest: Сортировать по возрастанию
+    name-syntax: <light_purple>[name]</light_purple>
+    title: Топ балансов
+  deposit:
+    description: внести сумму на счёт вашего острова
+    parameters: <сумма>
+    success: '<green>Успешно! Ваш новый баланс островного банка: [number].</green>'
+    alert: <green>[name] внёс [number] в островной банк.</green>
+  errors:
+    bank-error: <red>Ошибка загрузки информации о банковском счёте — попробуйте позже.</red>
+    low-balance: <red>Баланс вашего островного банка недостаточно высок!</red>
+    too-low: <red>Баланс острова слишком низкий.</red>
+    must-be-a-number: <red>Сумма должна быть числом.</red>
+    no-rank: <red>Ваш ранг недостаточно высок для использования банка.</red>
+    too-much: <red>У вас нет такой суммы для внесения.</red>
+    value-must-be-positive: <red>Сумма должна быть положительной.</red>
+    scientific: <red>Научная нотация не поддерживается.</red>
+    too-long: <red>Значение должно содержать менее 10 цифр.</red>
+  statement:
+    balance:
+      name: <blue>Баланс:</blue>
+      description: <gold>[number]</gold>
+    deposit: Внесение
+    description: показать историю вашего островного банка
+    give: Выдача администратором
+    interest: Проценты
+    latest: Сортировать по новизне
+    oldest: Сортировать по давности
+    set: Установка администратором
+    syntax: |-
+      <blue>[date]</blue>
+      <blue>[time]</blue>
+      <gray>[name]</gray>
+      <gold>[number]</gold>
+    take: Снятие администратором
+    title: История операций
+    unknown: Неизвестный тип
+    withdrawal: Снятие
+  user:
+    description: команда островного банка
+  withdraw:
+    description: снять сумму со счёта вашего острова
+    parameters: <сумма>
+    success: '<green>Успешно! Ваш новый баланс островного банка: [number].</green>'
+    alert: <green>[name] снял [number] с островного банка.</green>
+protection:
+  flags:
+    BANK_ACCESS:
+      description: Переключает доступ к островному банку
+      name: Доступ к островному банку

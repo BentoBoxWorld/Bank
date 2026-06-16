@@ -1,37 +1,27 @@
 package world.bentobox.bank.data;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
 public class MoneyTest {
 
     Money m;
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp() {
         m = new Money();
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
     }
 
     /**
@@ -177,17 +167,17 @@ public class MoneyTest {
     /**
      * Test method for {@link world.bentobox.bank.data.Money#parseMoney(java.lang.String)}.
      */
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testParseMoneyNPE() {
-        Money.parseMoney(null);
+        assertThrows(NullPointerException.class, () -> Money.parseMoney(null));
     }
 
     /**
      * Test method for {@link world.bentobox.bank.data.Money#parseMoney(java.lang.String)}.
      */
-    @Test(expected = NumberFormatException.class)
+    @Test
     public void testParseMoneyNFE() {
-        Money.parseMoney("tastybento");
+        assertThrows(NumberFormatException.class, () -> Money.parseMoney("tastybento"));
     }
 
     /**
@@ -204,12 +194,12 @@ public class MoneyTest {
     @SuppressWarnings("unlikely-arg-type")
     @Test
     public void testEqualsObject() {
-        assertTrue(m.equals(m));
-        assertFalse(m.equals("string"));
-        assertFalse(m.equals(null));
-        assertFalse(m.equals(new Money(123)));
+        assertEquals(m, m);
+        assertNotEquals("string", m);
+        assertNotEquals(null, m);
+        assertNotEquals(new Money(123), m);
         m = new Money(345);
-        assertTrue(m.equals(new Money(345)));
+        assertEquals(m, new Money(345));
     }
 
     /**

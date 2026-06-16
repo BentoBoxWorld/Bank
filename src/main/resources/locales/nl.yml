@@ -1,0 +1,81 @@
+---
+bank:
+  admin:
+    description: admin-commando voor de eilandbank
+    give:
+      parameters: "<player> <amount>"
+      description: voeg bedrag toe aan de eilandrekening van de speler
+      success: "&a Succes! Het eilandbanksaldo van [name] is nu [number]."
+    take:
+      parameters: "<player> <amount>"
+      description: neem bedrag van de eilandrekening van de speler
+    balance:
+      parameters: "<player>"
+      description: bekijk het saldo van de eilandrekening van de speler
+    set:
+      parameters: "<player> <amount>"
+      description: stel bedrag in op de eilandrekening van de speler
+      success: "&a Rekening van [name] ingesteld op [number]."
+    statement:
+      parameters: "<player>"
+      description: bekijk het eilandbankafschrift van de speler
+  balance:
+    description: toont je eilandbanksaldo
+    island-balance: "&a Eilandbanksaldo is [number]."
+  baltop:
+    description: toon saldoranglijst
+    description-syntax: "&d [number]"
+    highest: Sorteer op hoogste
+    lowest: Sorteer op laagste
+    name-syntax: "&d [name]"
+    title: Hoogste saldi
+  deposit:
+    description: stort bedrag op je eilandrekening
+    parameters: "<amount>"
+    success: "&a Succes! Je nieuwe eilandbanksaldo is [number]."
+    alert: "&a [name] heeft [number] op de eilandbank gestort."
+  errors:
+    bank-error: "&c Fout bij het laden van bankrekeninggegevens - probeer het later
+      opnieuw"
+    low-balance: "&c Je eilandbanksaldo is niet hoog genoeg!"
+    too-low: "&c Het eilandsaldo is te laag."
+    must-be-a-number: "&c Bedrag moet een getal zijn"
+    no-rank: "&c Je rang is niet hoog genoeg om de bank te gebruiken."
+    too-much: "&c Je hebt dat bedrag niet om te storten."
+    value-must-be-positive: "&c Bedrag moet positief zijn."
+    scientific: "&c Wetenschappelijke notatie wordt niet ondersteund."
+    too-long: "&c Waarde moet minder dan 10 cijfers hebben"
+  statement:
+    balance:
+      name: "&9 Saldo:"
+      description: "&6 [number]"
+    deposit: Storting
+    description: toon je eilandbankgeschiedenis
+    give: Admin geven
+    interest: Rente
+    latest: Sorteer op nieuwste
+    oldest: Sorteer op oudste
+    set: Admin instellen
+    syntax: |
+        &9 [date]
+        &9 [time]
+        &7 [name]
+        &6 [number]
+    take: Admin afnemen
+    title: Rekeninggeschiedenis
+    unknown: Onbekend type
+    withdrawal: Opname
+  user:
+    description: eilandbankcommando
+  withdraw:
+    description: neem bedrag op van je eilandrekening
+    parameters: "<amount>"
+    success: "&a Succes! Je nieuwe eilandbanksaldo is [number]."
+    alert: "&a [name] heeft [number] van de eilandbank opgenomen."
+protection:
+  flags:
+    BANK_ACCESS:
+      description: |-
+          &f Sta toegang toe tot
+          &f de eilandbank
+      name: Toegang tot eilandbank
