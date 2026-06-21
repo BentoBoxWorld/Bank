@@ -37,16 +37,20 @@ public class Bank extends Addon {
     public void onEnable() {
         // Register flag
         this.registerFlag(BANK_ACCESS);
-        // Vault hook
+        // Vault hook. BentoBox hooks Vault before addons enable, so if no economy plugin had
+        // registered an economy provider yet, that early hook failed and was discarded. An addon
+        // (e.g. InvSwitcher) can provide an economy during enable, so retry the hook before giving up.
+        if (getPlugin().getVault().isEmpty()) {
+            getPlugin().getHooks().registerHook(new VaultHook());
+        }
         if (getPlugin().getVault().isEmpty()) {
             // Vault is required
             logError("Vault is required - disabling Bank - please install the Vault plugin");
             this.setState(State.DISABLED);
             return;
-        } else {
-            // Get economy
-            vault = getPlugin().getVault().get();
         }
+        // Get economy
+        vault = getPlugin().getVault().get();
         saveDefaultConfig();
         settings = config.loadConfigObject();
         if (settings == null) {
