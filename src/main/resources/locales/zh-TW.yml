@@ -1,0 +1,79 @@
+bank:
+  admin:
+    description: 島嶼銀行管理指令
+    give:
+      parameters: <玩家> <金額>
+      description: 將指定金額存入玩家的島嶼銀行帳戶
+      success: <green>成功！[name] 的島嶼銀行餘額已更新為 [number]。
+    take:
+      parameters: <玩家> <金額>
+      description: 從玩家的島嶼銀行帳戶扣除指定金額
+    balance:
+      parameters: <玩家>
+      description: 查看玩家的島嶼銀行餘額
+    set:
+      parameters: <玩家> <金額>
+      description: 設定玩家的島嶼銀行餘額
+      success: <green>已將 [name] 的島嶼銀行餘額設為 [number]。
+    statement:
+      parameters: <玩家>
+      description: 查看玩家的島嶼銀行交易紀錄
+  balance:
+    description: 查看你的島嶼銀行餘額
+    island-balance: <green>島嶼銀行餘額：[number]。
+  baltop:
+    description: 顯示餘額排行榜
+    description-syntax: <light_purple>[number]
+    highest: 依餘額由高到低排序
+    lowest: 依餘額由低到高排序
+    name-syntax: <light_purple>[mane]
+    title: 餘額排行榜
+  deposit:
+    description: 將金額存入你的島嶼銀行帳戶
+    parameters: <金額>
+    success: <green>成功！你的島嶼銀行餘額已更新為 [number]。
+    alert: <green>[name] 已存入 [number] 至島嶼銀行。
+  errors:
+    bank-error: <red>載入島嶼銀行資料時發生錯誤，請稍後再試。
+    low-balance: <red>你的島嶼銀行餘額不足！
+    too-low: <red>島嶼銀行餘額過低。
+    must-be-a-number: <red>金額必須為數字。
+    no-rank: <red>你的權限等級不足，無法使用島嶼銀行。
+    too-much: <red>你的身上沒有足夠的金額可以存入。
+    value-must-be-positive: <red>金額必須為正數。
+    scientific: <red>不支援科學記號格式。
+    too-long: <red>數值不得超過 10 位數。
+  statement:
+    balance:
+      name: '<blue>島嶼銀行餘額：'
+      description: <gold>[number]
+    deposit: 存款
+    description: 查看你的島嶼銀行交易紀錄
+    give: 管理員存入
+    interest: 利息
+    latest: 依最新排序
+    oldest: 依最舊排序
+    set: 管理員設定
+    syntax: |
+      <blue>[date]
+      <blue>[time]
+      <gray>[name]
+      <gold>[number]
+    take: 管理員扣除
+    title: 島嶼銀行交易紀錄
+    unknown: 未知類型
+    withdrawal: 提款
+  user:
+    description: 島嶼銀行指令
+  withdraw:
+    description: 從你的島嶼銀行帳戶提領金額
+    parameters: <金額>
+    success: <green>成功！你的島嶼銀行餘額已更新為 [number]。
+    alert: <green>[name] 已從島嶼銀行提領 [number]。
+protection:
+  flags:
+    BANK_ACCESS:
+      description: |-
+        <white>允許使用
+        <white>島嶼銀行
+      name: 島嶼銀行
