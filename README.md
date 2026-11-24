@@ -1,4 +1,8 @@
 # Bank
+
+<!-- BentoBox stats badges: https://download.bentobox.world/admin (Badges tab) -->
+[![Servers](https://download.bentobox.world/badge/Bank/servers.svg)](https://download.bentobox.world/) [![Popularity](https://download.bentobox.world/badge/Bank/rank.svg)](https://download.bentobox.world/) [![Downloads](https://download.bentobox.world/badge/Bank/downloads.svg)](https://download.bentobox.world/) [![Minecraft](https://download.bentobox.world/badge/Bank/mc.svg)](https://download.bentobox.world/)
+
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Bank&metric=bugs)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Bank)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Bank&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Bank)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Bank&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Bank)
